@@ -1,0 +1,6618 @@
+Terminals unused in grammar
+
+   "ABS"
+   "ALIAS"
+   "ASSERT"
+   "ATTRIBUTE"
+   "BLOCK"
+   "BUFFER"
+   "BUS"
+   "CONFIGURATION"
+   "DISCONNENT"
+   "FUNCTION"
+   "GROUP"
+   "GUARDED"
+   "IMPURE"
+   "INERTIAL"
+   "INOUT"
+   "LABEL"
+   "LINKAGE"
+   "LITERAL"
+   "NAND"
+   "NEW"
+   "NEXT"
+   "NOR"
+   "ON"
+   "OPEN"
+   "POSTPONED"
+   "PROCEDURE"
+   "PURE"
+   "REGISTER"
+   "REJECT"
+   "REM"
+   "REPORT"
+   "RETURN"
+   "ROL"
+   "ROR"
+   "SEVERITY"
+   "SLA"
+   "SLL"
+   "SRA"
+   "SRL"
+   "SUBTYPE"
+   "TRANSPORT"
+   "UNAFFECTED"
+   "UNITS"
+   "UNTIL"
+   "WAIT"
+   "WHILE"
+   "XNOR"
+
+
+Grammar
+
+    0 $accept: design_file $end
+
+    1 design_file: %empty
+    2            | design_file design_unit
+
+    3 design_unit: context_clause library_unit
+    4            | library_unit
+
+    5 context_clause: context_item
+    6               | context_clause context_item
+
+    7 context_item: library_clause
+    8             | use_clause
+
+    9 use_clause: "USE" name_list ';'
+
+   10 name_list: name
+   11          | name_list ',' name
+
+   12 name: TOK_IDENTIFIER
+   13     | selected_name
+
+   14 selected_name: name '.' TOK_IDENTIFIER
+   15              | name '.' "ALL"
+
+   16 library_clause: "LIBRARY" name_list ';'
+
+   17 library_unit: primary_unit
+   18             | secondary_unit
+
+   19 primary_unit: entity_declaration
+   20             | package_declaration
+
+   21 package_declaration: "PACKAGE" name "IS" package_declarative_part "END" ';'
+
+   22 package_declarative_part: %empty
+
+   23 secondary_unit: architecture
+   24               | package
+
+   25 package: "PACKAGE" "BODY" name "IS" package_body_declarative_part "END" ';'
+
+   26 package_body_declarative_part: %empty
+
+   27 entity_declaration: "ENTITY" name "IS" "PORT" '(' port_list ')' ';' "END" name_opt ';'
+   28                   | "ENTITY" name "IS" "GENERIC" '(' generic_list ')' ';' "PORT" '(' port_list ')' ';' "END" name_opt ';'
+
+   29 generic_list: generic
+   30             | generic_list ';' generic
+
+   31 generic: s_list ':' type ':' '=' expr
+   32        | s_list ':' type
+
+   33 port_list: port
+   34          | port_list ';' port
+
+   35 port: s_list ':' dir type
+
+   36 dir: "IN"
+   37    | "OUT"
+
+   38 type: name '(' expr updown expr ')'
+   39     | name '(' expr ')'
+   40     | name '(' name '\'' "RANGE" ')'
+   41     | name '(' name '\'' TOK_IDENTIFIER ')'
+   42     | name
+   43     | '(' enumeration_literal_list ')'
+   44     | "RANGE" expr updown expr
+   45     | "ARRAY" '(' index_constraint_list ')' "OF" type
+   46     | "RECORD" element_declaration_list "END" "RECORD" name_opt
+   47     | "ACCESS" type
+   48     | "TYPE" TOK_IDENTIFIER
+   49     | "FILE" "OF" type
+   50     | "PROTECTED" "END" "PROTECTED"
+
+   51 element_declaration_list: element_declaration
+   52                         | element_declaration_list element_declaration
+
+   53 element_declaration: identifier_list ':' type ';'
+
+   54 identifier_list: TOK_IDENTIFIER
+   55                | identifier_list TOK_IDENTIFIER
+
+   56 index_constraint_list: index_constraint
+   57                      | index_constraint_list ',' index_constraint
+
+   58 index_constraint: name
+   59                 | name '(' name '\'' "RANGE" ')'
+   60                 | expr updown expr
+
+   61 enumeration_literal_list: enumeration_literal
+   62                         | enumeration_literal_list ',' enumeration_literal
+
+   63 enumeration_literal: TOK_IDENTIFIER
+   64                    | TOK_CHAR
+
+   65 updown: "DOWNTO"
+   66       | "TO"
+
+   67 architecture: "ARCHITECTURE" name "OF" name "IS" architecture_decl_list "BEGIN" architecture_body "END" name_opt ';'
+
+   68 architecture_decl_list: %empty
+   69                       | architecture_decl_list architecture_decl
+
+   70 architecture_decl: "SIGNAL" s_list ':' type ';'
+   71                  | "CONSTANT" name ':' type ':' '=' expr ';'
+   72                  | "TYPE" name "IS" '(' s_list ')' ';'
+   73                  | "COMPONENT" name "PORT" '(' port_list ')' ';' "END" "COMPONENT" ';'
+   74                  | "COMPONENT" name "GENERIC" '(' generic_list ')' ';' "PORT" '(' port_list ')' ';' "END" "COMPONENT" ';'
+
+   75 s_list: name
+   76       | s_list ',' name
+
+   77 architecture_body: %empty
+   78                  | architecture_body architecture_item
+
+   79 architecture_item: signal '<' '=' sigvalue
+   80                  | "WITH" expr "SELECT" signal '<' '=' with_list ';'
+   81                  | name ':' name "PORT" "MAP" '(' map_list ')' ';'
+   82                  | name ':' name "GENERIC" "MAP" '(' generic_map_list ')' "PORT" "MAP" '(' map_list ')' ';'
+   83                  | label_opt "PROCESS" '(' signal_list ')' process_decl_list "BEGIN" process_body "END" "PROCESS" name_opt ';'
+   84                  | label_opt "IF" conditional_expr "GENERATE" architecture_body "END" "GENERATE" name_opt ';'
+   85                  | label_opt "FOR" signal "IN" expr "TO" expr "GENERATE" architecture_body "END" "GENERATE" name_opt ';'
+   86                  | label_opt "FOR" signal "IN" expr "DOWNTO" expr "GENERATE" architecture_body "END" "GENERATE" name_opt ';'
+
+   87 name_opt: %empty
+   88         | name
+
+   89 label_opt: %empty
+   90          | name ':'
+
+   91 with_list: with_item_list
+   92          | with_item_list ',' expr delay_opt "WHEN" "OTHERS"
+   93          | expr delay_opt "WHEN" "OTHERS"
+
+   94 with_item_list: with_item
+   95               | with_item_list ',' with_item
+
+   96 with_item: expr delay_opt "WHEN" with_value_list
+
+   97 process_decl_list: %empty
+   98                  | process_decl_list process_decl
+
+   99 process_decl: "VARIABLE" s_list ':' type ';'
+  100             | "VARIABLE" s_list ':' type ':' '=' expr ';'
+
+  101 process_body: %empty
+  102             | process_body process_item
+
+  103 process_item: signal ':' '=' expr ';'
+  104             | signal '<' '=' sigvalue
+  105             | "IF" conditional_expr "THEN" process_body elsepart "END" "IF" ';'
+  106             | "FOR" signal "IN" expr "TO" expr "LOOP" process_body "END" "LOOP" ';'
+  107             | "FOR" signal "IN" expr "DOWNTO" expr "LOOP" process_body "END" "LOOP" ';'
+  108             | "CASE" expr "IS" cases "END" "CASE" ';'
+  109             | "EXIT" ';'
+  110             | "NULL" ';'
+
+  111 elsepart: %empty
+  112         | "ELSIF" conditional_expr "THEN" process_body elsepart
+  113         | "ELSE" process_body
+
+  114 cases: "WHEN" with_value_list '=' '>' process_body cases
+  115      | "WHEN" "OTHERS" '=' '>' process_body
+
+  116 with_value_list: with_value
+  117                | with_value_list '|' with_value
+
+  118 with_value: TOK_STRING
+  119           | name
+
+  120 signal_list: signal
+  121            | signal_list ',' signal
+
+  122 sigvalue: expr delay_opt ';'
+  123         | expr delay_opt "WHEN" conditional_expr ';'
+  124         | expr delay_opt "WHEN" conditional_expr "ELSE" sigvalue
+
+  125 delay_opt: %empty
+  126          | "AFTER" TOK_NATURAL name
+
+  127 map_list: map_item
+  128         | map_item ',' map_list
+
+  129 map_item: signal
+  130         | name '=' '>' signal
+
+  131 generic_map_list: generic_map_item
+  132                 | generic_map_item ',' generic_map_list
+
+  133 generic_map_item: name '=' '>' expr
+
+  134 signal: name
+  135       | name '(' expr updown expr ')'
+  136       | name '(' name '\'' "RANGE" ')'
+
+  137 choice: "OTHERS"
+
+  138 choices: choice
+  139        | choices '|' choice
+
+  140 element_association: choices '=' '>' expr
+
+  141 element_association_list: element_association
+  142                         | element_association_list ',' element_association
+
+  143 expr: signal
+  144     | TOK_STRING
+  145     | TOK_BIT_STRING
+  146     | TOK_CHAR
+  147     | TOK_NATURAL
+  148     | TOK_NATURAL TOK_BASED_INTEGER
+  149     | '(' element_association_list ')'
+  150     | expr '&' expr
+  151     | '-' expr
+  152     | '+' expr
+  153     | expr '+' expr
+  154     | expr '-' expr
+  155     | expr '*' expr
+  156     | expr '/' expr
+  157     | expr "MOD" expr
+  158     | "NOT" expr
+  159     | expr "AND" expr
+  160     | expr "OR" expr
+  161     | expr "XOR" expr
+  162     | name '(' expr_list ')'
+  163     | '(' expr ')'
+
+  164 expr_list: expr
+  165          | expr_list ',' expr
+
+  166 conditional_expr: comparison
+  167                 | '(' conditional_expr ')'
+  168                 | conditional_expr "AND" conditional_expr
+  169                 | conditional_expr "OR" conditional_expr
+  170                 | "NOT" conditional_expr
+
+  171 comparison: expr '=' expr
+  172           | expr '>' expr
+  173           | expr '>' '=' expr
+  174           | expr '<' expr
+  175           | expr '<' '=' expr
+  176           | expr '/' '=' expr
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+'&' (38) 150
+'\'' (39) 40 41 59 136
+'(' (40) 27 28 38 39 40 41 43 45 59 72 73 74 81 82 83 135 136 149 162
+    163 167
+')' (41) 27 28 38 39 40 41 43 45 59 72 73 74 81 82 83 135 136 149 162
+    163 167
+'*' (42) 155
+'+' (43) 152 153
+',' (44) 11 57 62 76 92 95 121 128 132 142 165
+'-' (45) 151 154
+'.' (46) 14 15
+'/' (47) 156 176
+':' (58) 31 32 35 53 70 71 81 82 90 99 100 103
+';' (59) 9 16 21 25 27 28 30 34 53 67 70 71 72 73 74 80 81 82 83 84
+    85 86 99 100 103 105 106 107 108 109 110 122 123
+'<' (60) 79 80 104 174 175
+'=' (61) 31 71 79 80 100 103 104 114 115 130 133 140 171 173 175 176
+'>' (62) 114 115 130 133 140 172 173
+'|' (124) 117 139
+error (256)
+ORL (258)
+ANDL (259)
+"OR" (260) 160 169
+"XOR" (261) 161
+"AND" (262) 159 168
+"MOD" (263) 157
+BIGEQ (264)
+LESSEQ (265)
+NOTEQ (266)
+EQUAL (267)
+UMINUS (268)
+UPLUS (269)
+NOTL (270)
+"NOT" (271) 158 170
+"ABS" (272)
+"ACCESS" (273) 47
+"AFTER" (274) 126
+"ALIAS" (275)
+"ALL" (276) 15
+"ARCHITECTURE" (277) 67
+"ARRAY" (278) 45
+"ASSERT" (279)
+"ATTRIBUTE" (280)
+"BEGIN" (281) 67 83
+"BLOCK" (282)
+"BODY" (283) 25
+"BUFFER" (284)
+"BUS" (285)
+"CASE" (286) 108
+"COMPONENT" (287) 73 74
+"CONFIGURATION" (288)
+"CONSTANT" (289) 71
+"DISCONNENT" (290)
+"DOWNTO" (291) 65 86 107
+"ELSE" (292) 113 124
+"ELSIF" (293) 112
+"END" (294) 21 25 27 28 46 50 67 73 74 83 84 85 86 105 106 107 108
+"ENTITY" (295) 27 28
+"EXIT" (296) 109
+"FILE" (297) 49
+"FOR" (298) 85 86 106 107
+"FUNCTION" (299)
+"GENERATE" (300) 84 85 86
+"GENERIC" (301) 28 74 82
+"GROUP" (302)
+"GUARDED" (303)
+"IF" (304) 84 105
+"IMPURE" (305)
+"IN" (306) 36 85 86 106 107
+"INERTIAL" (307)
+"INOUT" (308)
+"IS" (309) 21 25 27 28 67 72 108
+"LABEL" (310)
+"LIBRARY" (311) 16
+"LINKAGE" (312)
+"LITERAL" (313)
+"LOOP" (314) 106 107
+"MAP" (315) 81 82
+"NAND" (316)
+"NEW" (317)
+"NEXT" (318)
+"NOR" (319)
+"NULL" (320) 110
+"OF" (321) 45 49 67
+"ON" (322)
+"OPEN" (323)
+"OTHERS" (324) 92 93 115 137
+"OUT" (325) 37
+"PACKAGE" (326) 21 25
+"PORT" (327) 27 28 73 74 81 82
+"POSTPONED" (328)
+"PROCEDURE" (329)
+"PROCESS" (330) 83
+"PROTECTED" (331) 50
+"PURE" (332)
+"RANGE" (333) 40 44 59 136
+"RECORD" (334) 46
+"REGISTER" (335)
+"REJECT" (336)
+"REM" (337)
+"REPORT" (338)
+"RETURN" (339)
+"ROL" (340)
+"ROR" (341)
+"SELECT" (342) 80
+"SEVERITY" (343)
+"SIGNAL" (344) 70
+"SLA" (345)
+"SLL" (346)
+"SRA" (347)
+"SRL" (348)
+"SUBTYPE" (349)
+"THEN" (350) 105 112
+"TO" (351) 66 85 106
+"TRANSPORT" (352)
+"TYPE" (353) 48 72
+"UNAFFECTED" (354)
+"UNITS" (355)
+"UNTIL" (356)
+"USE" (357) 9
+"VARIABLE" (358) 99 100
+"WAIT" (359)
+"WHEN" (360) 92 93 96 114 115 123 124
+"WHILE" (361)
+"WITH" (362) 80
+"XNOR" (363)
+TOK_NATURAL (364) 126 147 148
+TOK_BASED_INTEGER (365) 148
+TOK_STRING (366) 118 144
+TOK_BIT_STRING (367) 145
+TOK_CHAR (368) 64 146
+TOK_IDENTIFIER (369) 12 14 41 48 54 55 63
+
+
+Nonterminals, with rules where they appear
+
+$accept (131)
+    on left: 0
+design_file (132)
+    on left: 1 2, on right: 0 2
+design_unit (133)
+    on left: 3 4, on right: 2
+context_clause (134)
+    on left: 5 6, on right: 3 6
+context_item (135)
+    on left: 7 8, on right: 5 6
+use_clause (136)
+    on left: 9, on right: 8
+name_list (137)
+    on left: 10 11, on right: 9 11 16
+name (138)
+    on left: 12 13, on right: 10 11 14 15 21 25 27 28 38 39 40 41 42
+    58 59 67 71 72 73 74 75 76 81 82 88 90 119 126 130 133 134 135
+    136 162
+selected_name (139)
+    on left: 14 15, on right: 13
+library_clause (140)
+    on left: 16, on right: 7
+library_unit (141)
+    on left: 17 18, on right: 3 4
+primary_unit (142)
+    on left: 19 20, on right: 17
+package_declaration (143)
+    on left: 21, on right: 20
+package_declarative_part (144)
+    on left: 22, on right: 21
+secondary_unit (145)
+    on left: 23 24, on right: 18
+package (146)
+    on left: 25, on right: 24
+package_body_declarative_part (147)
+    on left: 26, on right: 25
+entity_declaration (148)
+    on left: 27 28, on right: 19
+generic_list (149)
+    on left: 29 30, on right: 28 30 74
+generic (150)
+    on left: 31 32, on right: 29 30
+port_list (151)
+    on left: 33 34, on right: 27 28 34 73 74
+port (152)
+    on left: 35, on right: 33 34
+dir (153)
+    on left: 36 37, on right: 35
+type (154)
+    on left: 38 39 40 41 42 43 44 45 46 47 48 49 50, on right: 31 32
+    35 45 47 49 53 70 71 99 100
+element_declaration_list (155)
+    on left: 51 52, on right: 46 52
+element_declaration (156)
+    on left: 53, on right: 51 52
+identifier_list (157)
+    on left: 54 55, on right: 53 55
+index_constraint_list (158)
+    on left: 56 57, on right: 45 57
+index_constraint (159)
+    on left: 58 59 60, on right: 56 57
+enumeration_literal_list (160)
+    on left: 61 62, on right: 43 62
+enumeration_literal (161)
+    on left: 63 64, on right: 61 62
+updown (162)
+    on left: 65 66, on right: 38 44 60 135
+architecture (163)
+    on left: 67, on right: 23
+architecture_decl_list (164)
+    on left: 68 69, on right: 67 69
+architecture_decl (165)
+    on left: 70 71 72 73 74, on right: 69
+s_list (166)
+    on left: 75 76, on right: 31 32 35 70 72 76 99 100
+architecture_body (167)
+    on left: 77 78, on right: 67 78 84 85 86
+architecture_item (168)
+    on left: 79 80 81 82 83 84 85 86, on right: 78
+name_opt (169)
+    on left: 87 88, on right: 27 28 46 67 83 84 85 86
+label_opt (170)
+    on left: 89 90, on right: 83 84 85 86
+with_list (171)
+    on left: 91 92 93, on right: 80
+with_item_list (172)
+    on left: 94 95, on right: 91 92 95
+with_item (173)
+    on left: 96, on right: 94 95
+process_decl_list (174)
+    on left: 97 98, on right: 83 98
+process_decl (175)
+    on left: 99 100, on right: 98
+process_body (176)
+    on left: 101 102, on right: 83 102 105 106 107 112 113 114 115
+process_item (177)
+    on left: 103 104 105 106 107 108 109 110, on right: 102
+elsepart (178)
+    on left: 111 112 113, on right: 105 112
+cases (179)
+    on left: 114 115, on right: 108 114
+with_value_list (180)
+    on left: 116 117, on right: 96 114 117
+with_value (181)
+    on left: 118 119, on right: 116 117
+signal_list (182)
+    on left: 120 121, on right: 83 121
+sigvalue (183)
+    on left: 122 123 124, on right: 79 104 124
+delay_opt (184)
+    on left: 125 126, on right: 92 93 96 122 123 124
+map_list (185)
+    on left: 127 128, on right: 81 82 128
+map_item (186)
+    on left: 129 130, on right: 127 128
+generic_map_list (187)
+    on left: 131 132, on right: 82 132
+generic_map_item (188)
+    on left: 133, on right: 131 132
+signal (189)
+    on left: 134 135 136, on right: 79 80 85 86 103 104 106 107 120
+    121 129 130 143
+choice (190)
+    on left: 137, on right: 138 139
+choices (191)
+    on left: 138 139, on right: 139 140
+element_association (192)
+    on left: 140, on right: 141 142
+element_association_list (193)
+    on left: 141 142, on right: 142 149
+expr (194)
+    on left: 143 144 145 146 147 148 149 150 151 152 153 154 155 156
+    157 158 159 160 161 162 163, on right: 31 38 39 44 60 71 80 85
+    86 92 93 96 100 103 106 107 108 122 123 124 133 135 140 150 151
+    152 153 154 155 156 157 158 159 160 161 163 164 165 171 172 173
+    174 175 176
+expr_list (195)
+    on left: 164 165, on right: 162 165
+conditional_expr (196)
+    on left: 166 167 168 169 170, on right: 84 105 112 123 124 167
+    168 169 170
+comparison (197)
+    on left: 171 172 173 174 175 176, on right: 166
+
+
+State 0
+
+    0 $accept: . design_file $end
+
+    $default  reduce using rule 1 (design_file)
+
+    design_file  go to state 1
+
+
+State 1
+
+    0 $accept: design_file . $end
+    2 design_file: design_file . design_unit
+
+    $end            shift, and go to state 2
+    "ARCHITECTURE"  shift, and go to state 3
+    "ENTITY"        shift, and go to state 4
+    "LIBRARY"       shift, and go to state 5
+    "PACKAGE"       shift, and go to state 6
+    "USE"           shift, and go to state 7
+
+    design_unit          go to state 8
+    context_clause       go to state 9
+    context_item         go to state 10
+    use_clause           go to state 11
+    library_clause       go to state 12
+    library_unit         go to state 13
+    primary_unit         go to state 14
+    package_declaration  go to state 15
+    secondary_unit       go to state 16
+    package              go to state 17
+    entity_declaration   go to state 18
+    architecture         go to state 19
+
+
+State 2
+
+    0 $accept: design_file $end .
+
+    $default  accept
+
+
+State 3
+
+   67 architecture: "ARCHITECTURE" . name "OF" name "IS" architecture_decl_list "BEGIN" architecture_body "END" name_opt ';'
+
+    TOK_IDENTIFIER  shift, and go to state 20
+
+    name           go to state 21
+    selected_name  go to state 22
+
+
+State 4
+
+   27 entity_declaration: "ENTITY" . name "IS" "PORT" '(' port_list ')' ';' "END" name_opt ';'
+   28                   | "ENTITY" . name "IS" "GENERIC" '(' generic_list ')' ';' "PORT" '(' port_list ')' ';' "END" name_opt ';'
+
+    TOK_IDENTIFIER  shift, and go to state 20
+
+    name           go to state 23
+    selected_name  go to state 22
+
+
+State 5
+
+   16 library_clause: "LIBRARY" . name_list ';'
+
+    TOK_IDENTIFIER  shift, and go to state 20
+
+    name_list      go to state 24
+    name           go to state 25
+    selected_name  go to state 22
+
+
+State 6
+
+   21 package_declaration: "PACKAGE" . name "IS" package_declarative_part "END" ';'
+   25 package: "PACKAGE" . "BODY" name "IS" package_body_declarative_part "END" ';'
+
+    "BODY"          shift, and go to state 26
+    TOK_IDENTIFIER  shift, and go to state 20
+
+    name           go to state 27
+    selected_name  go to state 22
+
+
+State 7
+
+    9 use_clause: "USE" . name_list ';'
+
+    TOK_IDENTIFIER  shift, and go to state 20
+
+    name_list      go to state 28
+    name           go to state 25
+    selected_name  go to state 22
+
+
+State 8
+
+    2 design_file: design_file design_unit .
+
+    $default  reduce using rule 2 (design_file)
+
+
+State 9
+
+    3 design_unit: context_clause . library_unit
+    6 context_clause: context_clause . context_item
+
+    "ARCHITECTURE"  shift, and go to state 3
+    "ENTITY"        shift, and go to state 4
+    "LIBRARY"       shift, and go to state 5
+    "PACKAGE"       shift, and go to state 6
+    "USE"           shift, and go to state 7
+
+    context_item         go to state 29
+    use_clause           go to state 11
+    library_clause       go to state 12
+    library_unit         go to state 30
+    primary_unit         go to state 14
+    package_declaration  go to state 15
+    secondary_unit       go to state 16
+    package              go to state 17
+    entity_declaration   go to state 18
+    architecture         go to state 19
+
+
+State 10
+
+    5 context_clause: context_item .
+
+    $default  reduce using rule 5 (context_clause)
+
+
+State 11
+
+    8 context_item: use_clause .
+
+    $default  reduce using rule 8 (context_item)
+
+
+State 12
+
+    7 context_item: library_clause .
+
+    $default  reduce using rule 7 (context_item)
+
+
+State 13
+
+    4 design_unit: library_unit .
+
+    $default  reduce using rule 4 (design_unit)
+
+
+State 14
+
+   17 library_unit: primary_unit .
+
+    $default  reduce using rule 17 (library_unit)
+
+
+State 15
+
+   20 primary_unit: package_declaration .
+
+    $default  reduce using rule 20 (primary_unit)
+
+
+State 16
+
+   18 library_unit: secondary_unit .
+
+    $default  reduce using rule 18 (library_unit)
+
+
+State 17
+
+   24 secondary_unit: package .
+
+    $default  reduce using rule 24 (secondary_unit)
+
+
+State 18
+
+   19 primary_unit: entity_declaration .
+
+    $default  reduce using rule 19 (primary_unit)
+
+
+State 19
+
+   23 secondary_unit: architecture .
+
+    $default  reduce using rule 23 (secondary_unit)
+
+
+State 20
+
+   12 name: TOK_IDENTIFIER .
+
+    $default  reduce using rule 12 (name)
+
+
+State 21
+
+   14 selected_name: name . '.' TOK_IDENTIFIER
+   15              | name . '.' "ALL"
+   67 architecture: "ARCHITECTURE" name . "OF" name "IS" architecture_decl_list "BEGIN" architecture_body "END" name_opt ';'
+
+    "OF"  shift, and go to state 31
+    '.'   shift, and go to state 32
+
+
+State 22
+
+   13 name: selected_name .
+
+    $default  reduce using rule 13 (name)
+
+
+State 23
+
+   14 selected_name: name . '.' TOK_IDENTIFIER
+   15              | name . '.' "ALL"
+   27 entity_declaration: "ENTITY" name . "IS" "PORT" '(' port_list ')' ';' "END" name_opt ';'
+   28                   | "ENTITY" name . "IS" "GENERIC" '(' generic_list ')' ';' "PORT" '(' port_list ')' ';' "END" name_opt ';'
+
+    "IS"  shift, and go to state 33
+    '.'   shift, and go to state 32
+
+
+State 24
+
+   11 name_list: name_list . ',' name
+   16 library_clause: "LIBRARY" name_list . ';'
+
+    ';'  shift, and go to state 34
+    ','  shift, and go to state 35
+
+
+State 25
+
+   10 name_list: name .
+   14 selected_name: name . '.' TOK_IDENTIFIER
+   15              | name . '.' "ALL"
+
+    '.'  shift, and go to state 32
+
+    $default  reduce using rule 10 (name_list)
+
+
+State 26
+
+   25 package: "PACKAGE" "BODY" . name "IS" package_body_declarative_part "END" ';'
+
+    TOK_IDENTIFIER  shift, and go to state 20
+
+    name           go to state 36
+    selected_name  go to state 22
+
+
+State 27
+
+   14 selected_name: name . '.' TOK_IDENTIFIER
+   15              | name . '.' "ALL"
+   21 package_declaration: "PACKAGE" name . "IS" package_declarative_part "END" ';'
+
+    "IS"  shift, and go to state 37
+    '.'   shift, and go to state 32
+
+
+State 28
+
+    9 use_clause: "USE" name_list . ';'
+   11 name_list: name_list . ',' name
+
+    ';'  shift, and go to state 38
+    ','  shift, and go to state 35
+
+
+State 29
+
+    6 context_clause: context_clause context_item .
+
+    $default  reduce using rule 6 (context_clause)
+
+
+State 30
+
+    3 design_unit: context_clause library_unit .
+
+    $default  reduce using rule 3 (design_unit)
+
+
+State 31
+
+   67 architecture: "ARCHITECTURE" name "OF" . name "IS" architecture_decl_list "BEGIN" architecture_body "END" name_opt ';'
+
+    TOK_IDENTIFIER  shift, and go to state 20
+
+    name           go to state 39
+    selected_name  go to state 22
+
+
+State 32
+
+   14 selected_name: name '.' . TOK_IDENTIFIER
+   15              | name '.' . "ALL"
+
+    "ALL"           shift, and go to state 40
+    TOK_IDENTIFIER  shift, and go to state 41
+
+
+State 33
+
+   27 entity_declaration: "ENTITY" name "IS" . "PORT" '(' port_list ')' ';' "END" name_opt ';'
+   28                   | "ENTITY" name "IS" . "GENERIC" '(' generic_list ')' ';' "PORT" '(' port_list ')' ';' "END" name_opt ';'
+
+    "GENERIC"  shift, and go to state 42
+    "PORT"     shift, and go to state 43
+
+
+State 34
+
+   16 library_clause: "LIBRARY" name_list ';' .
+
+    $default  reduce using rule 16 (library_clause)
+
+
+State 35
+
+   11 name_list: name_list ',' . name
+
+    TOK_IDENTIFIER  shift, and go to state 20
+
+    name           go to state 44
+    selected_name  go to state 22
+
+
+State 36
+
+   14 selected_name: name . '.' TOK_IDENTIFIER
+   15              | name . '.' "ALL"
+   25 package: "PACKAGE" "BODY" name . "IS" package_body_declarative_part "END" ';'
+
+    "IS"  shift, and go to state 45
+    '.'   shift, and go to state 32
+
+
+State 37
+
+   21 package_declaration: "PACKAGE" name "IS" . package_declarative_part "END" ';'
+
+    $default  reduce using rule 22 (package_declarative_part)
+
+    package_declarative_part  go to state 46
+
+
+State 38
+
+    9 use_clause: "USE" name_list ';' .
+
+    $default  reduce using rule 9 (use_clause)
+
+
+State 39
+
+   14 selected_name: name . '.' TOK_IDENTIFIER
+   15              | name . '.' "ALL"
+   67 architecture: "ARCHITECTURE" name "OF" name . "IS" architecture_decl_list "BEGIN" architecture_body "END" name_opt ';'
+
+    "IS"  shift, and go to state 47
+    '.'   shift, and go to state 32
+
+
+State 40
+
+   15 selected_name: name '.' "ALL" .
+
+    $default  reduce using rule 15 (selected_name)
+
+
+State 41
+
+   14 selected_name: name '.' TOK_IDENTIFIER .
+
+    $default  reduce using rule 14 (selected_name)
+
+
+State 42
+
+   28 entity_declaration: "ENTITY" name "IS" "GENERIC" . '(' generic_list ')' ';' "PORT" '(' port_list ')' ';' "END" name_opt ';'
+
+    '('  shift, and go to state 48
+
+
+State 43
+
+   27 entity_declaration: "ENTITY" name "IS" "PORT" . '(' port_list ')' ';' "END" name_opt ';'
+
+    '('  shift, and go to state 49
+
+
+State 44
+
+   11 name_list: name_list ',' name .
+   14 selected_name: name . '.' TOK_IDENTIFIER
+   15              | name . '.' "ALL"
+
+    '.'  shift, and go to state 32
+
+    $default  reduce using rule 11 (name_list)
+
+
+State 45
+
+   25 package: "PACKAGE" "BODY" name "IS" . package_body_declarative_part "END" ';'
+
+    $default  reduce using rule 26 (package_body_declarative_part)
+
+    package_body_declarative_part  go to state 50
+
+
+State 46
+
+   21 package_declaration: "PACKAGE" name "IS" package_declarative_part . "END" ';'
+
+    "END"  shift, and go to state 51
+
+
+State 47
+
+   67 architecture: "ARCHITECTURE" name "OF" name "IS" . architecture_decl_list "BEGIN" architecture_body "END" name_opt ';'
+
+    $default  reduce using rule 68 (architecture_decl_list)
+
+    architecture_decl_list  go to state 52
+
+
+State 48
+
+   28 entity_declaration: "ENTITY" name "IS" "GENERIC" '(' . generic_list ')' ';' "PORT" '(' port_list ')' ';' "END" name_opt ';'
+
+    TOK_IDENTIFIER  shift, and go to state 20
+
+    name           go to state 53
+    selected_name  go to state 22
+    generic_list   go to state 54
+    generic        go to state 55
+    s_list         go to state 56
+
+
+State 49
+
+   27 entity_declaration: "ENTITY" name "IS" "PORT" '(' . port_list ')' ';' "END" name_opt ';'
+
+    TOK_IDENTIFIER  shift, and go to state 20
+
+    name           go to state 53
+    selected_name  go to state 22
+    port_list      go to state 57
+    port           go to state 58
+    s_list         go to state 59
+
+
+State 50
+
+   25 package: "PACKAGE" "BODY" name "IS" package_body_declarative_part . "END" ';'
+
+    "END"  shift, and go to state 60
+
+
+State 51
+
+   21 package_declaration: "PACKAGE" name "IS" package_declarative_part "END" . ';'
+
+    ';'  shift, and go to state 61
+
+
+State 52
+
+   67 architecture: "ARCHITECTURE" name "OF" name "IS" architecture_decl_list . "BEGIN" architecture_body "END" name_opt ';'
+   69 architecture_decl_list: architecture_decl_list . architecture_decl
+
+    "BEGIN"      shift, and go to state 62
+    "COMPONENT"  shift, and go to state 63
+    "CONSTANT"   shift, and go to state 64
+    "SIGNAL"     shift, and go to state 65
+    "TYPE"       shift, and go to state 66
+
+    architecture_decl  go to state 67
+
+
+State 53
+
+   14 selected_name: name . '.' TOK_IDENTIFIER
+   15              | name . '.' "ALL"
+   75 s_list: name .
+
+    '.'  shift, and go to state 32
+
+    $default  reduce using rule 75 (s_list)
+
+
+State 54
+
+   28 entity_declaration: "ENTITY" name "IS" "GENERIC" '(' generic_list . ')' ';' "PORT" '(' port_list ')' ';' "END" name_opt ';'
+   30 generic_list: generic_list . ';' generic
+
+    ';'  shift, and go to state 68
+    ')'  shift, and go to state 69
+
+
+State 55
+
+   29 generic_list: generic .
+
+    $default  reduce using rule 29 (generic_list)
+
+
+State 56
+
+   31 generic: s_list . ':' type ':' '=' expr
+   32        | s_list . ':' type
+   76 s_list: s_list . ',' name
+
+    ','  shift, and go to state 70
+    ':'  shift, and go to state 71
+
+
+State 57
+
+   27 entity_declaration: "ENTITY" name "IS" "PORT" '(' port_list . ')' ';' "END" name_opt ';'
+   34 port_list: port_list . ';' port
+
+    ';'  shift, and go to state 72
+    ')'  shift, and go to state 73
+
+
+State 58
+
+   33 port_list: port .
+
+    $default  reduce using rule 33 (port_list)
+
+
+State 59
+
+   35 port: s_list . ':' dir type
+   76 s_list: s_list . ',' name
+
+    ','  shift, and go to state 70
+    ':'  shift, and go to state 74
+
+
+State 60
+
+   25 package: "PACKAGE" "BODY" name "IS" package_body_declarative_part "END" . ';'
+
+    ';'  shift, and go to state 75
+
+
+State 61
+
+   21 package_declaration: "PACKAGE" name "IS" package_declarative_part "END" ';' .
+
+    $default  reduce using rule 21 (package_declaration)
+
+
+State 62
+
+   67 architecture: "ARCHITECTURE" name "OF" name "IS" architecture_decl_list "BEGIN" . architecture_body "END" name_opt ';'
+
+    $default  reduce using rule 77 (architecture_body)
+
+    architecture_body  go to state 76
+
+
+State 63
+
+   73 architecture_decl: "COMPONENT" . name "PORT" '(' port_list ')' ';' "END" "COMPONENT" ';'
+   74                  | "COMPONENT" . name "GENERIC" '(' generic_list ')' ';' "PORT" '(' port_list ')' ';' "END" "COMPONENT" ';'
+
+    TOK_IDENTIFIER  shift, and go to state 20
+
+    name           go to state 77
+    selected_name  go to state 22
+
+
+State 64
+
+   71 architecture_decl: "CONSTANT" . name ':' type ':' '=' expr ';'
+
+    TOK_IDENTIFIER  shift, and go to state 20
+
+    name           go to state 78
+    selected_name  go to state 22
+
+
+State 65
+
+   70 architecture_decl: "SIGNAL" . s_list ':' type ';'
+
+    TOK_IDENTIFIER  shift, and go to state 20
+
+    name           go to state 53
+    selected_name  go to state 22
+    s_list         go to state 79
+
+
+State 66
+
+   72 architecture_decl: "TYPE" . name "IS" '(' s_list ')' ';'
+
+    TOK_IDENTIFIER  shift, and go to state 20
+
+    name           go to state 80
+    selected_name  go to state 22
+
+
+State 67
+
+   69 architecture_decl_list: architecture_decl_list architecture_decl .
+
+    $default  reduce using rule 69 (architecture_decl_list)
+
+
+State 68
+
+   30 generic_list: generic_list ';' . generic
+
+    TOK_IDENTIFIER  shift, and go to state 20
+
+    name           go to state 53
+    selected_name  go to state 22
+    generic        go to state 81
+    s_list         go to state 56
+
+
+State 69
+
+   28 entity_declaration: "ENTITY" name "IS" "GENERIC" '(' generic_list ')' . ';' "PORT" '(' port_list ')' ';' "END" name_opt ';'
+
+    ';'  shift, and go to state 82
+
+
+State 70
+
+   76 s_list: s_list ',' . name
+
+    TOK_IDENTIFIER  shift, and go to state 20
+
+    name           go to state 83
+    selected_name  go to state 22
+
+
+State 71
+
+   31 generic: s_list ':' . type ':' '=' expr
+   32        | s_list ':' . type
+
+    "ACCESS"        shift, and go to state 84
+    "ARRAY"         shift, and go to state 85
+    "FILE"          shift, and go to state 86
+    "PROTECTED"     shift, and go to state 87
+    "RANGE"         shift, and go to state 88
+    "RECORD"        shift, and go to state 89
+    "TYPE"          shift, and go to state 90
+    TOK_IDENTIFIER  shift, and go to state 20
+    '('             shift, and go to state 91
+
+    name           go to state 92
+    selected_name  go to state 22
+    type           go to state 93
+
+
+State 72
+
+   34 port_list: port_list ';' . port
+
+    TOK_IDENTIFIER  shift, and go to state 20
+
+    name           go to state 53
+    selected_name  go to state 22
+    port           go to state 94
+    s_list         go to state 59
+
+
+State 73
+
+   27 entity_declaration: "ENTITY" name "IS" "PORT" '(' port_list ')' . ';' "END" name_opt ';'
+
+    ';'  shift, and go to state 95
+
+
+State 74
+
+   35 port: s_list ':' . dir type
+
+    "IN"   shift, and go to state 96
+    "OUT"  shift, and go to state 97
+
+    dir  go to state 98
+
+
+State 75
+
+   25 package: "PACKAGE" "BODY" name "IS" package_body_declarative_part "END" ';' .
+
+    $default  reduce using rule 25 (package)
+
+
+State 76
+
+   67 architecture: "ARCHITECTURE" name "OF" name "IS" architecture_decl_list "BEGIN" architecture_body . "END" name_opt ';'
+   78 architecture_body: architecture_body . architecture_item
+
+    "END"           shift, and go to state 99
+    "WITH"          shift, and go to state 100
+    TOK_IDENTIFIER  shift, and go to state 20
+
+    $default  reduce using rule 89 (label_opt)
+
+    name               go to state 101
+    selected_name      go to state 22
+    architecture_item  go to state 102
+    label_opt          go to state 103
+    signal             go to state 104
+
+
+State 77
+
+   14 selected_name: name . '.' TOK_IDENTIFIER
+   15              | name . '.' "ALL"
+   73 architecture_decl: "COMPONENT" name . "PORT" '(' port_list ')' ';' "END" "COMPONENT" ';'
+   74                  | "COMPONENT" name . "GENERIC" '(' generic_list ')' ';' "PORT" '(' port_list ')' ';' "END" "COMPONENT" ';'
+
+    "GENERIC"  shift, and go to state 105
+    "PORT"     shift, and go to state 106
+    '.'        shift, and go to state 32
+
+
+State 78
+
+   14 selected_name: name . '.' TOK_IDENTIFIER
+   15              | name . '.' "ALL"
+   71 architecture_decl: "CONSTANT" name . ':' type ':' '=' expr ';'
+
+    '.'  shift, and go to state 32
+    ':'  shift, and go to state 107
+
+
+State 79
+
+   70 architecture_decl: "SIGNAL" s_list . ':' type ';'
+   76 s_list: s_list . ',' name
+
+    ','  shift, and go to state 70
+    ':'  shift, and go to state 108
+
+
+State 80
+
+   14 selected_name: name . '.' TOK_IDENTIFIER
+   15              | name . '.' "ALL"
+   72 architecture_decl: "TYPE" name . "IS" '(' s_list ')' ';'
+
+    "IS"  shift, and go to state 109
+    '.'   shift, and go to state 32
+
+
+State 81
+
+   30 generic_list: generic_list ';' generic .
+
+    $default  reduce using rule 30 (generic_list)
+
+
+State 82
+
+   28 entity_declaration: "ENTITY" name "IS" "GENERIC" '(' generic_list ')' ';' . "PORT" '(' port_list ')' ';' "END" name_opt ';'
+
+    "PORT"  shift, and go to state 110
+
+
+State 83
+
+   14 selected_name: name . '.' TOK_IDENTIFIER
+   15              | name . '.' "ALL"
+   76 s_list: s_list ',' name .
+
+    '.'  shift, and go to state 32
+
+    $default  reduce using rule 76 (s_list)
+
+
+State 84
+
+   47 type: "ACCESS" . type
+
+    "ACCESS"        shift, and go to state 84
+    "ARRAY"         shift, and go to state 85
+    "FILE"          shift, and go to state 86
+    "PROTECTED"     shift, and go to state 87
+    "RANGE"         shift, and go to state 88
+    "RECORD"        shift, and go to state 89
+    "TYPE"          shift, and go to state 90
+    TOK_IDENTIFIER  shift, and go to state 20
+    '('             shift, and go to state 91
+
+    name           go to state 92
+    selected_name  go to state 22
+    type           go to state 111
+
+
+State 85
+
+   45 type: "ARRAY" . '(' index_constraint_list ')' "OF" type
+
+    '('  shift, and go to state 112
+
+
+State 86
+
+   49 type: "FILE" . "OF" type
+
+    "OF"  shift, and go to state 113
+
+
+State 87
+
+   50 type: "PROTECTED" . "END" "PROTECTED"
+
+    "END"  shift, and go to state 114
+
+
+State 88
+
+   44 type: "RANGE" . expr updown expr
+
+    '+'             shift, and go to state 115
+    '-'             shift, and go to state 116
+    "NOT"           shift, and go to state 117
+    TOK_NATURAL     shift, and go to state 118
+    TOK_STRING      shift, and go to state 119
+    TOK_BIT_STRING  shift, and go to state 120
+    TOK_CHAR        shift, and go to state 121
+    TOK_IDENTIFIER  shift, and go to state 20
+    '('             shift, and go to state 122
+
+    name           go to state 123
+    selected_name  go to state 22
+    signal         go to state 124
+    expr           go to state 125
+
+
+State 89
+
+   46 type: "RECORD" . element_declaration_list "END" "RECORD" name_opt
+
+    TOK_IDENTIFIER  shift, and go to state 126
+
+    element_declaration_list  go to state 127
+    element_declaration       go to state 128
+    identifier_list           go to state 129
+
+
+State 90
+
+   48 type: "TYPE" . TOK_IDENTIFIER
+
+    TOK_IDENTIFIER  shift, and go to state 130
+
+
+State 91
+
+   43 type: '(' . enumeration_literal_list ')'
+
+    TOK_CHAR        shift, and go to state 131
+    TOK_IDENTIFIER  shift, and go to state 132
+
+    enumeration_literal_list  go to state 133
+    enumeration_literal       go to state 134
+
+
+State 92
+
+   14 selected_name: name . '.' TOK_IDENTIFIER
+   15              | name . '.' "ALL"
+   38 type: name . '(' expr updown expr ')'
+   39     | name . '(' expr ')'
+   40     | name . '(' name '\'' "RANGE" ')'
+   41     | name . '(' name '\'' TOK_IDENTIFIER ')'
+   42     | name .
+
+    '.'  shift, and go to state 32
+    '('  shift, and go to state 135
+
+    $default  reduce using rule 42 (type)
+
+
+State 93
+
+   31 generic: s_list ':' type . ':' '=' expr
+   32        | s_list ':' type .
+
+    ':'  shift, and go to state 136
+
+    $default  reduce using rule 32 (generic)
+
+
+State 94
+
+   34 port_list: port_list ';' port .
+
+    $default  reduce using rule 34 (port_list)
+
+
+State 95
+
+   27 entity_declaration: "ENTITY" name "IS" "PORT" '(' port_list ')' ';' . "END" name_opt ';'
+
+    "END"  shift, and go to state 137
+
+
+State 96
+
+   36 dir: "IN" .
+
+    $default  reduce using rule 36 (dir)
+
+
+State 97
+
+   37 dir: "OUT" .
+
+    $default  reduce using rule 37 (dir)
+
+
+State 98
+
+   35 port: s_list ':' dir . type
+
+    "ACCESS"        shift, and go to state 84
+    "ARRAY"         shift, and go to state 85
+    "FILE"          shift, and go to state 86
+    "PROTECTED"     shift, and go to state 87
+    "RANGE"         shift, and go to state 88
+    "RECORD"        shift, and go to state 89
+    "TYPE"          shift, and go to state 90
+    TOK_IDENTIFIER  shift, and go to state 20
+    '('             shift, and go to state 91
+
+    name           go to state 92
+    selected_name  go to state 22
+    type           go to state 138
+
+
+State 99
+
+   67 architecture: "ARCHITECTURE" name "OF" name "IS" architecture_decl_list "BEGIN" architecture_body "END" . name_opt ';'
+
+    TOK_IDENTIFIER  shift, and go to state 20
+
+    $default  reduce using rule 87 (name_opt)
+
+    name           go to state 139
+    selected_name  go to state 22
+    name_opt       go to state 140
+
+
+State 100
+
+   80 architecture_item: "WITH" . expr "SELECT" signal '<' '=' with_list ';'
+
+    '+'             shift, and go to state 115
+    '-'             shift, and go to state 116
+    "NOT"           shift, and go to state 117
+    TOK_NATURAL     shift, and go to state 118
+    TOK_STRING      shift, and go to state 119
+    TOK_BIT_STRING  shift, and go to state 120
+    TOK_CHAR        shift, and go to state 121
+    TOK_IDENTIFIER  shift, and go to state 20
+    '('             shift, and go to state 122
+
+    name           go to state 123
+    selected_name  go to state 22
+    signal         go to state 124
+    expr           go to state 141
+
+
+State 101
+
+   14 selected_name: name . '.' TOK_IDENTIFIER
+   15              | name . '.' "ALL"
+   81 architecture_item: name . ':' name "PORT" "MAP" '(' map_list ')' ';'
+   82                  | name . ':' name "GENERIC" "MAP" '(' generic_map_list ')' "PORT" "MAP" '(' map_list ')' ';'
+   90 label_opt: name . ':'
+  134 signal: name .
+  135       | name . '(' expr updown expr ')'
+  136       | name . '(' name '\'' "RANGE" ')'
+
+    '.'  shift, and go to state 32
+    '('  shift, and go to state 142
+    ':'  shift, and go to state 143
+
+    $default  reduce using rule 134 (signal)
+
+
+State 102
+
+   78 architecture_body: architecture_body architecture_item .
+
+    $default  reduce using rule 78 (architecture_body)
+
+
+State 103
+
+   83 architecture_item: label_opt . "PROCESS" '(' signal_list ')' process_decl_list "BEGIN" process_body "END" "PROCESS" name_opt ';'
+   84                  | label_opt . "IF" conditional_expr "GENERATE" architecture_body "END" "GENERATE" name_opt ';'
+   85                  | label_opt . "FOR" signal "IN" expr "TO" expr "GENERATE" architecture_body "END" "GENERATE" name_opt ';'
+   86                  | label_opt . "FOR" signal "IN" expr "DOWNTO" expr "GENERATE" architecture_body "END" "GENERATE" name_opt ';'
+
+    "FOR"      shift, and go to state 144
+    "IF"       shift, and go to state 145
+    "PROCESS"  shift, and go to state 146
+
+
+State 104
+
+   79 architecture_item: signal . '<' '=' sigvalue
+
+    '<'  shift, and go to state 147
+
+
+State 105
+
+   74 architecture_decl: "COMPONENT" name "GENERIC" . '(' generic_list ')' ';' "PORT" '(' port_list ')' ';' "END" "COMPONENT" ';'
+
+    '('  shift, and go to state 148
+
+
+State 106
+
+   73 architecture_decl: "COMPONENT" name "PORT" . '(' port_list ')' ';' "END" "COMPONENT" ';'
+
+    '('  shift, and go to state 149
+
+
+State 107
+
+   71 architecture_decl: "CONSTANT" name ':' . type ':' '=' expr ';'
+
+    "ACCESS"        shift, and go to state 84
+    "ARRAY"         shift, and go to state 85
+    "FILE"          shift, and go to state 86
+    "PROTECTED"     shift, and go to state 87
+    "RANGE"         shift, and go to state 88
+    "RECORD"        shift, and go to state 89
+    "TYPE"          shift, and go to state 90
+    TOK_IDENTIFIER  shift, and go to state 20
+    '('             shift, and go to state 91
+
+    name           go to state 92
+    selected_name  go to state 22
+    type           go to state 150
+
+
+State 108
+
+   70 architecture_decl: "SIGNAL" s_list ':' . type ';'
+
+    "ACCESS"        shift, and go to state 84
+    "ARRAY"         shift, and go to state 85
+    "FILE"          shift, and go to state 86
+    "PROTECTED"     shift, and go to state 87
+    "RANGE"         shift, and go to state 88
+    "RECORD"        shift, and go to state 89
+    "TYPE"          shift, and go to state 90
+    TOK_IDENTIFIER  shift, and go to state 20
+    '('             shift, and go to state 91
+
+    name           go to state 92
+    selected_name  go to state 22
+    type           go to state 151
+
+
+State 109
+
+   72 architecture_decl: "TYPE" name "IS" . '(' s_list ')' ';'
+
+    '('  shift, and go to state 152
+
+
+State 110
+
+   28 entity_declaration: "ENTITY" name "IS" "GENERIC" '(' generic_list ')' ';' "PORT" . '(' port_list ')' ';' "END" name_opt ';'
+
+    '('  shift, and go to state 153
+
+
+State 111
+
+   47 type: "ACCESS" type .
+
+    $default  reduce using rule 47 (type)
+
+
+State 112
+
+   45 type: "ARRAY" '(' . index_constraint_list ')' "OF" type
+
+    '+'             shift, and go to state 115
+    '-'             shift, and go to state 116
+    "NOT"           shift, and go to state 117
+    TOK_NATURAL     shift, and go to state 118
+    TOK_STRING      shift, and go to state 119
+    TOK_BIT_STRING  shift, and go to state 120
+    TOK_CHAR        shift, and go to state 121
+    TOK_IDENTIFIER  shift, and go to state 20
+    '('             shift, and go to state 122
+
+    name                   go to state 154
+    selected_name          go to state 22
+    index_constraint_list  go to state 155
+    index_constraint       go to state 156
+    signal                 go to state 124
+    expr                   go to state 157
+
+
+State 113
+
+   49 type: "FILE" "OF" . type
+
+    "ACCESS"        shift, and go to state 84
+    "ARRAY"         shift, and go to state 85
+    "FILE"          shift, and go to state 86
+    "PROTECTED"     shift, and go to state 87
+    "RANGE"         shift, and go to state 88
+    "RECORD"        shift, and go to state 89
+    "TYPE"          shift, and go to state 90
+    TOK_IDENTIFIER  shift, and go to state 20
+    '('             shift, and go to state 91
+
+    name           go to state 92
+    selected_name  go to state 22
+    type           go to state 158
+
+
+State 114
+
+   50 type: "PROTECTED" "END" . "PROTECTED"
+
+    "PROTECTED"  shift, and go to state 159
+
+
+State 115
+
+  152 expr: '+' . expr
+
+    '+'             shift, and go to state 115
+    '-'             shift, and go to state 116
+    "NOT"           shift, and go to state 117
+    TOK_NATURAL     shift, and go to state 118
+    TOK_STRING      shift, and go to state 119
+    TOK_BIT_STRING  shift, and go to state 120
+    TOK_CHAR        shift, and go to state 121
+    TOK_IDENTIFIER  shift, and go to state 20
+    '('             shift, and go to state 122
+
+    name           go to state 123
+    selected_name  go to state 22
+    signal         go to state 124
+    expr           go to state 160
+
+
+State 116
+
+  151 expr: '-' . expr
+
+    '+'             shift, and go to state 115
+    '-'             shift, and go to state 116
+    "NOT"           shift, and go to state 117
+    TOK_NATURAL     shift, and go to state 118
+    TOK_STRING      shift, and go to state 119
+    TOK_BIT_STRING  shift, and go to state 120
+    TOK_CHAR        shift, and go to state 121
+    TOK_IDENTIFIER  shift, and go to state 20
+    '('             shift, and go to state 122
+
+    name           go to state 123
+    selected_name  go to state 22
+    signal         go to state 124
+    expr           go to state 161
+
+
+State 117
+
+  158 expr: "NOT" . expr
+
+    '+'             shift, and go to state 115
+    '-'             shift, and go to state 116
+    "NOT"           shift, and go to state 117
+    TOK_NATURAL     shift, and go to state 118
+    TOK_STRING      shift, and go to state 119
+    TOK_BIT_STRING  shift, and go to state 120
+    TOK_CHAR        shift, and go to state 121
+    TOK_IDENTIFIER  shift, and go to state 20
+    '('             shift, and go to state 122
+
+    name           go to state 123
+    selected_name  go to state 22
+    signal         go to state 124
+    expr           go to state 162
+
+
+State 118
+
+  147 expr: TOK_NATURAL .
+  148     | TOK_NATURAL . TOK_BASED_INTEGER
+
+    TOK_BASED_INTEGER  shift, and go to state 163
+
+    $default  reduce using rule 147 (expr)
+
+
+State 119
+
+  144 expr: TOK_STRING .
+
+    $default  reduce using rule 144 (expr)
+
+
+State 120
+
+  145 expr: TOK_BIT_STRING .
+
+    $default  reduce using rule 145 (expr)
+
+
+State 121
+
+  146 expr: TOK_CHAR .
+
+    $default  reduce using rule 146 (expr)
+
+
+State 122
+
+  149 expr: '(' . element_association_list ')'
+  163     | '(' . expr ')'
+
+    '+'             shift, and go to state 115
+    '-'             shift, and go to state 116
+    "NOT"           shift, and go to state 117
+    "OTHERS"        shift, and go to state 164
+    TOK_NATURAL     shift, and go to state 118
+    TOK_STRING      shift, and go to state 119
+    TOK_BIT_STRING  shift, and go to state 120
+    TOK_CHAR        shift, and go to state 121
+    TOK_IDENTIFIER  shift, and go to state 20
+    '('             shift, and go to state 122
+
+    name                      go to state 123
+    selected_name             go to state 22
+    signal                    go to state 124
+    choice                    go to state 165
+    choices                   go to state 166
+    element_association       go to state 167
+    element_association_list  go to state 168
+    expr                      go to state 169
+
+
+State 123
+
+   14 selected_name: name . '.' TOK_IDENTIFIER
+   15              | name . '.' "ALL"
+  134 signal: name .
+  135       | name . '(' expr updown expr ')'
+  136       | name . '(' name '\'' "RANGE" ')'
+  162 expr: name . '(' expr_list ')'
+
+    '.'  shift, and go to state 32
+    '('  shift, and go to state 170
+
+    $default  reduce using rule 134 (signal)
+
+
+State 124
+
+  143 expr: signal .
+
+    $default  reduce using rule 143 (expr)
+
+
+State 125
+
+   44 type: "RANGE" expr . updown expr
+  150 expr: expr . '&' expr
+  153     | expr . '+' expr
+  154     | expr . '-' expr
+  155     | expr . '*' expr
+  156     | expr . '/' expr
+  157     | expr . "MOD" expr
+  159     | expr . "AND" expr
+  160     | expr . "OR" expr
+  161     | expr . "XOR" expr
+
+    "OR"      shift, and go to state 171
+    "XOR"     shift, and go to state 172
+    "AND"     shift, and go to state 173
+    "MOD"     shift, and go to state 174
+    '+'       shift, and go to state 175
+    '-'       shift, and go to state 176
+    '&'       shift, and go to state 177
+    '*'       shift, and go to state 178
+    '/'       shift, and go to state 179
+    "DOWNTO"  shift, and go to state 180
+    "TO"      shift, and go to state 181
+
+    updown  go to state 182
+
+
+State 126
+
+   54 identifier_list: TOK_IDENTIFIER .
+
+    $default  reduce using rule 54 (identifier_list)
+
+
+State 127
+
+   46 type: "RECORD" element_declaration_list . "END" "RECORD" name_opt
+   52 element_declaration_list: element_declaration_list . element_declaration
+
+    "END"           shift, and go to state 183
+    TOK_IDENTIFIER  shift, and go to state 126
+
+    element_declaration  go to state 184
+    identifier_list      go to state 129
+
+
+State 128
+
+   51 element_declaration_list: element_declaration .
+
+    $default  reduce using rule 51 (element_declaration_list)
+
+
+State 129
+
+   53 element_declaration: identifier_list . ':' type ';'
+   55 identifier_list: identifier_list . TOK_IDENTIFIER
+
+    TOK_IDENTIFIER  shift, and go to state 185
+    ':'             shift, and go to state 186
+
+
+State 130
+
+   48 type: "TYPE" TOK_IDENTIFIER .
+
+    $default  reduce using rule 48 (type)
+
+
+State 131
+
+   64 enumeration_literal: TOK_CHAR .
+
+    $default  reduce using rule 64 (enumeration_literal)
+
+
+State 132
+
+   63 enumeration_literal: TOK_IDENTIFIER .
+
+    $default  reduce using rule 63 (enumeration_literal)
+
+
+State 133
+
+   43 type: '(' enumeration_literal_list . ')'
+   62 enumeration_literal_list: enumeration_literal_list . ',' enumeration_literal
+
+    ','  shift, and go to state 187
+    ')'  shift, and go to state 188
+
+
+State 134
+
+   61 enumeration_literal_list: enumeration_literal .
+
+    $default  reduce using rule 61 (enumeration_literal_list)
+
+
+State 135
+
+   38 type: name '(' . expr updown expr ')'
+   39     | name '(' . expr ')'
+   40     | name '(' . name '\'' "RANGE" ')'
+   41     | name '(' . name '\'' TOK_IDENTIFIER ')'
+
+    '+'             shift, and go to state 115
+    '-'             shift, and go to state 116
+    "NOT"           shift, and go to state 117
+    TOK_NATURAL     shift, and go to state 118
+    TOK_STRING      shift, and go to state 119
+    TOK_BIT_STRING  shift, and go to state 120
+    TOK_CHAR        shift, and go to state 121
+    TOK_IDENTIFIER  shift, and go to state 20
+    '('             shift, and go to state 122
+
+    name           go to state 189
+    selected_name  go to state 22
+    signal         go to state 124
+    expr           go to state 190
+
+
+State 136
+
+   31 generic: s_list ':' type ':' . '=' expr
+
+    '='  shift, and go to state 191
+
+
+State 137
+
+   27 entity_declaration: "ENTITY" name "IS" "PORT" '(' port_list ')' ';' "END" . name_opt ';'
+
+    TOK_IDENTIFIER  shift, and go to state 20
+
+    $default  reduce using rule 87 (name_opt)
+
+    name           go to state 139
+    selected_name  go to state 22
+    name_opt       go to state 192
+
+
+State 138
+
+   35 port: s_list ':' dir type .
+
+    $default  reduce using rule 35 (port)
+
+
+State 139
+
+   14 selected_name: name . '.' TOK_IDENTIFIER
+   15              | name . '.' "ALL"
+   88 name_opt: name .
+
+    '.'  shift, and go to state 32
+
+    $default  reduce using rule 88 (name_opt)
+
+
+State 140
+
+   67 architecture: "ARCHITECTURE" name "OF" name "IS" architecture_decl_list "BEGIN" architecture_body "END" name_opt . ';'
+
+    ';'  shift, and go to state 193
+
+
+State 141
+
+   80 architecture_item: "WITH" expr . "SELECT" signal '<' '=' with_list ';'
+  150 expr: expr . '&' expr
+  153     | expr . '+' expr
+  154     | expr . '-' expr
+  155     | expr . '*' expr
+  156     | expr . '/' expr
+  157     | expr . "MOD" expr
+  159     | expr . "AND" expr
+  160     | expr . "OR" expr
+  161     | expr . "XOR" expr
+
+    "OR"      shift, and go to state 171
+    "XOR"     shift, and go to state 172
+    "AND"     shift, and go to state 173
+    "MOD"     shift, and go to state 174
+    '+'       shift, and go to state 175
+    '-'       shift, and go to state 176
+    '&'       shift, and go to state 177
+    '*'       shift, and go to state 178
+    '/'       shift, and go to state 179
+    "SELECT"  shift, and go to state 194
+
+
+State 142
+
+  135 signal: name '(' . expr updown expr ')'
+  136       | name '(' . name '\'' "RANGE" ')'
+
+    '+'             shift, and go to state 115
+    '-'             shift, and go to state 116
+    "NOT"           shift, and go to state 117
+    TOK_NATURAL     shift, and go to state 118
+    TOK_STRING      shift, and go to state 119
+    TOK_BIT_STRING  shift, and go to state 120
+    TOK_CHAR        shift, and go to state 121
+    TOK_IDENTIFIER  shift, and go to state 20
+    '('             shift, and go to state 122
+
+    name           go to state 195
+    selected_name  go to state 22
+    signal         go to state 124
+    expr           go to state 196
+
+
+State 143
+
+   81 architecture_item: name ':' . name "PORT" "MAP" '(' map_list ')' ';'
+   82                  | name ':' . name "GENERIC" "MAP" '(' generic_map_list ')' "PORT" "MAP" '(' map_list ')' ';'
+   90 label_opt: name ':' .
+
+    TOK_IDENTIFIER  shift, and go to state 20
+
+    $default  reduce using rule 90 (label_opt)
+
+    name           go to state 197
+    selected_name  go to state 22
+
+
+State 144
+
+   85 architecture_item: label_opt "FOR" . signal "IN" expr "TO" expr "GENERATE" architecture_body "END" "GENERATE" name_opt ';'
+   86                  | label_opt "FOR" . signal "IN" expr "DOWNTO" expr "GENERATE" architecture_body "END" "GENERATE" name_opt ';'
+
+    TOK_IDENTIFIER  shift, and go to state 20
+
+    name           go to state 198
+    selected_name  go to state 22
+    signal         go to state 199
+
+
+State 145
+
+   84 architecture_item: label_opt "IF" . conditional_expr "GENERATE" architecture_body "END" "GENERATE" name_opt ';'
+
+    '+'             shift, and go to state 115
+    '-'             shift, and go to state 116
+    "NOT"           shift, and go to state 200
+    TOK_NATURAL     shift, and go to state 118
+    TOK_STRING      shift, and go to state 119
+    TOK_BIT_STRING  shift, and go to state 120
+    TOK_CHAR        shift, and go to state 121
+    TOK_IDENTIFIER  shift, and go to state 20
+    '('             shift, and go to state 201
+
+    name              go to state 123
+    selected_name     go to state 22
+    signal            go to state 124
+    expr              go to state 202
+    conditional_expr  go to state 203
+    comparison        go to state 204
+
+
+State 146
+
+   83 architecture_item: label_opt "PROCESS" . '(' signal_list ')' process_decl_list "BEGIN" process_body "END" "PROCESS" name_opt ';'
+
+    '('  shift, and go to state 205
+
+
+State 147
+
+   79 architecture_item: signal '<' . '=' sigvalue
+
+    '='  shift, and go to state 206
+
+
+State 148
+
+   74 architecture_decl: "COMPONENT" name "GENERIC" '(' . generic_list ')' ';' "PORT" '(' port_list ')' ';' "END" "COMPONENT" ';'
+
+    TOK_IDENTIFIER  shift, and go to state 20
+
+    name           go to state 53
+    selected_name  go to state 22
+    generic_list   go to state 207
+    generic        go to state 55
+    s_list         go to state 56
+
+
+State 149
+
+   73 architecture_decl: "COMPONENT" name "PORT" '(' . port_list ')' ';' "END" "COMPONENT" ';'
+
+    TOK_IDENTIFIER  shift, and go to state 20
+
+    name           go to state 53
+    selected_name  go to state 22
+    port_list      go to state 208
+    port           go to state 58
+    s_list         go to state 59
+
+
+State 150
+
+   71 architecture_decl: "CONSTANT" name ':' type . ':' '=' expr ';'
+
+    ':'  shift, and go to state 209
+
+
+State 151
+
+   70 architecture_decl: "SIGNAL" s_list ':' type . ';'
+
+    ';'  shift, and go to state 210
+
+
+State 152
+
+   72 architecture_decl: "TYPE" name "IS" '(' . s_list ')' ';'
+
+    TOK_IDENTIFIER  shift, and go to state 20
+
+    name           go to state 53
+    selected_name  go to state 22
+    s_list         go to state 211
+
+
+State 153
+
+   28 entity_declaration: "ENTITY" name "IS" "GENERIC" '(' generic_list ')' ';' "PORT" '(' . port_list ')' ';' "END" name_opt ';'
+
+    TOK_IDENTIFIER  shift, and go to state 20
+
+    name           go to state 53
+    selected_name  go to state 22
+    port_list      go to state 212
+    port           go to state 58
+    s_list         go to state 59
+
+
+State 154
+
+   14 selected_name: name . '.' TOK_IDENTIFIER
+   15              | name . '.' "ALL"
+   58 index_constraint: name .
+   59                 | name . '(' name '\'' "RANGE" ')'
+  134 signal: name .
+  135       | name . '(' expr updown expr ')'
+  136       | name . '(' name '\'' "RANGE" ')'
+  162 expr: name . '(' expr_list ')'
+
+    '.'  shift, and go to state 32
+    '('  shift, and go to state 213
+
+    ','       reduce using rule 58 (index_constraint)
+    ')'       reduce using rule 58 (index_constraint)
+    $default  reduce using rule 134 (signal)
+
+
+State 155
+
+   45 type: "ARRAY" '(' index_constraint_list . ')' "OF" type
+   57 index_constraint_list: index_constraint_list . ',' index_constraint
+
+    ','  shift, and go to state 214
+    ')'  shift, and go to state 215
+
+
+State 156
+
+   56 index_constraint_list: index_constraint .
+
+    $default  reduce using rule 56 (index_constraint_list)
+
+
+State 157
+
+   60 index_constraint: expr . updown expr
+  150 expr: expr . '&' expr
+  153     | expr . '+' expr
+  154     | expr . '-' expr
+  155     | expr . '*' expr
+  156     | expr . '/' expr
+  157     | expr . "MOD" expr
+  159     | expr . "AND" expr
+  160     | expr . "OR" expr
+  161     | expr . "XOR" expr
+
+    "OR"      shift, and go to state 171
+    "XOR"     shift, and go to state 172
+    "AND"     shift, and go to state 173
+    "MOD"     shift, and go to state 174
+    '+'       shift, and go to state 175
+    '-'       shift, and go to state 176
+    '&'       shift, and go to state 177
+    '*'       shift, and go to state 178
+    '/'       shift, and go to state 179
+    "DOWNTO"  shift, and go to state 180
+    "TO"      shift, and go to state 181
+
+    updown  go to state 216
+
+
+State 158
+
+   49 type: "FILE" "OF" type .
+
+    $default  reduce using rule 49 (type)
+
+
+State 159
+
+   50 type: "PROTECTED" "END" "PROTECTED" .
+
+    $default  reduce using rule 50 (type)
+
+
+State 160
+
+  150 expr: expr . '&' expr
+  152     | '+' expr .
+  153     | expr . '+' expr
+  154     | expr . '-' expr
+  155     | expr . '*' expr
+  156     | expr . '/' expr
+  157     | expr . "MOD" expr
+  159     | expr . "AND" expr
+  160     | expr . "OR" expr
+  161     | expr . "XOR" expr
+
+    $default  reduce using rule 152 (expr)
+
+
+State 161
+
+  150 expr: expr . '&' expr
+  151     | '-' expr .
+  153     | expr . '+' expr
+  154     | expr . '-' expr
+  155     | expr . '*' expr
+  156     | expr . '/' expr
+  157     | expr . "MOD" expr
+  159     | expr . "AND" expr
+  160     | expr . "OR" expr
+  161     | expr . "XOR" expr
+
+    $default  reduce using rule 151 (expr)
+
+
+State 162
+
+  150 expr: expr . '&' expr
+  153     | expr . '+' expr
+  154     | expr . '-' expr
+  155     | expr . '*' expr
+  156     | expr . '/' expr
+  157     | expr . "MOD" expr
+  158     | "NOT" expr .
+  159     | expr . "AND" expr
+  160     | expr . "OR" expr
+  161     | expr . "XOR" expr
+
+    $default  reduce using rule 158 (expr)
+
+
+State 163
+
+  148 expr: TOK_NATURAL TOK_BASED_INTEGER .
+
+    $default  reduce using rule 148 (expr)
+
+
+State 164
+
+  137 choice: "OTHERS" .
+
+    $default  reduce using rule 137 (choice)
+
+
+State 165
+
+  138 choices: choice .
+
+    $default  reduce using rule 138 (choices)
+
+
+State 166
+
+  139 choices: choices . '|' choice
+  140 element_association: choices . '=' '>' expr
+
+    '='  shift, and go to state 217
+    '|'  shift, and go to state 218
+
+
+State 167
+
+  141 element_association_list: element_association .
+
+    $default  reduce using rule 141 (element_association_list)
+
+
+State 168
+
+  142 element_association_list: element_association_list . ',' element_association
+  149 expr: '(' element_association_list . ')'
+
+    ','  shift, and go to state 219
+    ')'  shift, and go to state 220
+
+
+State 169
+
+  150 expr: expr . '&' expr
+  153     | expr . '+' expr
+  154     | expr . '-' expr
+  155     | expr . '*' expr
+  156     | expr . '/' expr
+  157     | expr . "MOD" expr
+  159     | expr . "AND" expr
+  160     | expr . "OR" expr
+  161     | expr . "XOR" expr
+  163     | '(' expr . ')'
+
+    "OR"   shift, and go to state 171
+    "XOR"  shift, and go to state 172
+    "AND"  shift, and go to state 173
+    "MOD"  shift, and go to state 174
+    '+'    shift, and go to state 175
+    '-'    shift, and go to state 176
+    '&'    shift, and go to state 177
+    '*'    shift, and go to state 178
+    '/'    shift, and go to state 179
+    ')'    shift, and go to state 221
+
+
+State 170
+
+  135 signal: name '(' . expr updown expr ')'
+  136       | name '(' . name '\'' "RANGE" ')'
+  162 expr: name '(' . expr_list ')'
+
+    '+'             shift, and go to state 115
+    '-'             shift, and go to state 116
+    "NOT"           shift, and go to state 117
+    TOK_NATURAL     shift, and go to state 118
+    TOK_STRING      shift, and go to state 119
+    TOK_BIT_STRING  shift, and go to state 120
+    TOK_CHAR        shift, and go to state 121
+    TOK_IDENTIFIER  shift, and go to state 20
+    '('             shift, and go to state 122
+
+    name           go to state 195
+    selected_name  go to state 22
+    signal         go to state 124
+    expr           go to state 222
+    expr_list      go to state 223
+
+
+State 171
+
+  160 expr: expr "OR" . expr
+
+    '+'             shift, and go to state 115
+    '-'             shift, and go to state 116
+    "NOT"           shift, and go to state 117
+    TOK_NATURAL     shift, and go to state 118
+    TOK_STRING      shift, and go to state 119
+    TOK_BIT_STRING  shift, and go to state 120
+    TOK_CHAR        shift, and go to state 121
+    TOK_IDENTIFIER  shift, and go to state 20
+    '('             shift, and go to state 122
+
+    name           go to state 123
+    selected_name  go to state 22
+    signal         go to state 124
+    expr           go to state 224
+
+
+State 172
+
+  161 expr: expr "XOR" . expr
+
+    '+'             shift, and go to state 115
+    '-'             shift, and go to state 116
+    "NOT"           shift, and go to state 117
+    TOK_NATURAL     shift, and go to state 118
+    TOK_STRING      shift, and go to state 119
+    TOK_BIT_STRING  shift, and go to state 120
+    TOK_CHAR        shift, and go to state 121
+    TOK_IDENTIFIER  shift, and go to state 20
+    '('             shift, and go to state 122
+
+    name           go to state 123
+    selected_name  go to state 22
+    signal         go to state 124
+    expr           go to state 225
+
+
+State 173
+
+  159 expr: expr "AND" . expr
+
+    '+'             shift, and go to state 115
+    '-'             shift, and go to state 116
+    "NOT"           shift, and go to state 117
+    TOK_NATURAL     shift, and go to state 118
+    TOK_STRING      shift, and go to state 119
+    TOK_BIT_STRING  shift, and go to state 120
+    TOK_CHAR        shift, and go to state 121
+    TOK_IDENTIFIER  shift, and go to state 20
+    '('             shift, and go to state 122
+
+    name           go to state 123
+    selected_name  go to state 22
+    signal         go to state 124
+    expr           go to state 226
+
+
+State 174
+
+  157 expr: expr "MOD" . expr
+
+    '+'             shift, and go to state 115
+    '-'             shift, and go to state 116
+    "NOT"           shift, and go to state 117
+    TOK_NATURAL     shift, and go to state 118
+    TOK_STRING      shift, and go to state 119
+    TOK_BIT_STRING  shift, and go to state 120
+    TOK_CHAR        shift, and go to state 121
+    TOK_IDENTIFIER  shift, and go to state 20
+    '('             shift, and go to state 122
+
+    name           go to state 123
+    selected_name  go to state 22
+    signal         go to state 124
+    expr           go to state 227
+
+
+State 175
+
+  153 expr: expr '+' . expr
+
+    '+'             shift, and go to state 115
+    '-'             shift, and go to state 116
+    "NOT"           shift, and go to state 117
+    TOK_NATURAL     shift, and go to state 118
+    TOK_STRING      shift, and go to state 119
+    TOK_BIT_STRING  shift, and go to state 120
+    TOK_CHAR        shift, and go to state 121
+    TOK_IDENTIFIER  shift, and go to state 20
+    '('             shift, and go to state 122
+
+    name           go to state 123
+    selected_name  go to state 22
+    signal         go to state 124
+    expr           go to state 228
+
+
+State 176
+
+  154 expr: expr '-' . expr
+
+    '+'             shift, and go to state 115
+    '-'             shift, and go to state 116
+    "NOT"           shift, and go to state 117
+    TOK_NATURAL     shift, and go to state 118
+    TOK_STRING      shift, and go to state 119
+    TOK_BIT_STRING  shift, and go to state 120
+    TOK_CHAR        shift, and go to state 121
+    TOK_IDENTIFIER  shift, and go to state 20
+    '('             shift, and go to state 122
+
+    name           go to state 123
+    selected_name  go to state 22
+    signal         go to state 124
+    expr           go to state 229
+
+
+State 177
+
+  150 expr: expr '&' . expr
+
+    '+'             shift, and go to state 115
+    '-'             shift, and go to state 116
+    "NOT"           shift, and go to state 117
+    TOK_NATURAL     shift, and go to state 118
+    TOK_STRING      shift, and go to state 119
+    TOK_BIT_STRING  shift, and go to state 120
+    TOK_CHAR        shift, and go to state 121
+    TOK_IDENTIFIER  shift, and go to state 20
+    '('             shift, and go to state 122
+
+    name           go to state 123
+    selected_name  go to state 22
+    signal         go to state 124
+    expr           go to state 230
+
+
+State 178
+
+  155 expr: expr '*' . expr
+
+    '+'             shift, and go to state 115
+    '-'             shift, and go to state 116
+    "NOT"           shift, and go to state 117
+    TOK_NATURAL     shift, and go to state 118
+    TOK_STRING      shift, and go to state 119
+    TOK_BIT_STRING  shift, and go to state 120
+    TOK_CHAR        shift, and go to state 121
+    TOK_IDENTIFIER  shift, and go to state 20
+    '('             shift, and go to state 122
+
+    name           go to state 123
+    selected_name  go to state 22
+    signal         go to state 124
+    expr           go to state 231
+
+
+State 179
+
+  156 expr: expr '/' . expr
+
+    '+'             shift, and go to state 115
+    '-'             shift, and go to state 116
+    "NOT"           shift, and go to state 117
+    TOK_NATURAL     shift, and go to state 118
+    TOK_STRING      shift, and go to state 119
+    TOK_BIT_STRING  shift, and go to state 120
+    TOK_CHAR        shift, and go to state 121
+    TOK_IDENTIFIER  shift, and go to state 20
+    '('             shift, and go to state 122
+
+    name           go to state 123
+    selected_name  go to state 22
+    signal         go to state 124
+    expr           go to state 232
+
+
+State 180
+
+   65 updown: "DOWNTO" .
+
+    $default  reduce using rule 65 (updown)
+
+
+State 181
+
+   66 updown: "TO" .
+
+    $default  reduce using rule 66 (updown)
+
+
+State 182
+
+   44 type: "RANGE" expr updown . expr
+
+    '+'             shift, and go to state 115
+    '-'             shift, and go to state 116
+    "NOT"           shift, and go to state 117
+    TOK_NATURAL     shift, and go to state 118
+    TOK_STRING      shift, and go to state 119
+    TOK_BIT_STRING  shift, and go to state 120
+    TOK_CHAR        shift, and go to state 121
+    TOK_IDENTIFIER  shift, and go to state 20
+    '('             shift, and go to state 122
+
+    name           go to state 123
+    selected_name  go to state 22
+    signal         go to state 124
+    expr           go to state 233
+
+
+State 183
+
+   46 type: "RECORD" element_declaration_list "END" . "RECORD" name_opt
+
+    "RECORD"  shift, and go to state 234
+
+
+State 184
+
+   52 element_declaration_list: element_declaration_list element_declaration .
+
+    $default  reduce using rule 52 (element_declaration_list)
+
+
+State 185
+
+   55 identifier_list: identifier_list TOK_IDENTIFIER .
+
+    $default  reduce using rule 55 (identifier_list)
+
+
+State 186
+
+   53 element_declaration: identifier_list ':' . type ';'
+
+    "ACCESS"        shift, and go to state 84
+    "ARRAY"         shift, and go to state 85
+    "FILE"          shift, and go to state 86
+    "PROTECTED"     shift, and go to state 87
+    "RANGE"         shift, and go to state 88
+    "RECORD"        shift, and go to state 89
+    "TYPE"          shift, and go to state 90
+    TOK_IDENTIFIER  shift, and go to state 20
+    '('             shift, and go to state 91
+
+    name           go to state 92
+    selected_name  go to state 22
+    type           go to state 235
+
+
+State 187
+
+   62 enumeration_literal_list: enumeration_literal_list ',' . enumeration_literal
+
+    TOK_CHAR        shift, and go to state 131
+    TOK_IDENTIFIER  shift, and go to state 132
+
+    enumeration_literal  go to state 236
+
+
+State 188
+
+   43 type: '(' enumeration_literal_list ')' .
+
+    $default  reduce using rule 43 (type)
+
+
+State 189
+
+   14 selected_name: name . '.' TOK_IDENTIFIER
+   15              | name . '.' "ALL"
+   40 type: name '(' name . '\'' "RANGE" ')'
+   41     | name '(' name . '\'' TOK_IDENTIFIER ')'
+  134 signal: name .
+  135       | name . '(' expr updown expr ')'
+  136       | name . '(' name '\'' "RANGE" ')'
+  162 expr: name . '(' expr_list ')'
+
+    '.'   shift, and go to state 32
+    '('   shift, and go to state 170
+    '\''  shift, and go to state 237
+
+    $default  reduce using rule 134 (signal)
+
+
+State 190
+
+   38 type: name '(' expr . updown expr ')'
+   39     | name '(' expr . ')'
+  150 expr: expr . '&' expr
+  153     | expr . '+' expr
+  154     | expr . '-' expr
+  155     | expr . '*' expr
+  156     | expr . '/' expr
+  157     | expr . "MOD" expr
+  159     | expr . "AND" expr
+  160     | expr . "OR" expr
+  161     | expr . "XOR" expr
+
+    "OR"      shift, and go to state 171
+    "XOR"     shift, and go to state 172
+    "AND"     shift, and go to state 173
+    "MOD"     shift, and go to state 174
+    '+'       shift, and go to state 175
+    '-'       shift, and go to state 176
+    '&'       shift, and go to state 177
+    '*'       shift, and go to state 178
+    '/'       shift, and go to state 179
+    "DOWNTO"  shift, and go to state 180
+    "TO"      shift, and go to state 181
+    ')'       shift, and go to state 238
+
+    updown  go to state 239
+
+
+State 191
+
+   31 generic: s_list ':' type ':' '=' . expr
+
+    '+'             shift, and go to state 115
+    '-'             shift, and go to state 116
+    "NOT"           shift, and go to state 117
+    TOK_NATURAL     shift, and go to state 118
+    TOK_STRING      shift, and go to state 119
+    TOK_BIT_STRING  shift, and go to state 120
+    TOK_CHAR        shift, and go to state 121
+    TOK_IDENTIFIER  shift, and go to state 20
+    '('             shift, and go to state 122
+
+    name           go to state 123
+    selected_name  go to state 22
+    signal         go to state 124
+    expr           go to state 240
+
+
+State 192
+
+   27 entity_declaration: "ENTITY" name "IS" "PORT" '(' port_list ')' ';' "END" name_opt . ';'
+
+    ';'  shift, and go to state 241
+
+
+State 193
+
+   67 architecture: "ARCHITECTURE" name "OF" name "IS" architecture_decl_list "BEGIN" architecture_body "END" name_opt ';' .
+
+    $default  reduce using rule 67 (architecture)
+
+
+State 194
+
+   80 architecture_item: "WITH" expr "SELECT" . signal '<' '=' with_list ';'
+
+    TOK_IDENTIFIER  shift, and go to state 20
+
+    name           go to state 198
+    selected_name  go to state 22
+    signal         go to state 242
+
+
+State 195
+
+   14 selected_name: name . '.' TOK_IDENTIFIER
+   15              | name . '.' "ALL"
+  134 signal: name .
+  135       | name . '(' expr updown expr ')'
+  136       | name . '(' name '\'' "RANGE" ')'
+  136       | name '(' name . '\'' "RANGE" ')'
+  162 expr: name . '(' expr_list ')'
+
+    '.'   shift, and go to state 32
+    '('   shift, and go to state 170
+    '\''  shift, and go to state 243
+
+    $default  reduce using rule 134 (signal)
+
+
+State 196
+
+  135 signal: name '(' expr . updown expr ')'
+  150 expr: expr . '&' expr
+  153     | expr . '+' expr
+  154     | expr . '-' expr
+  155     | expr . '*' expr
+  156     | expr . '/' expr
+  157     | expr . "MOD" expr
+  159     | expr . "AND" expr
+  160     | expr . "OR" expr
+  161     | expr . "XOR" expr
+
+    "OR"      shift, and go to state 171
+    "XOR"     shift, and go to state 172
+    "AND"     shift, and go to state 173
+    "MOD"     shift, and go to state 174
+    '+'       shift, and go to state 175
+    '-'       shift, and go to state 176
+    '&'       shift, and go to state 177
+    '*'       shift, and go to state 178
+    '/'       shift, and go to state 179
+    "DOWNTO"  shift, and go to state 180
+    "TO"      shift, and go to state 181
+
+    updown  go to state 244
+
+
+State 197
+
+   14 selected_name: name . '.' TOK_IDENTIFIER
+   15              | name . '.' "ALL"
+   81 architecture_item: name ':' name . "PORT" "MAP" '(' map_list ')' ';'
+   82                  | name ':' name . "GENERIC" "MAP" '(' generic_map_list ')' "PORT" "MAP" '(' map_list ')' ';'
+
+    "GENERIC"  shift, and go to state 245
+    "PORT"     shift, and go to state 246
+    '.'        shift, and go to state 32
+
+
+State 198
+
+   14 selected_name: name . '.' TOK_IDENTIFIER
+   15              | name . '.' "ALL"
+  134 signal: name .
+  135       | name . '(' expr updown expr ')'
+  136       | name . '(' name '\'' "RANGE" ')'
+
+    '.'  shift, and go to state 32
+    '('  shift, and go to state 142
+
+    $default  reduce using rule 134 (signal)
+
+
+State 199
+
+   85 architecture_item: label_opt "FOR" signal . "IN" expr "TO" expr "GENERATE" architecture_body "END" "GENERATE" name_opt ';'
+   86                  | label_opt "FOR" signal . "IN" expr "DOWNTO" expr "GENERATE" architecture_body "END" "GENERATE" name_opt ';'
+
+    "IN"  shift, and go to state 247
+
+
+State 200
+
+  158 expr: "NOT" . expr
+  170 conditional_expr: "NOT" . conditional_expr
+
+    '+'             shift, and go to state 115
+    '-'             shift, and go to state 116
+    "NOT"           shift, and go to state 200
+    TOK_NATURAL     shift, and go to state 118
+    TOK_STRING      shift, and go to state 119
+    TOK_BIT_STRING  shift, and go to state 120
+    TOK_CHAR        shift, and go to state 121
+    TOK_IDENTIFIER  shift, and go to state 20
+    '('             shift, and go to state 201
+
+    name              go to state 123
+    selected_name     go to state 22
+    signal            go to state 124
+    expr              go to state 248
+    conditional_expr  go to state 249
+    comparison        go to state 204
+
+
+State 201
+
+  149 expr: '(' . element_association_list ')'
+  163     | '(' . expr ')'
+  167 conditional_expr: '(' . conditional_expr ')'
+
+    '+'             shift, and go to state 115
+    '-'             shift, and go to state 116
+    "NOT"           shift, and go to state 200
+    "OTHERS"        shift, and go to state 164
+    TOK_NATURAL     shift, and go to state 118
+    TOK_STRING      shift, and go to state 119
+    TOK_BIT_STRING  shift, and go to state 120
+    TOK_CHAR        shift, and go to state 121
+    TOK_IDENTIFIER  shift, and go to state 20
+    '('             shift, and go to state 201
+
+    name                      go to state 123
+    selected_name             go to state 22
+    signal                    go to state 124
+    choice                    go to state 165
+    choices                   go to state 166
+    element_association       go to state 167
+    element_association_list  go to state 168
+    expr                      go to state 250
+    conditional_expr          go to state 251
+    comparison                go to state 204
+
+
+State 202
+
+  150 expr: expr . '&' expr
+  153     | expr . '+' expr
+  154     | expr . '-' expr
+  155     | expr . '*' expr
+  156     | expr . '/' expr
+  157     | expr . "MOD" expr
+  159     | expr . "AND" expr
+  160     | expr . "OR" expr
+  161     | expr . "XOR" expr
+  171 comparison: expr . '=' expr
+  172           | expr . '>' expr
+  173           | expr . '>' '=' expr
+  174           | expr . '<' expr
+  175           | expr . '<' '=' expr
+  176           | expr . '/' '=' expr
+
+    '='    shift, and go to state 252
+    "OR"   shift, and go to state 171
+    "XOR"  shift, and go to state 172
+    "AND"  shift, and go to state 173
+    "MOD"  shift, and go to state 174
+    '<'    shift, and go to state 253
+    '>'    shift, and go to state 254
+    '+'    shift, and go to state 175
+    '-'    shift, and go to state 176
+    '&'    shift, and go to state 177
+    '*'    shift, and go to state 178
+    '/'    shift, and go to state 255
+
+
+State 203
+
+   84 architecture_item: label_opt "IF" conditional_expr . "GENERATE" architecture_body "END" "GENERATE" name_opt ';'
+  168 conditional_expr: conditional_expr . "AND" conditional_expr
+  169                 | conditional_expr . "OR" conditional_expr
+
+    "OR"        shift, and go to state 256
+    "AND"       shift, and go to state 257
+    "GENERATE"  shift, and go to state 258
+
+
+State 204
+
+  166 conditional_expr: comparison .
+
+    $default  reduce using rule 166 (conditional_expr)
+
+
+State 205
+
+   83 architecture_item: label_opt "PROCESS" '(' . signal_list ')' process_decl_list "BEGIN" process_body "END" "PROCESS" name_opt ';'
+
+    TOK_IDENTIFIER  shift, and go to state 20
+
+    name           go to state 198
+    selected_name  go to state 22
+    signal_list    go to state 259
+    signal         go to state 260
+
+
+State 206
+
+   79 architecture_item: signal '<' '=' . sigvalue
+
+    '+'             shift, and go to state 115
+    '-'             shift, and go to state 116
+    "NOT"           shift, and go to state 117
+    TOK_NATURAL     shift, and go to state 118
+    TOK_STRING      shift, and go to state 119
+    TOK_BIT_STRING  shift, and go to state 120
+    TOK_CHAR        shift, and go to state 121
+    TOK_IDENTIFIER  shift, and go to state 20
+    '('             shift, and go to state 122
+
+    name           go to state 123
+    selected_name  go to state 22
+    sigvalue       go to state 261
+    signal         go to state 124
+    expr           go to state 262
+
+
+State 207
+
+   30 generic_list: generic_list . ';' generic
+   74 architecture_decl: "COMPONENT" name "GENERIC" '(' generic_list . ')' ';' "PORT" '(' port_list ')' ';' "END" "COMPONENT" ';'
+
+    ';'  shift, and go to state 68
+    ')'  shift, and go to state 263
+
+
+State 208
+
+   34 port_list: port_list . ';' port
+   73 architecture_decl: "COMPONENT" name "PORT" '(' port_list . ')' ';' "END" "COMPONENT" ';'
+
+    ';'  shift, and go to state 72
+    ')'  shift, and go to state 264
+
+
+State 209
+
+   71 architecture_decl: "CONSTANT" name ':' type ':' . '=' expr ';'
+
+    '='  shift, and go to state 265
+
+
+State 210
+
+   70 architecture_decl: "SIGNAL" s_list ':' type ';' .
+
+    $default  reduce using rule 70 (architecture_decl)
+
+
+State 211
+
+   72 architecture_decl: "TYPE" name "IS" '(' s_list . ')' ';'
+   76 s_list: s_list . ',' name
+
+    ','  shift, and go to state 70
+    ')'  shift, and go to state 266
+
+
+State 212
+
+   28 entity_declaration: "ENTITY" name "IS" "GENERIC" '(' generic_list ')' ';' "PORT" '(' port_list . ')' ';' "END" name_opt ';'
+   34 port_list: port_list . ';' port
+
+    ';'  shift, and go to state 72
+    ')'  shift, and go to state 267
+
+
+State 213
+
+   59 index_constraint: name '(' . name '\'' "RANGE" ')'
+  135 signal: name '(' . expr updown expr ')'
+  136       | name '(' . name '\'' "RANGE" ')'
+  162 expr: name '(' . expr_list ')'
+
+    '+'             shift, and go to state 115
+    '-'             shift, and go to state 116
+    "NOT"           shift, and go to state 117
+    TOK_NATURAL     shift, and go to state 118
+    TOK_STRING      shift, and go to state 119
+    TOK_BIT_STRING  shift, and go to state 120
+    TOK_CHAR        shift, and go to state 121
+    TOK_IDENTIFIER  shift, and go to state 20
+    '('             shift, and go to state 122
+
+    name           go to state 268
+    selected_name  go to state 22
+    signal         go to state 124
+    expr           go to state 222
+    expr_list      go to state 223
+
+
+State 214
+
+   57 index_constraint_list: index_constraint_list ',' . index_constraint
+
+    '+'             shift, and go to state 115
+    '-'             shift, and go to state 116
+    "NOT"           shift, and go to state 117
+    TOK_NATURAL     shift, and go to state 118
+    TOK_STRING      shift, and go to state 119
+    TOK_BIT_STRING  shift, and go to state 120
+    TOK_CHAR        shift, and go to state 121
+    TOK_IDENTIFIER  shift, and go to state 20
+    '('             shift, and go to state 122
+
+    name              go to state 154
+    selected_name     go to state 22
+    index_constraint  go to state 269
+    signal            go to state 124
+    expr              go to state 157
+
+
+State 215
+
+   45 type: "ARRAY" '(' index_constraint_list ')' . "OF" type
+
+    "OF"  shift, and go to state 270
+
+
+State 216
+
+   60 index_constraint: expr updown . expr
+
+    '+'             shift, and go to state 115
+    '-'             shift, and go to state 116
+    "NOT"           shift, and go to state 117
+    TOK_NATURAL     shift, and go to state 118
+    TOK_STRING      shift, and go to state 119
+    TOK_BIT_STRING  shift, and go to state 120
+    TOK_CHAR        shift, and go to state 121
+    TOK_IDENTIFIER  shift, and go to state 20
+    '('             shift, and go to state 122
+
+    name           go to state 123
+    selected_name  go to state 22
+    signal         go to state 124
+    expr           go to state 271
+
+
+State 217
+
+  140 element_association: choices '=' . '>' expr
+
+    '>'  shift, and go to state 272
+
+
+State 218
+
+  139 choices: choices '|' . choice
+
+    "OTHERS"  shift, and go to state 164
+
+    choice  go to state 273
+
+
+State 219
+
+  142 element_association_list: element_association_list ',' . element_association
+
+    "OTHERS"  shift, and go to state 164
+
+    choice               go to state 165
+    choices              go to state 166
+    element_association  go to state 274
+
+
+State 220
+
+  149 expr: '(' element_association_list ')' .
+
+    $default  reduce using rule 149 (expr)
+
+
+State 221
+
+  163 expr: '(' expr ')' .
+
+    $default  reduce using rule 163 (expr)
+
+
+State 222
+
+  135 signal: name '(' expr . updown expr ')'
+  150 expr: expr . '&' expr
+  153     | expr . '+' expr
+  154     | expr . '-' expr
+  155     | expr . '*' expr
+  156     | expr . '/' expr
+  157     | expr . "MOD" expr
+  159     | expr . "AND" expr
+  160     | expr . "OR" expr
+  161     | expr . "XOR" expr
+  164 expr_list: expr .
+
+    "OR"      shift, and go to state 171
+    "XOR"     shift, and go to state 172
+    "AND"     shift, and go to state 173
+    "MOD"     shift, and go to state 174
+    '+'       shift, and go to state 175
+    '-'       shift, and go to state 176
+    '&'       shift, and go to state 177
+    '*'       shift, and go to state 178
+    '/'       shift, and go to state 179
+    "DOWNTO"  shift, and go to state 180
+    "TO"      shift, and go to state 181
+
+    $default  reduce using rule 164 (expr_list)
+
+    updown  go to state 244
+
+
+State 223
+
+  162 expr: name '(' expr_list . ')'
+  165 expr_list: expr_list . ',' expr
+
+    ','  shift, and go to state 275
+    ')'  shift, and go to state 276
+
+
+State 224
+
+  150 expr: expr . '&' expr
+  153     | expr . '+' expr
+  154     | expr . '-' expr
+  155     | expr . '*' expr
+  156     | expr . '/' expr
+  157     | expr . "MOD" expr
+  159     | expr . "AND" expr
+  160     | expr . "OR" expr
+  160     | expr "OR" expr .
+  161     | expr . "XOR" expr
+
+    "XOR"  shift, and go to state 172
+    "AND"  shift, and go to state 173
+    "MOD"  shift, and go to state 174
+    '+'    shift, and go to state 175
+    '-'    shift, and go to state 176
+    '&'    shift, and go to state 177
+    '*'    shift, and go to state 178
+    '/'    shift, and go to state 179
+
+    $default  reduce using rule 160 (expr)
+
+
+State 225
+
+  150 expr: expr . '&' expr
+  153     | expr . '+' expr
+  154     | expr . '-' expr
+  155     | expr . '*' expr
+  156     | expr . '/' expr
+  157     | expr . "MOD" expr
+  159     | expr . "AND" expr
+  160     | expr . "OR" expr
+  161     | expr . "XOR" expr
+  161     | expr "XOR" expr .
+
+    "AND"  shift, and go to state 173
+    "MOD"  shift, and go to state 174
+    '+'    shift, and go to state 175
+    '-'    shift, and go to state 176
+    '&'    shift, and go to state 177
+    '*'    shift, and go to state 178
+    '/'    shift, and go to state 179
+
+    $default  reduce using rule 161 (expr)
+
+
+State 226
+
+  150 expr: expr . '&' expr
+  153     | expr . '+' expr
+  154     | expr . '-' expr
+  155     | expr . '*' expr
+  156     | expr . '/' expr
+  157     | expr . "MOD" expr
+  159     | expr . "AND" expr
+  159     | expr "AND" expr .
+  160     | expr . "OR" expr
+  161     | expr . "XOR" expr
+
+    "MOD"  shift, and go to state 174
+    '+'    shift, and go to state 175
+    '-'    shift, and go to state 176
+    '&'    shift, and go to state 177
+    '*'    shift, and go to state 178
+    '/'    shift, and go to state 179
+
+    $default  reduce using rule 159 (expr)
+
+
+State 227
+
+  150 expr: expr . '&' expr
+  153     | expr . '+' expr
+  154     | expr . '-' expr
+  155     | expr . '*' expr
+  156     | expr . '/' expr
+  157     | expr . "MOD" expr
+  157     | expr "MOD" expr .
+  159     | expr . "AND" expr
+  160     | expr . "OR" expr
+  161     | expr . "XOR" expr
+
+    '+'  shift, and go to state 175
+    '-'  shift, and go to state 176
+    '&'  shift, and go to state 177
+    '*'  shift, and go to state 178
+    '/'  shift, and go to state 179
+
+    $default  reduce using rule 157 (expr)
+
+
+State 228
+
+  150 expr: expr . '&' expr
+  153     | expr . '+' expr
+  153     | expr '+' expr .
+  154     | expr . '-' expr
+  155     | expr . '*' expr
+  156     | expr . '/' expr
+  157     | expr . "MOD" expr
+  159     | expr . "AND" expr
+  160     | expr . "OR" expr
+  161     | expr . "XOR" expr
+
+    '*'  shift, and go to state 178
+    '/'  shift, and go to state 179
+
+    $default  reduce using rule 153 (expr)
+
+
+State 229
+
+  150 expr: expr . '&' expr
+  153     | expr . '+' expr
+  154     | expr . '-' expr
+  154     | expr '-' expr .
+  155     | expr . '*' expr
+  156     | expr . '/' expr
+  157     | expr . "MOD" expr
+  159     | expr . "AND" expr
+  160     | expr . "OR" expr
+  161     | expr . "XOR" expr
+
+    '*'  shift, and go to state 178
+    '/'  shift, and go to state 179
+
+    $default  reduce using rule 154 (expr)
+
+
+State 230
+
+  150 expr: expr . '&' expr
+  150     | expr '&' expr .
+  153     | expr . '+' expr
+  154     | expr . '-' expr
+  155     | expr . '*' expr
+  156     | expr . '/' expr
+  157     | expr . "MOD" expr
+  159     | expr . "AND" expr
+  160     | expr . "OR" expr
+  161     | expr . "XOR" expr
+
+    '*'  shift, and go to state 178
+    '/'  shift, and go to state 179
+
+    $default  reduce using rule 150 (expr)
+
+
+State 231
+
+  150 expr: expr . '&' expr
+  153     | expr . '+' expr
+  154     | expr . '-' expr
+  155     | expr . '*' expr
+  155     | expr '*' expr .
+  156     | expr . '/' expr
+  157     | expr . "MOD" expr
+  159     | expr . "AND" expr
+  160     | expr . "OR" expr
+  161     | expr . "XOR" expr
+
+    $default  reduce using rule 155 (expr)
+
+
+State 232
+
+  150 expr: expr . '&' expr
+  153     | expr . '+' expr
+  154     | expr . '-' expr
+  155     | expr . '*' expr
+  156     | expr . '/' expr
+  156     | expr '/' expr .
+  157     | expr . "MOD" expr
+  159     | expr . "AND" expr
+  160     | expr . "OR" expr
+  161     | expr . "XOR" expr
+
+    $default  reduce using rule 156 (expr)
+
+
+State 233
+
+   44 type: "RANGE" expr updown expr .
+  150 expr: expr . '&' expr
+  153     | expr . '+' expr
+  154     | expr . '-' expr
+  155     | expr . '*' expr
+  156     | expr . '/' expr
+  157     | expr . "MOD" expr
+  159     | expr . "AND" expr
+  160     | expr . "OR" expr
+  161     | expr . "XOR" expr
+
+    "OR"   shift, and go to state 171
+    "XOR"  shift, and go to state 172
+    "AND"  shift, and go to state 173
+    "MOD"  shift, and go to state 174
+    '+'    shift, and go to state 175
+    '-'    shift, and go to state 176
+    '&'    shift, and go to state 177
+    '*'    shift, and go to state 178
+    '/'    shift, and go to state 179
+
+    $default  reduce using rule 44 (type)
+
+
+State 234
+
+   46 type: "RECORD" element_declaration_list "END" "RECORD" . name_opt
+
+    TOK_IDENTIFIER  shift, and go to state 20
+
+    $default  reduce using rule 87 (name_opt)
+
+    name           go to state 139
+    selected_name  go to state 22
+    name_opt       go to state 277
+
+
+State 235
+
+   53 element_declaration: identifier_list ':' type . ';'
+
+    ';'  shift, and go to state 278
+
+
+State 236
+
+   62 enumeration_literal_list: enumeration_literal_list ',' enumeration_literal .
+
+    $default  reduce using rule 62 (enumeration_literal_list)
+
+
+State 237
+
+   40 type: name '(' name '\'' . "RANGE" ')'
+   41     | name '(' name '\'' . TOK_IDENTIFIER ')'
+
+    "RANGE"         shift, and go to state 279
+    TOK_IDENTIFIER  shift, and go to state 280
+
+
+State 238
+
+   39 type: name '(' expr ')' .
+
+    $default  reduce using rule 39 (type)
+
+
+State 239
+
+   38 type: name '(' expr updown . expr ')'
+
+    '+'             shift, and go to state 115
+    '-'             shift, and go to state 116
+    "NOT"           shift, and go to state 117
+    TOK_NATURAL     shift, and go to state 118
+    TOK_STRING      shift, and go to state 119
+    TOK_BIT_STRING  shift, and go to state 120
+    TOK_CHAR        shift, and go to state 121
+    TOK_IDENTIFIER  shift, and go to state 20
+    '('             shift, and go to state 122
+
+    name           go to state 123
+    selected_name  go to state 22
+    signal         go to state 124
+    expr           go to state 281
+
+
+State 240
+
+   31 generic: s_list ':' type ':' '=' expr .
+  150 expr: expr . '&' expr
+  153     | expr . '+' expr
+  154     | expr . '-' expr
+  155     | expr . '*' expr
+  156     | expr . '/' expr
+  157     | expr . "MOD" expr
+  159     | expr . "AND" expr
+  160     | expr . "OR" expr
+  161     | expr . "XOR" expr
+
+    "OR"   shift, and go to state 171
+    "XOR"  shift, and go to state 172
+    "AND"  shift, and go to state 173
+    "MOD"  shift, and go to state 174
+    '+'    shift, and go to state 175
+    '-'    shift, and go to state 176
+    '&'    shift, and go to state 177
+    '*'    shift, and go to state 178
+    '/'    shift, and go to state 179
+
+    $default  reduce using rule 31 (generic)
+
+
+State 241
+
+   27 entity_declaration: "ENTITY" name "IS" "PORT" '(' port_list ')' ';' "END" name_opt ';' .
+
+    $default  reduce using rule 27 (entity_declaration)
+
+
+State 242
+
+   80 architecture_item: "WITH" expr "SELECT" signal . '<' '=' with_list ';'
+
+    '<'  shift, and go to state 282
+
+
+State 243
+
+  136 signal: name '(' name '\'' . "RANGE" ')'
+
+    "RANGE"  shift, and go to state 283
+
+
+State 244
+
+  135 signal: name '(' expr updown . expr ')'
+
+    '+'             shift, and go to state 115
+    '-'             shift, and go to state 116
+    "NOT"           shift, and go to state 117
+    TOK_NATURAL     shift, and go to state 118
+    TOK_STRING      shift, and go to state 119
+    TOK_BIT_STRING  shift, and go to state 120
+    TOK_CHAR        shift, and go to state 121
+    TOK_IDENTIFIER  shift, and go to state 20
+    '('             shift, and go to state 122
+
+    name           go to state 123
+    selected_name  go to state 22
+    signal         go to state 124
+    expr           go to state 284
+
+
+State 245
+
+   82 architecture_item: name ':' name "GENERIC" . "MAP" '(' generic_map_list ')' "PORT" "MAP" '(' map_list ')' ';'
+
+    "MAP"  shift, and go to state 285
+
+
+State 246
+
+   81 architecture_item: name ':' name "PORT" . "MAP" '(' map_list ')' ';'
+
+    "MAP"  shift, and go to state 286
+
+
+State 247
+
+   85 architecture_item: label_opt "FOR" signal "IN" . expr "TO" expr "GENERATE" architecture_body "END" "GENERATE" name_opt ';'
+   86                  | label_opt "FOR" signal "IN" . expr "DOWNTO" expr "GENERATE" architecture_body "END" "GENERATE" name_opt ';'
+
+    '+'             shift, and go to state 115
+    '-'             shift, and go to state 116
+    "NOT"           shift, and go to state 117
+    TOK_NATURAL     shift, and go to state 118
+    TOK_STRING      shift, and go to state 119
+    TOK_BIT_STRING  shift, and go to state 120
+    TOK_CHAR        shift, and go to state 121
+    TOK_IDENTIFIER  shift, and go to state 20
+    '('             shift, and go to state 122
+
+    name           go to state 123
+    selected_name  go to state 22
+    signal         go to state 124
+    expr           go to state 287
+
+
+State 248
+
+  150 expr: expr . '&' expr
+  153     | expr . '+' expr
+  154     | expr . '-' expr
+  155     | expr . '*' expr
+  156     | expr . '/' expr
+  157     | expr . "MOD" expr
+  158     | "NOT" expr .
+  159     | expr . "AND" expr
+  160     | expr . "OR" expr
+  161     | expr . "XOR" expr
+  171 comparison: expr . '=' expr
+  172           | expr . '>' expr
+  173           | expr . '>' '=' expr
+  174           | expr . '<' expr
+  175           | expr . '<' '=' expr
+  176           | expr . '/' '=' expr
+
+    $default  reduce using rule 158 (expr)
+
+
+State 249
+
+  168 conditional_expr: conditional_expr . "AND" conditional_expr
+  169                 | conditional_expr . "OR" conditional_expr
+  170                 | "NOT" conditional_expr .
+
+    $default  reduce using rule 170 (conditional_expr)
+
+
+State 250
+
+  150 expr: expr . '&' expr
+  153     | expr . '+' expr
+  154     | expr . '-' expr
+  155     | expr . '*' expr
+  156     | expr . '/' expr
+  157     | expr . "MOD" expr
+  159     | expr . "AND" expr
+  160     | expr . "OR" expr
+  161     | expr . "XOR" expr
+  163     | '(' expr . ')'
+  171 comparison: expr . '=' expr
+  172           | expr . '>' expr
+  173           | expr . '>' '=' expr
+  174           | expr . '<' expr
+  175           | expr . '<' '=' expr
+  176           | expr . '/' '=' expr
+
+    '='    shift, and go to state 252
+    "OR"   shift, and go to state 171
+    "XOR"  shift, and go to state 172
+    "AND"  shift, and go to state 173
+    "MOD"  shift, and go to state 174
+    '<'    shift, and go to state 253
+    '>'    shift, and go to state 254
+    '+'    shift, and go to state 175
+    '-'    shift, and go to state 176
+    '&'    shift, and go to state 177
+    '*'    shift, and go to state 178
+    '/'    shift, and go to state 255
+    ')'    shift, and go to state 221
+
+
+State 251
+
+  167 conditional_expr: '(' conditional_expr . ')'
+  168                 | conditional_expr . "AND" conditional_expr
+  169                 | conditional_expr . "OR" conditional_expr
+
+    "OR"   shift, and go to state 256
+    "AND"  shift, and go to state 257
+    ')'    shift, and go to state 288
+
+
+State 252
+
+  171 comparison: expr '=' . expr
+
+    '+'             shift, and go to state 115
+    '-'             shift, and go to state 116
+    "NOT"           shift, and go to state 117
+    TOK_NATURAL     shift, and go to state 118
+    TOK_STRING      shift, and go to state 119
+    TOK_BIT_STRING  shift, and go to state 120
+    TOK_CHAR        shift, and go to state 121
+    TOK_IDENTIFIER  shift, and go to state 20
+    '('             shift, and go to state 122
+
+    name           go to state 123
+    selected_name  go to state 22
+    signal         go to state 124
+    expr           go to state 289
+
+
+State 253
+
+  174 comparison: expr '<' . expr
+  175           | expr '<' . '=' expr
+
+    '='             shift, and go to state 290
+    '+'             shift, and go to state 115
+    '-'             shift, and go to state 116
+    "NOT"           shift, and go to state 117
+    TOK_NATURAL     shift, and go to state 118
+    TOK_STRING      shift, and go to state 119
+    TOK_BIT_STRING  shift, and go to state 120
+    TOK_CHAR        shift, and go to state 121
+    TOK_IDENTIFIER  shift, and go to state 20
+    '('             shift, and go to state 122
+
+    name           go to state 123
+    selected_name  go to state 22
+    signal         go to state 124
+    expr           go to state 291
+
+
+State 254
+
+  172 comparison: expr '>' . expr
+  173           | expr '>' . '=' expr
+
+    '='             shift, and go to state 292
+    '+'             shift, and go to state 115
+    '-'             shift, and go to state 116
+    "NOT"           shift, and go to state 117
+    TOK_NATURAL     shift, and go to state 118
+    TOK_STRING      shift, and go to state 119
+    TOK_BIT_STRING  shift, and go to state 120
+    TOK_CHAR        shift, and go to state 121
+    TOK_IDENTIFIER  shift, and go to state 20
+    '('             shift, and go to state 122
+
+    name           go to state 123
+    selected_name  go to state 22
+    signal         go to state 124
+    expr           go to state 293
+
+
+State 255
+
+  156 expr: expr '/' . expr
+  176 comparison: expr '/' . '=' expr
+
+    '='             shift, and go to state 294
+    '+'             shift, and go to state 115
+    '-'             shift, and go to state 116
+    "NOT"           shift, and go to state 117
+    TOK_NATURAL     shift, and go to state 118
+    TOK_STRING      shift, and go to state 119
+    TOK_BIT_STRING  shift, and go to state 120
+    TOK_CHAR        shift, and go to state 121
+    TOK_IDENTIFIER  shift, and go to state 20
+    '('             shift, and go to state 122
+
+    name           go to state 123
+    selected_name  go to state 22
+    signal         go to state 124
+    expr           go to state 232
+
+
+State 256
+
+  169 conditional_expr: conditional_expr "OR" . conditional_expr
+
+    '+'             shift, and go to state 115
+    '-'             shift, and go to state 116
+    "NOT"           shift, and go to state 200
+    TOK_NATURAL     shift, and go to state 118
+    TOK_STRING      shift, and go to state 119
+    TOK_BIT_STRING  shift, and go to state 120
+    TOK_CHAR        shift, and go to state 121
+    TOK_IDENTIFIER  shift, and go to state 20
+    '('             shift, and go to state 201
+
+    name              go to state 123
+    selected_name     go to state 22
+    signal            go to state 124
+    expr              go to state 202
+    conditional_expr  go to state 295
+    comparison        go to state 204
+
+
+State 257
+
+  168 conditional_expr: conditional_expr "AND" . conditional_expr
+
+    '+'             shift, and go to state 115
+    '-'             shift, and go to state 116
+    "NOT"           shift, and go to state 200
+    TOK_NATURAL     shift, and go to state 118
+    TOK_STRING      shift, and go to state 119
+    TOK_BIT_STRING  shift, and go to state 120
+    TOK_CHAR        shift, and go to state 121
+    TOK_IDENTIFIER  shift, and go to state 20
+    '('             shift, and go to state 201
+
+    name              go to state 123
+    selected_name     go to state 22
+    signal            go to state 124
+    expr              go to state 202
+    conditional_expr  go to state 296
+    comparison        go to state 204
+
+
+State 258
+
+   84 architecture_item: label_opt "IF" conditional_expr "GENERATE" . architecture_body "END" "GENERATE" name_opt ';'
+
+    $default  reduce using rule 77 (architecture_body)
+
+    architecture_body  go to state 297
+
+
+State 259
+
+   83 architecture_item: label_opt "PROCESS" '(' signal_list . ')' process_decl_list "BEGIN" process_body "END" "PROCESS" name_opt ';'
+  121 signal_list: signal_list . ',' signal
+
+    ','  shift, and go to state 298
+    ')'  shift, and go to state 299
+
+
+State 260
+
+  120 signal_list: signal .
+
+    $default  reduce using rule 120 (signal_list)
+
+
+State 261
+
+   79 architecture_item: signal '<' '=' sigvalue .
+
+    $default  reduce using rule 79 (architecture_item)
+
+
+State 262
+
+  122 sigvalue: expr . delay_opt ';'
+  123         | expr . delay_opt "WHEN" conditional_expr ';'
+  124         | expr . delay_opt "WHEN" conditional_expr "ELSE" sigvalue
+  150 expr: expr . '&' expr
+  153     | expr . '+' expr
+  154     | expr . '-' expr
+  155     | expr . '*' expr
+  156     | expr . '/' expr
+  157     | expr . "MOD" expr
+  159     | expr . "AND" expr
+  160     | expr . "OR" expr
+  161     | expr . "XOR" expr
+
+    "OR"     shift, and go to state 171
+    "XOR"    shift, and go to state 172
+    "AND"    shift, and go to state 173
+    "MOD"    shift, and go to state 174
+    '+'      shift, and go to state 175
+    '-'      shift, and go to state 176
+    '&'      shift, and go to state 177
+    '*'      shift, and go to state 178
+    '/'      shift, and go to state 179
+    "AFTER"  shift, and go to state 300
+
+    $default  reduce using rule 125 (delay_opt)
+
+    delay_opt  go to state 301
+
+
+State 263
+
+   74 architecture_decl: "COMPONENT" name "GENERIC" '(' generic_list ')' . ';' "PORT" '(' port_list ')' ';' "END" "COMPONENT" ';'
+
+    ';'  shift, and go to state 302
+
+
+State 264
+
+   73 architecture_decl: "COMPONENT" name "PORT" '(' port_list ')' . ';' "END" "COMPONENT" ';'
+
+    ';'  shift, and go to state 303
+
+
+State 265
+
+   71 architecture_decl: "CONSTANT" name ':' type ':' '=' . expr ';'
+
+    '+'             shift, and go to state 115
+    '-'             shift, and go to state 116
+    "NOT"           shift, and go to state 117
+    TOK_NATURAL     shift, and go to state 118
+    TOK_STRING      shift, and go to state 119
+    TOK_BIT_STRING  shift, and go to state 120
+    TOK_CHAR        shift, and go to state 121
+    TOK_IDENTIFIER  shift, and go to state 20
+    '('             shift, and go to state 122
+
+    name           go to state 123
+    selected_name  go to state 22
+    signal         go to state 124
+    expr           go to state 304
+
+
+State 266
+
+   72 architecture_decl: "TYPE" name "IS" '(' s_list ')' . ';'
+
+    ';'  shift, and go to state 305
+
+
+State 267
+
+   28 entity_declaration: "ENTITY" name "IS" "GENERIC" '(' generic_list ')' ';' "PORT" '(' port_list ')' . ';' "END" name_opt ';'
+
+    ';'  shift, and go to state 306
+
+
+State 268
+
+   14 selected_name: name . '.' TOK_IDENTIFIER
+   15              | name . '.' "ALL"
+   59 index_constraint: name '(' name . '\'' "RANGE" ')'
+  134 signal: name .
+  135       | name . '(' expr updown expr ')'
+  136       | name . '(' name '\'' "RANGE" ')'
+  136       | name '(' name . '\'' "RANGE" ')'
+  162 expr: name . '(' expr_list ')'
+
+    '.'   shift, and go to state 32
+    '('   shift, and go to state 170
+    '\''  shift, and go to state 307
+
+    $default  reduce using rule 134 (signal)
+
+
+State 269
+
+   57 index_constraint_list: index_constraint_list ',' index_constraint .
+
+    $default  reduce using rule 57 (index_constraint_list)
+
+
+State 270
+
+   45 type: "ARRAY" '(' index_constraint_list ')' "OF" . type
+
+    "ACCESS"        shift, and go to state 84
+    "ARRAY"         shift, and go to state 85
+    "FILE"          shift, and go to state 86
+    "PROTECTED"     shift, and go to state 87
+    "RANGE"         shift, and go to state 88
+    "RECORD"        shift, and go to state 89
+    "TYPE"          shift, and go to state 90
+    TOK_IDENTIFIER  shift, and go to state 20
+    '('             shift, and go to state 91
+
+    name           go to state 92
+    selected_name  go to state 22
+    type           go to state 308
+
+
+State 271
+
+   60 index_constraint: expr updown expr .
+  150 expr: expr . '&' expr
+  153     | expr . '+' expr
+  154     | expr . '-' expr
+  155     | expr . '*' expr
+  156     | expr . '/' expr
+  157     | expr . "MOD" expr
+  159     | expr . "AND" expr
+  160     | expr . "OR" expr
+  161     | expr . "XOR" expr
+
+    "OR"   shift, and go to state 171
+    "XOR"  shift, and go to state 172
+    "AND"  shift, and go to state 173
+    "MOD"  shift, and go to state 174
+    '+'    shift, and go to state 175
+    '-'    shift, and go to state 176
+    '&'    shift, and go to state 177
+    '*'    shift, and go to state 178
+    '/'    shift, and go to state 179
+
+    $default  reduce using rule 60 (index_constraint)
+
+
+State 272
+
+  140 element_association: choices '=' '>' . expr
+
+    '+'             shift, and go to state 115
+    '-'             shift, and go to state 116
+    "NOT"           shift, and go to state 117
+    TOK_NATURAL     shift, and go to state 118
+    TOK_STRING      shift, and go to state 119
+    TOK_BIT_STRING  shift, and go to state 120
+    TOK_CHAR        shift, and go to state 121
+    TOK_IDENTIFIER  shift, and go to state 20
+    '('             shift, and go to state 122
+
+    name           go to state 123
+    selected_name  go to state 22
+    signal         go to state 124
+    expr           go to state 309
+
+
+State 273
+
+  139 choices: choices '|' choice .
+
+    $default  reduce using rule 139 (choices)
+
+
+State 274
+
+  142 element_association_list: element_association_list ',' element_association .
+
+    $default  reduce using rule 142 (element_association_list)
+
+
+State 275
+
+  165 expr_list: expr_list ',' . expr
+
+    '+'             shift, and go to state 115
+    '-'             shift, and go to state 116
+    "NOT"           shift, and go to state 117
+    TOK_NATURAL     shift, and go to state 118
+    TOK_STRING      shift, and go to state 119
+    TOK_BIT_STRING  shift, and go to state 120
+    TOK_CHAR        shift, and go to state 121
+    TOK_IDENTIFIER  shift, and go to state 20
+    '('             shift, and go to state 122
+
+    name           go to state 123
+    selected_name  go to state 22
+    signal         go to state 124
+    expr           go to state 310
+
+
+State 276
+
+  162 expr: name '(' expr_list ')' .
+
+    $default  reduce using rule 162 (expr)
+
+
+State 277
+
+   46 type: "RECORD" element_declaration_list "END" "RECORD" name_opt .
+
+    $default  reduce using rule 46 (type)
+
+
+State 278
+
+   53 element_declaration: identifier_list ':' type ';' .
+
+    $default  reduce using rule 53 (element_declaration)
+
+
+State 279
+
+   40 type: name '(' name '\'' "RANGE" . ')'
+
+    ')'  shift, and go to state 311
+
+
+State 280
+
+   41 type: name '(' name '\'' TOK_IDENTIFIER . ')'
+
+    ')'  shift, and go to state 312
+
+
+State 281
+
+   38 type: name '(' expr updown expr . ')'
+  150 expr: expr . '&' expr
+  153     | expr . '+' expr
+  154     | expr . '-' expr
+  155     | expr . '*' expr
+  156     | expr . '/' expr
+  157     | expr . "MOD" expr
+  159     | expr . "AND" expr
+  160     | expr . "OR" expr
+  161     | expr . "XOR" expr
+
+    "OR"   shift, and go to state 171
+    "XOR"  shift, and go to state 172
+    "AND"  shift, and go to state 173
+    "MOD"  shift, and go to state 174
+    '+'    shift, and go to state 175
+    '-'    shift, and go to state 176
+    '&'    shift, and go to state 177
+    '*'    shift, and go to state 178
+    '/'    shift, and go to state 179
+    ')'    shift, and go to state 313
+
+
+State 282
+
+   80 architecture_item: "WITH" expr "SELECT" signal '<' . '=' with_list ';'
+
+    '='  shift, and go to state 314
+
+
+State 283
+
+  136 signal: name '(' name '\'' "RANGE" . ')'
+
+    ')'  shift, and go to state 315
+
+
+State 284
+
+  135 signal: name '(' expr updown expr . ')'
+  150 expr: expr . '&' expr
+  153     | expr . '+' expr
+  154     | expr . '-' expr
+  155     | expr . '*' expr
+  156     | expr . '/' expr
+  157     | expr . "MOD" expr
+  159     | expr . "AND" expr
+  160     | expr . "OR" expr
+  161     | expr . "XOR" expr
+
+    "OR"   shift, and go to state 171
+    "XOR"  shift, and go to state 172
+    "AND"  shift, and go to state 173
+    "MOD"  shift, and go to state 174
+    '+'    shift, and go to state 175
+    '-'    shift, and go to state 176
+    '&'    shift, and go to state 177
+    '*'    shift, and go to state 178
+    '/'    shift, and go to state 179
+    ')'    shift, and go to state 316
+
+
+State 285
+
+   82 architecture_item: name ':' name "GENERIC" "MAP" . '(' generic_map_list ')' "PORT" "MAP" '(' map_list ')' ';'
+
+    '('  shift, and go to state 317
+
+
+State 286
+
+   81 architecture_item: name ':' name "PORT" "MAP" . '(' map_list ')' ';'
+
+    '('  shift, and go to state 318
+
+
+State 287
+
+   85 architecture_item: label_opt "FOR" signal "IN" expr . "TO" expr "GENERATE" architecture_body "END" "GENERATE" name_opt ';'
+   86                  | label_opt "FOR" signal "IN" expr . "DOWNTO" expr "GENERATE" architecture_body "END" "GENERATE" name_opt ';'
+  150 expr: expr . '&' expr
+  153     | expr . '+' expr
+  154     | expr . '-' expr
+  155     | expr . '*' expr
+  156     | expr . '/' expr
+  157     | expr . "MOD" expr
+  159     | expr . "AND" expr
+  160     | expr . "OR" expr
+  161     | expr . "XOR" expr
+
+    "OR"      shift, and go to state 171
+    "XOR"     shift, and go to state 172
+    "AND"     shift, and go to state 173
+    "MOD"     shift, and go to state 174
+    '+'       shift, and go to state 175
+    '-'       shift, and go to state 176
+    '&'       shift, and go to state 177
+    '*'       shift, and go to state 178
+    '/'       shift, and go to state 179
+    "DOWNTO"  shift, and go to state 319
+    "TO"      shift, and go to state 320
+
+
+State 288
+
+  167 conditional_expr: '(' conditional_expr ')' .
+
+    $default  reduce using rule 167 (conditional_expr)
+
+
+State 289
+
+  150 expr: expr . '&' expr
+  153     | expr . '+' expr
+  154     | expr . '-' expr
+  155     | expr . '*' expr
+  156     | expr . '/' expr
+  157     | expr . "MOD" expr
+  159     | expr . "AND" expr
+  160     | expr . "OR" expr
+  161     | expr . "XOR" expr
+  171 comparison: expr '=' expr .
+
+    "XOR"  shift, and go to state 172
+    "MOD"  shift, and go to state 174
+    '+'    shift, and go to state 175
+    '-'    shift, and go to state 176
+    '&'    shift, and go to state 177
+    '*'    shift, and go to state 178
+    '/'    shift, and go to state 179
+
+    $default  reduce using rule 171 (comparison)
+
+
+State 290
+
+  175 comparison: expr '<' '=' . expr
+
+    '+'             shift, and go to state 115
+    '-'             shift, and go to state 116
+    "NOT"           shift, and go to state 117
+    TOK_NATURAL     shift, and go to state 118
+    TOK_STRING      shift, and go to state 119
+    TOK_BIT_STRING  shift, and go to state 120
+    TOK_CHAR        shift, and go to state 121
+    TOK_IDENTIFIER  shift, and go to state 20
+    '('             shift, and go to state 122
+
+    name           go to state 123
+    selected_name  go to state 22
+    signal         go to state 124
+    expr           go to state 321
+
+
+State 291
+
+  150 expr: expr . '&' expr
+  153     | expr . '+' expr
+  154     | expr . '-' expr
+  155     | expr . '*' expr
+  156     | expr . '/' expr
+  157     | expr . "MOD" expr
+  159     | expr . "AND" expr
+  160     | expr . "OR" expr
+  161     | expr . "XOR" expr
+  174 comparison: expr '<' expr .
+
+    "XOR"  shift, and go to state 172
+    "MOD"  shift, and go to state 174
+    '+'    shift, and go to state 175
+    '-'    shift, and go to state 176
+    '&'    shift, and go to state 177
+    '*'    shift, and go to state 178
+    '/'    shift, and go to state 179
+
+    $default  reduce using rule 174 (comparison)
+
+
+State 292
+
+  173 comparison: expr '>' '=' . expr
+
+    '+'             shift, and go to state 115
+    '-'             shift, and go to state 116
+    "NOT"           shift, and go to state 117
+    TOK_NATURAL     shift, and go to state 118
+    TOK_STRING      shift, and go to state 119
+    TOK_BIT_STRING  shift, and go to state 120
+    TOK_CHAR        shift, and go to state 121
+    TOK_IDENTIFIER  shift, and go to state 20
+    '('             shift, and go to state 122
+
+    name           go to state 123
+    selected_name  go to state 22
+    signal         go to state 124
+    expr           go to state 322
+
+
+State 293
+
+  150 expr: expr . '&' expr
+  153     | expr . '+' expr
+  154     | expr . '-' expr
+  155     | expr . '*' expr
+  156     | expr . '/' expr
+  157     | expr . "MOD" expr
+  159     | expr . "AND" expr
+  160     | expr . "OR" expr
+  161     | expr . "XOR" expr
+  172 comparison: expr '>' expr .
+
+    "XOR"  shift, and go to state 172
+    "MOD"  shift, and go to state 174
+    '+'    shift, and go to state 175
+    '-'    shift, and go to state 176
+    '&'    shift, and go to state 177
+    '*'    shift, and go to state 178
+    '/'    shift, and go to state 179
+
+    $default  reduce using rule 172 (comparison)
+
+
+State 294
+
+  176 comparison: expr '/' '=' . expr
+
+    '+'             shift, and go to state 115
+    '-'             shift, and go to state 116
+    "NOT"           shift, and go to state 117
+    TOK_NATURAL     shift, and go to state 118
+    TOK_STRING      shift, and go to state 119
+    TOK_BIT_STRING  shift, and go to state 120
+    TOK_CHAR        shift, and go to state 121
+    TOK_IDENTIFIER  shift, and go to state 20
+    '('             shift, and go to state 122
+
+    name           go to state 123
+    selected_name  go to state 22
+    signal         go to state 124
+    expr           go to state 323
+
+
+State 295
+
+  168 conditional_expr: conditional_expr . "AND" conditional_expr
+  169                 | conditional_expr . "OR" conditional_expr
+  169                 | conditional_expr "OR" conditional_expr .
+
+    "OR"   shift, and go to state 256
+    "AND"  shift, and go to state 257
+
+    $default  reduce using rule 169 (conditional_expr)
+
+
+State 296
+
+  168 conditional_expr: conditional_expr . "AND" conditional_expr
+  168                 | conditional_expr "AND" conditional_expr .
+  169                 | conditional_expr . "OR" conditional_expr
+
+    "OR"   shift, and go to state 256
+    "AND"  shift, and go to state 257
+
+    $default  reduce using rule 168 (conditional_expr)
+
+
+State 297
+
+   78 architecture_body: architecture_body . architecture_item
+   84 architecture_item: label_opt "IF" conditional_expr "GENERATE" architecture_body . "END" "GENERATE" name_opt ';'
+
+    "END"           shift, and go to state 324
+    "WITH"          shift, and go to state 100
+    TOK_IDENTIFIER  shift, and go to state 20
+
+    $default  reduce using rule 89 (label_opt)
+
+    name               go to state 101
+    selected_name      go to state 22
+    architecture_item  go to state 102
+    label_opt          go to state 103
+    signal             go to state 104
+
+
+State 298
+
+  121 signal_list: signal_list ',' . signal
+
+    TOK_IDENTIFIER  shift, and go to state 20
+
+    name           go to state 198
+    selected_name  go to state 22
+    signal         go to state 325
+
+
+State 299
+
+   83 architecture_item: label_opt "PROCESS" '(' signal_list ')' . process_decl_list "BEGIN" process_body "END" "PROCESS" name_opt ';'
+
+    $default  reduce using rule 97 (process_decl_list)
+
+    process_decl_list  go to state 326
+
+
+State 300
+
+  126 delay_opt: "AFTER" . TOK_NATURAL name
+
+    TOK_NATURAL  shift, and go to state 327
+
+
+State 301
+
+  122 sigvalue: expr delay_opt . ';'
+  123         | expr delay_opt . "WHEN" conditional_expr ';'
+  124         | expr delay_opt . "WHEN" conditional_expr "ELSE" sigvalue
+
+    "WHEN"  shift, and go to state 328
+    ';'     shift, and go to state 329
+
+
+State 302
+
+   74 architecture_decl: "COMPONENT" name "GENERIC" '(' generic_list ')' ';' . "PORT" '(' port_list ')' ';' "END" "COMPONENT" ';'
+
+    "PORT"  shift, and go to state 330
+
+
+State 303
+
+   73 architecture_decl: "COMPONENT" name "PORT" '(' port_list ')' ';' . "END" "COMPONENT" ';'
+
+    "END"  shift, and go to state 331
+
+
+State 304
+
+   71 architecture_decl: "CONSTANT" name ':' type ':' '=' expr . ';'
+  150 expr: expr . '&' expr
+  153     | expr . '+' expr
+  154     | expr . '-' expr
+  155     | expr . '*' expr
+  156     | expr . '/' expr
+  157     | expr . "MOD" expr
+  159     | expr . "AND" expr
+  160     | expr . "OR" expr
+  161     | expr . "XOR" expr
+
+    "OR"   shift, and go to state 171
+    "XOR"  shift, and go to state 172
+    "AND"  shift, and go to state 173
+    "MOD"  shift, and go to state 174
+    '+'    shift, and go to state 175
+    '-'    shift, and go to state 176
+    '&'    shift, and go to state 177
+    '*'    shift, and go to state 178
+    '/'    shift, and go to state 179
+    ';'    shift, and go to state 332
+
+
+State 305
+
+   72 architecture_decl: "TYPE" name "IS" '(' s_list ')' ';' .
+
+    $default  reduce using rule 72 (architecture_decl)
+
+
+State 306
+
+   28 entity_declaration: "ENTITY" name "IS" "GENERIC" '(' generic_list ')' ';' "PORT" '(' port_list ')' ';' . "END" name_opt ';'
+
+    "END"  shift, and go to state 333
+
+
+State 307
+
+   59 index_constraint: name '(' name '\'' . "RANGE" ')'
+  136 signal: name '(' name '\'' . "RANGE" ')'
+
+    "RANGE"  shift, and go to state 334
+
+
+State 308
+
+   45 type: "ARRAY" '(' index_constraint_list ')' "OF" type .
+
+    $default  reduce using rule 45 (type)
+
+
+State 309
+
+  140 element_association: choices '=' '>' expr .
+  150 expr: expr . '&' expr
+  153     | expr . '+' expr
+  154     | expr . '-' expr
+  155     | expr . '*' expr
+  156     | expr . '/' expr
+  157     | expr . "MOD" expr
+  159     | expr . "AND" expr
+  160     | expr . "OR" expr
+  161     | expr . "XOR" expr
+
+    "OR"   shift, and go to state 171
+    "XOR"  shift, and go to state 172
+    "AND"  shift, and go to state 173
+    "MOD"  shift, and go to state 174
+    '+'    shift, and go to state 175
+    '-'    shift, and go to state 176
+    '&'    shift, and go to state 177
+    '*'    shift, and go to state 178
+    '/'    shift, and go to state 179
+
+    $default  reduce using rule 140 (element_association)
+
+
+State 310
+
+  150 expr: expr . '&' expr
+  153     | expr . '+' expr
+  154     | expr . '-' expr
+  155     | expr . '*' expr
+  156     | expr . '/' expr
+  157     | expr . "MOD" expr
+  159     | expr . "AND" expr
+  160     | expr . "OR" expr
+  161     | expr . "XOR" expr
+  165 expr_list: expr_list ',' expr .
+
+    "OR"   shift, and go to state 171
+    "XOR"  shift, and go to state 172
+    "AND"  shift, and go to state 173
+    "MOD"  shift, and go to state 174
+    '+'    shift, and go to state 175
+    '-'    shift, and go to state 176
+    '&'    shift, and go to state 177
+    '*'    shift, and go to state 178
+    '/'    shift, and go to state 179
+
+    $default  reduce using rule 165 (expr_list)
+
+
+State 311
+
+   40 type: name '(' name '\'' "RANGE" ')' .
+
+    $default  reduce using rule 40 (type)
+
+
+State 312
+
+   41 type: name '(' name '\'' TOK_IDENTIFIER ')' .
+
+    $default  reduce using rule 41 (type)
+
+
+State 313
+
+   38 type: name '(' expr updown expr ')' .
+
+    $default  reduce using rule 38 (type)
+
+
+State 314
+
+   80 architecture_item: "WITH" expr "SELECT" signal '<' '=' . with_list ';'
+
+    '+'             shift, and go to state 115
+    '-'             shift, and go to state 116
+    "NOT"           shift, and go to state 117
+    TOK_NATURAL     shift, and go to state 118
+    TOK_STRING      shift, and go to state 119
+    TOK_BIT_STRING  shift, and go to state 120
+    TOK_CHAR        shift, and go to state 121
+    TOK_IDENTIFIER  shift, and go to state 20
+    '('             shift, and go to state 122
+
+    name            go to state 123
+    selected_name   go to state 22
+    with_list       go to state 335
+    with_item_list  go to state 336
+    with_item       go to state 337
+    signal          go to state 124
+    expr            go to state 338
+
+
+State 315
+
+  136 signal: name '(' name '\'' "RANGE" ')' .
+
+    $default  reduce using rule 136 (signal)
+
+
+State 316
+
+  135 signal: name '(' expr updown expr ')' .
+
+    $default  reduce using rule 135 (signal)
+
+
+State 317
+
+   82 architecture_item: name ':' name "GENERIC" "MAP" '(' . generic_map_list ')' "PORT" "MAP" '(' map_list ')' ';'
+
+    TOK_IDENTIFIER  shift, and go to state 20
+
+    name              go to state 339
+    selected_name     go to state 22
+    generic_map_list  go to state 340
+    generic_map_item  go to state 341
+
+
+State 318
+
+   81 architecture_item: name ':' name "PORT" "MAP" '(' . map_list ')' ';'
+
+    TOK_IDENTIFIER  shift, and go to state 20
+
+    name           go to state 342
+    selected_name  go to state 22
+    map_list       go to state 343
+    map_item       go to state 344
+    signal         go to state 345
+
+
+State 319
+
+   86 architecture_item: label_opt "FOR" signal "IN" expr "DOWNTO" . expr "GENERATE" architecture_body "END" "GENERATE" name_opt ';'
+
+    '+'             shift, and go to state 115
+    '-'             shift, and go to state 116
+    "NOT"           shift, and go to state 117
+    TOK_NATURAL     shift, and go to state 118
+    TOK_STRING      shift, and go to state 119
+    TOK_BIT_STRING  shift, and go to state 120
+    TOK_CHAR        shift, and go to state 121
+    TOK_IDENTIFIER  shift, and go to state 20
+    '('             shift, and go to state 122
+
+    name           go to state 123
+    selected_name  go to state 22
+    signal         go to state 124
+    expr           go to state 346
+
+
+State 320
+
+   85 architecture_item: label_opt "FOR" signal "IN" expr "TO" . expr "GENERATE" architecture_body "END" "GENERATE" name_opt ';'
+
+    '+'             shift, and go to state 115
+    '-'             shift, and go to state 116
+    "NOT"           shift, and go to state 117
+    TOK_NATURAL     shift, and go to state 118
+    TOK_STRING      shift, and go to state 119
+    TOK_BIT_STRING  shift, and go to state 120
+    TOK_CHAR        shift, and go to state 121
+    TOK_IDENTIFIER  shift, and go to state 20
+    '('             shift, and go to state 122
+
+    name           go to state 123
+    selected_name  go to state 22
+    signal         go to state 124
+    expr           go to state 347
+
+
+State 321
+
+  150 expr: expr . '&' expr
+  153     | expr . '+' expr
+  154     | expr . '-' expr
+  155     | expr . '*' expr
+  156     | expr . '/' expr
+  157     | expr . "MOD" expr
+  159     | expr . "AND" expr
+  160     | expr . "OR" expr
+  161     | expr . "XOR" expr
+  175 comparison: expr '<' '=' expr .
+
+    "XOR"  shift, and go to state 172
+    "MOD"  shift, and go to state 174
+    '+'    shift, and go to state 175
+    '-'    shift, and go to state 176
+    '&'    shift, and go to state 177
+    '*'    shift, and go to state 178
+    '/'    shift, and go to state 179
+
+    $default  reduce using rule 175 (comparison)
+
+
+State 322
+
+  150 expr: expr . '&' expr
+  153     | expr . '+' expr
+  154     | expr . '-' expr
+  155     | expr . '*' expr
+  156     | expr . '/' expr
+  157     | expr . "MOD" expr
+  159     | expr . "AND" expr
+  160     | expr . "OR" expr
+  161     | expr . "XOR" expr
+  173 comparison: expr '>' '=' expr .
+
+    "XOR"  shift, and go to state 172
+    "MOD"  shift, and go to state 174
+    '+'    shift, and go to state 175
+    '-'    shift, and go to state 176
+    '&'    shift, and go to state 177
+    '*'    shift, and go to state 178
+    '/'    shift, and go to state 179
+
+    $default  reduce using rule 173 (comparison)
+
+
+State 323
+
+  150 expr: expr . '&' expr
+  153     | expr . '+' expr
+  154     | expr . '-' expr
+  155     | expr . '*' expr
+  156     | expr . '/' expr
+  157     | expr . "MOD" expr
+  159     | expr . "AND" expr
+  160     | expr . "OR" expr
+  161     | expr . "XOR" expr
+  176 comparison: expr '/' '=' expr .
+
+    "XOR"  shift, and go to state 172
+    "MOD"  shift, and go to state 174
+    '+'    shift, and go to state 175
+    '-'    shift, and go to state 176
+    '&'    shift, and go to state 177
+    '*'    shift, and go to state 178
+    '/'    shift, and go to state 179
+
+    $default  reduce using rule 176 (comparison)
+
+
+State 324
+
+   84 architecture_item: label_opt "IF" conditional_expr "GENERATE" architecture_body "END" . "GENERATE" name_opt ';'
+
+    "GENERATE"  shift, and go to state 348
+
+
+State 325
+
+  121 signal_list: signal_list ',' signal .
+
+    $default  reduce using rule 121 (signal_list)
+
+
+State 326
+
+   83 architecture_item: label_opt "PROCESS" '(' signal_list ')' process_decl_list . "BEGIN" process_body "END" "PROCESS" name_opt ';'
+   98 process_decl_list: process_decl_list . process_decl
+
+    "BEGIN"     shift, and go to state 349
+    "VARIABLE"  shift, and go to state 350
+
+    process_decl  go to state 351
+
+
+State 327
+
+  126 delay_opt: "AFTER" TOK_NATURAL . name
+
+    TOK_IDENTIFIER  shift, and go to state 20
+
+    name           go to state 352
+    selected_name  go to state 22
+
+
+State 328
+
+  123 sigvalue: expr delay_opt "WHEN" . conditional_expr ';'
+  124         | expr delay_opt "WHEN" . conditional_expr "ELSE" sigvalue
+
+    '+'             shift, and go to state 115
+    '-'             shift, and go to state 116
+    "NOT"           shift, and go to state 200
+    TOK_NATURAL     shift, and go to state 118
+    TOK_STRING      shift, and go to state 119
+    TOK_BIT_STRING  shift, and go to state 120
+    TOK_CHAR        shift, and go to state 121
+    TOK_IDENTIFIER  shift, and go to state 20
+    '('             shift, and go to state 201
+
+    name              go to state 123
+    selected_name     go to state 22
+    signal            go to state 124
+    expr              go to state 202
+    conditional_expr  go to state 353
+    comparison        go to state 204
+
+
+State 329
+
+  122 sigvalue: expr delay_opt ';' .
+
+    $default  reduce using rule 122 (sigvalue)
+
+
+State 330
+
+   74 architecture_decl: "COMPONENT" name "GENERIC" '(' generic_list ')' ';' "PORT" . '(' port_list ')' ';' "END" "COMPONENT" ';'
+
+    '('  shift, and go to state 354
+
+
+State 331
+
+   73 architecture_decl: "COMPONENT" name "PORT" '(' port_list ')' ';' "END" . "COMPONENT" ';'
+
+    "COMPONENT"  shift, and go to state 355
+
+
+State 332
+
+   71 architecture_decl: "CONSTANT" name ':' type ':' '=' expr ';' .
+
+    $default  reduce using rule 71 (architecture_decl)
+
+
+State 333
+
+   28 entity_declaration: "ENTITY" name "IS" "GENERIC" '(' generic_list ')' ';' "PORT" '(' port_list ')' ';' "END" . name_opt ';'
+
+    TOK_IDENTIFIER  shift, and go to state 20
+
+    $default  reduce using rule 87 (name_opt)
+
+    name           go to state 139
+    selected_name  go to state 22
+    name_opt       go to state 356
+
+
+State 334
+
+   59 index_constraint: name '(' name '\'' "RANGE" . ')'
+  136 signal: name '(' name '\'' "RANGE" . ')'
+
+    ')'  shift, and go to state 357
+
+
+State 335
+
+   80 architecture_item: "WITH" expr "SELECT" signal '<' '=' with_list . ';'
+
+    ';'  shift, and go to state 358
+
+
+State 336
+
+   91 with_list: with_item_list .
+   92          | with_item_list . ',' expr delay_opt "WHEN" "OTHERS"
+   95 with_item_list: with_item_list . ',' with_item
+
+    ','  shift, and go to state 359
+
+    $default  reduce using rule 91 (with_list)
+
+
+State 337
+
+   94 with_item_list: with_item .
+
+    $default  reduce using rule 94 (with_item_list)
+
+
+State 338
+
+   93 with_list: expr . delay_opt "WHEN" "OTHERS"
+   96 with_item: expr . delay_opt "WHEN" with_value_list
+  150 expr: expr . '&' expr
+  153     | expr . '+' expr
+  154     | expr . '-' expr
+  155     | expr . '*' expr
+  156     | expr . '/' expr
+  157     | expr . "MOD" expr
+  159     | expr . "AND" expr
+  160     | expr . "OR" expr
+  161     | expr . "XOR" expr
+
+    "OR"     shift, and go to state 171
+    "XOR"    shift, and go to state 172
+    "AND"    shift, and go to state 173
+    "MOD"    shift, and go to state 174
+    '+'      shift, and go to state 175
+    '-'      shift, and go to state 176
+    '&'      shift, and go to state 177
+    '*'      shift, and go to state 178
+    '/'      shift, and go to state 179
+    "AFTER"  shift, and go to state 300
+
+    $default  reduce using rule 125 (delay_opt)
+
+    delay_opt  go to state 360
+
+
+State 339
+
+   14 selected_name: name . '.' TOK_IDENTIFIER
+   15              | name . '.' "ALL"
+  133 generic_map_item: name . '=' '>' expr
+
+    '='  shift, and go to state 361
+    '.'  shift, and go to state 32
+
+
+State 340
+
+   82 architecture_item: name ':' name "GENERIC" "MAP" '(' generic_map_list . ')' "PORT" "MAP" '(' map_list ')' ';'
+
+    ')'  shift, and go to state 362
+
+
+State 341
+
+  131 generic_map_list: generic_map_item .
+  132                 | generic_map_item . ',' generic_map_list
+
+    ','  shift, and go to state 363
+
+    $default  reduce using rule 131 (generic_map_list)
+
+
+State 342
+
+   14 selected_name: name . '.' TOK_IDENTIFIER
+   15              | name . '.' "ALL"
+  130 map_item: name . '=' '>' signal
+  134 signal: name .
+  135       | name . '(' expr updown expr ')'
+  136       | name . '(' name '\'' "RANGE" ')'
+
+    '='  shift, and go to state 364
+    '.'  shift, and go to state 32
+    '('  shift, and go to state 142
+
+    $default  reduce using rule 134 (signal)
+
+
+State 343
+
+   81 architecture_item: name ':' name "PORT" "MAP" '(' map_list . ')' ';'
+
+    ')'  shift, and go to state 365
+
+
+State 344
+
+  127 map_list: map_item .
+  128         | map_item . ',' map_list
+
+    ','  shift, and go to state 366
+
+    $default  reduce using rule 127 (map_list)
+
+
+State 345
+
+  129 map_item: signal .
+
+    $default  reduce using rule 129 (map_item)
+
+
+State 346
+
+   86 architecture_item: label_opt "FOR" signal "IN" expr "DOWNTO" expr . "GENERATE" architecture_body "END" "GENERATE" name_opt ';'
+  150 expr: expr . '&' expr
+  153     | expr . '+' expr
+  154     | expr . '-' expr
+  155     | expr . '*' expr
+  156     | expr . '/' expr
+  157     | expr . "MOD" expr
+  159     | expr . "AND" expr
+  160     | expr . "OR" expr
+  161     | expr . "XOR" expr
+
+    "OR"        shift, and go to state 171
+    "XOR"       shift, and go to state 172
+    "AND"       shift, and go to state 173
+    "MOD"       shift, and go to state 174
+    '+'         shift, and go to state 175
+    '-'         shift, and go to state 176
+    '&'         shift, and go to state 177
+    '*'         shift, and go to state 178
+    '/'         shift, and go to state 179
+    "GENERATE"  shift, and go to state 367
+
+
+State 347
+
+   85 architecture_item: label_opt "FOR" signal "IN" expr "TO" expr . "GENERATE" architecture_body "END" "GENERATE" name_opt ';'
+  150 expr: expr . '&' expr
+  153     | expr . '+' expr
+  154     | expr . '-' expr
+  155     | expr . '*' expr
+  156     | expr . '/' expr
+  157     | expr . "MOD" expr
+  159     | expr . "AND" expr
+  160     | expr . "OR" expr
+  161     | expr . "XOR" expr
+
+    "OR"        shift, and go to state 171
+    "XOR"       shift, and go to state 172
+    "AND"       shift, and go to state 173
+    "MOD"       shift, and go to state 174
+    '+'         shift, and go to state 175
+    '-'         shift, and go to state 176
+    '&'         shift, and go to state 177
+    '*'         shift, and go to state 178
+    '/'         shift, and go to state 179
+    "GENERATE"  shift, and go to state 368
+
+
+State 348
+
+   84 architecture_item: label_opt "IF" conditional_expr "GENERATE" architecture_body "END" "GENERATE" . name_opt ';'
+
+    TOK_IDENTIFIER  shift, and go to state 20
+
+    $default  reduce using rule 87 (name_opt)
+
+    name           go to state 139
+    selected_name  go to state 22
+    name_opt       go to state 369
+
+
+State 349
+
+   83 architecture_item: label_opt "PROCESS" '(' signal_list ')' process_decl_list "BEGIN" . process_body "END" "PROCESS" name_opt ';'
+
+    $default  reduce using rule 101 (process_body)
+
+    process_body  go to state 370
+
+
+State 350
+
+   99 process_decl: "VARIABLE" . s_list ':' type ';'
+  100             | "VARIABLE" . s_list ':' type ':' '=' expr ';'
+
+    TOK_IDENTIFIER  shift, and go to state 20
+
+    name           go to state 53
+    selected_name  go to state 22
+    s_list         go to state 371
+
+
+State 351
+
+   98 process_decl_list: process_decl_list process_decl .
+
+    $default  reduce using rule 98 (process_decl_list)
+
+
+State 352
+
+   14 selected_name: name . '.' TOK_IDENTIFIER
+   15              | name . '.' "ALL"
+  126 delay_opt: "AFTER" TOK_NATURAL name .
+
+    '.'  shift, and go to state 32
+
+    $default  reduce using rule 126 (delay_opt)
+
+
+State 353
+
+  123 sigvalue: expr delay_opt "WHEN" conditional_expr . ';'
+  124         | expr delay_opt "WHEN" conditional_expr . "ELSE" sigvalue
+  168 conditional_expr: conditional_expr . "AND" conditional_expr
+  169                 | conditional_expr . "OR" conditional_expr
+
+    "OR"    shift, and go to state 256
+    "AND"   shift, and go to state 257
+    "ELSE"  shift, and go to state 372
+    ';'     shift, and go to state 373
+
+
+State 354
+
+   74 architecture_decl: "COMPONENT" name "GENERIC" '(' generic_list ')' ';' "PORT" '(' . port_list ')' ';' "END" "COMPONENT" ';'
+
+    TOK_IDENTIFIER  shift, and go to state 20
+
+    name           go to state 53
+    selected_name  go to state 22
+    port_list      go to state 374
+    port           go to state 58
+    s_list         go to state 59
+
+
+State 355
+
+   73 architecture_decl: "COMPONENT" name "PORT" '(' port_list ')' ';' "END" "COMPONENT" . ';'
+
+    ';'  shift, and go to state 375
+
+
+State 356
+
+   28 entity_declaration: "ENTITY" name "IS" "GENERIC" '(' generic_list ')' ';' "PORT" '(' port_list ')' ';' "END" name_opt . ';'
+
+    ';'  shift, and go to state 376
+
+
+State 357
+
+   59 index_constraint: name '(' name '\'' "RANGE" ')' .
+  136 signal: name '(' name '\'' "RANGE" ')' .
+
+    ','       reduce using rule 59 (index_constraint)
+    ')'       reduce using rule 59 (index_constraint)
+    $default  reduce using rule 136 (signal)
+
+
+State 358
+
+   80 architecture_item: "WITH" expr "SELECT" signal '<' '=' with_list ';' .
+
+    $default  reduce using rule 80 (architecture_item)
+
+
+State 359
+
+   92 with_list: with_item_list ',' . expr delay_opt "WHEN" "OTHERS"
+   95 with_item_list: with_item_list ',' . with_item
+
+    '+'             shift, and go to state 115
+    '-'             shift, and go to state 116
+    "NOT"           shift, and go to state 117
+    TOK_NATURAL     shift, and go to state 118
+    TOK_STRING      shift, and go to state 119
+    TOK_BIT_STRING  shift, and go to state 120
+    TOK_CHAR        shift, and go to state 121
+    TOK_IDENTIFIER  shift, and go to state 20
+    '('             shift, and go to state 122
+
+    name           go to state 123
+    selected_name  go to state 22
+    with_item      go to state 377
+    signal         go to state 124
+    expr           go to state 378
+
+
+State 360
+
+   93 with_list: expr delay_opt . "WHEN" "OTHERS"
+   96 with_item: expr delay_opt . "WHEN" with_value_list
+
+    "WHEN"  shift, and go to state 379
+
+
+State 361
+
+  133 generic_map_item: name '=' . '>' expr
+
+    '>'  shift, and go to state 380
+
+
+State 362
+
+   82 architecture_item: name ':' name "GENERIC" "MAP" '(' generic_map_list ')' . "PORT" "MAP" '(' map_list ')' ';'
+
+    "PORT"  shift, and go to state 381
+
+
+State 363
+
+  132 generic_map_list: generic_map_item ',' . generic_map_list
+
+    TOK_IDENTIFIER  shift, and go to state 20
+
+    name              go to state 339
+    selected_name     go to state 22
+    generic_map_list  go to state 382
+    generic_map_item  go to state 341
+
+
+State 364
+
+  130 map_item: name '=' . '>' signal
+
+    '>'  shift, and go to state 383
+
+
+State 365
+
+   81 architecture_item: name ':' name "PORT" "MAP" '(' map_list ')' . ';'
+
+    ';'  shift, and go to state 384
+
+
+State 366
+
+  128 map_list: map_item ',' . map_list
+
+    TOK_IDENTIFIER  shift, and go to state 20
+
+    name           go to state 342
+    selected_name  go to state 22
+    map_list       go to state 385
+    map_item       go to state 344
+    signal         go to state 345
+
+
+State 367
+
+   86 architecture_item: label_opt "FOR" signal "IN" expr "DOWNTO" expr "GENERATE" . architecture_body "END" "GENERATE" name_opt ';'
+
+    $default  reduce using rule 77 (architecture_body)
+
+    architecture_body  go to state 386
+
+
+State 368
+
+   85 architecture_item: label_opt "FOR" signal "IN" expr "TO" expr "GENERATE" . architecture_body "END" "GENERATE" name_opt ';'
+
+    $default  reduce using rule 77 (architecture_body)
+
+    architecture_body  go to state 387
+
+
+State 369
+
+   84 architecture_item: label_opt "IF" conditional_expr "GENERATE" architecture_body "END" "GENERATE" name_opt . ';'
+
+    ';'  shift, and go to state 388
+
+
+State 370
+
+   83 architecture_item: label_opt "PROCESS" '(' signal_list ')' process_decl_list "BEGIN" process_body . "END" "PROCESS" name_opt ';'
+  102 process_body: process_body . process_item
+
+    "CASE"          shift, and go to state 389
+    "END"           shift, and go to state 390
+    "EXIT"          shift, and go to state 391
+    "FOR"           shift, and go to state 392
+    "IF"            shift, and go to state 393
+    "NULL"          shift, and go to state 394
+    TOK_IDENTIFIER  shift, and go to state 20
+
+    name           go to state 198
+    selected_name  go to state 22
+    process_item   go to state 395
+    signal         go to state 396
+
+
+State 371
+
+   76 s_list: s_list . ',' name
+   99 process_decl: "VARIABLE" s_list . ':' type ';'
+  100             | "VARIABLE" s_list . ':' type ':' '=' expr ';'
+
+    ','  shift, and go to state 70
+    ':'  shift, and go to state 397
+
+
+State 372
+
+  124 sigvalue: expr delay_opt "WHEN" conditional_expr "ELSE" . sigvalue
+
+    '+'             shift, and go to state 115
+    '-'             shift, and go to state 116
+    "NOT"           shift, and go to state 117
+    TOK_NATURAL     shift, and go to state 118
+    TOK_STRING      shift, and go to state 119
+    TOK_BIT_STRING  shift, and go to state 120
+    TOK_CHAR        shift, and go to state 121
+    TOK_IDENTIFIER  shift, and go to state 20
+    '('             shift, and go to state 122
+
+    name           go to state 123
+    selected_name  go to state 22
+    sigvalue       go to state 398
+    signal         go to state 124
+    expr           go to state 262
+
+
+State 373
+
+  123 sigvalue: expr delay_opt "WHEN" conditional_expr ';' .
+
+    $default  reduce using rule 123 (sigvalue)
+
+
+State 374
+
+   34 port_list: port_list . ';' port
+   74 architecture_decl: "COMPONENT" name "GENERIC" '(' generic_list ')' ';' "PORT" '(' port_list . ')' ';' "END" "COMPONENT" ';'
+
+    ';'  shift, and go to state 72
+    ')'  shift, and go to state 399
+
+
+State 375
+
+   73 architecture_decl: "COMPONENT" name "PORT" '(' port_list ')' ';' "END" "COMPONENT" ';' .
+
+    $default  reduce using rule 73 (architecture_decl)
+
+
+State 376
+
+   28 entity_declaration: "ENTITY" name "IS" "GENERIC" '(' generic_list ')' ';' "PORT" '(' port_list ')' ';' "END" name_opt ';' .
+
+    $default  reduce using rule 28 (entity_declaration)
+
+
+State 377
+
+   95 with_item_list: with_item_list ',' with_item .
+
+    $default  reduce using rule 95 (with_item_list)
+
+
+State 378
+
+   92 with_list: with_item_list ',' expr . delay_opt "WHEN" "OTHERS"
+   96 with_item: expr . delay_opt "WHEN" with_value_list
+  150 expr: expr . '&' expr
+  153     | expr . '+' expr
+  154     | expr . '-' expr
+  155     | expr . '*' expr
+  156     | expr . '/' expr
+  157     | expr . "MOD" expr
+  159     | expr . "AND" expr
+  160     | expr . "OR" expr
+  161     | expr . "XOR" expr
+
+    "OR"     shift, and go to state 171
+    "XOR"    shift, and go to state 172
+    "AND"    shift, and go to state 173
+    "MOD"    shift, and go to state 174
+    '+'      shift, and go to state 175
+    '-'      shift, and go to state 176
+    '&'      shift, and go to state 177
+    '*'      shift, and go to state 178
+    '/'      shift, and go to state 179
+    "AFTER"  shift, and go to state 300
+
+    $default  reduce using rule 125 (delay_opt)
+
+    delay_opt  go to state 400
+
+
+State 379
+
+   93 with_list: expr delay_opt "WHEN" . "OTHERS"
+   96 with_item: expr delay_opt "WHEN" . with_value_list
+
+    "OTHERS"        shift, and go to state 401
+    TOK_STRING      shift, and go to state 402
+    TOK_IDENTIFIER  shift, and go to state 20
+
+    name             go to state 403
+    selected_name    go to state 22
+    with_value_list  go to state 404
+    with_value       go to state 405
+
+
+State 380
+
+  133 generic_map_item: name '=' '>' . expr
+
+    '+'             shift, and go to state 115
+    '-'             shift, and go to state 116
+    "NOT"           shift, and go to state 117
+    TOK_NATURAL     shift, and go to state 118
+    TOK_STRING      shift, and go to state 119
+    TOK_BIT_STRING  shift, and go to state 120
+    TOK_CHAR        shift, and go to state 121
+    TOK_IDENTIFIER  shift, and go to state 20
+    '('             shift, and go to state 122
+
+    name           go to state 123
+    selected_name  go to state 22
+    signal         go to state 124
+    expr           go to state 406
+
+
+State 381
+
+   82 architecture_item: name ':' name "GENERIC" "MAP" '(' generic_map_list ')' "PORT" . "MAP" '(' map_list ')' ';'
+
+    "MAP"  shift, and go to state 407
+
+
+State 382
+
+  132 generic_map_list: generic_map_item ',' generic_map_list .
+
+    $default  reduce using rule 132 (generic_map_list)
+
+
+State 383
+
+  130 map_item: name '=' '>' . signal
+
+    TOK_IDENTIFIER  shift, and go to state 20
+
+    name           go to state 198
+    selected_name  go to state 22
+    signal         go to state 408
+
+
+State 384
+
+   81 architecture_item: name ':' name "PORT" "MAP" '(' map_list ')' ';' .
+
+    $default  reduce using rule 81 (architecture_item)
+
+
+State 385
+
+  128 map_list: map_item ',' map_list .
+
+    $default  reduce using rule 128 (map_list)
+
+
+State 386
+
+   78 architecture_body: architecture_body . architecture_item
+   86 architecture_item: label_opt "FOR" signal "IN" expr "DOWNTO" expr "GENERATE" architecture_body . "END" "GENERATE" name_opt ';'
+
+    "END"           shift, and go to state 409
+    "WITH"          shift, and go to state 100
+    TOK_IDENTIFIER  shift, and go to state 20
+
+    $default  reduce using rule 89 (label_opt)
+
+    name               go to state 101
+    selected_name      go to state 22
+    architecture_item  go to state 102
+    label_opt          go to state 103
+    signal             go to state 104
+
+
+State 387
+
+   78 architecture_body: architecture_body . architecture_item
+   85 architecture_item: label_opt "FOR" signal "IN" expr "TO" expr "GENERATE" architecture_body . "END" "GENERATE" name_opt ';'
+
+    "END"           shift, and go to state 410
+    "WITH"          shift, and go to state 100
+    TOK_IDENTIFIER  shift, and go to state 20
+
+    $default  reduce using rule 89 (label_opt)
+
+    name               go to state 101
+    selected_name      go to state 22
+    architecture_item  go to state 102
+    label_opt          go to state 103
+    signal             go to state 104
+
+
+State 388
+
+   84 architecture_item: label_opt "IF" conditional_expr "GENERATE" architecture_body "END" "GENERATE" name_opt ';' .
+
+    $default  reduce using rule 84 (architecture_item)
+
+
+State 389
+
+  108 process_item: "CASE" . expr "IS" cases "END" "CASE" ';'
+
+    '+'             shift, and go to state 115
+    '-'             shift, and go to state 116
+    "NOT"           shift, and go to state 117
+    TOK_NATURAL     shift, and go to state 118
+    TOK_STRING      shift, and go to state 119
+    TOK_BIT_STRING  shift, and go to state 120
+    TOK_CHAR        shift, and go to state 121
+    TOK_IDENTIFIER  shift, and go to state 20
+    '('             shift, and go to state 122
+
+    name           go to state 123
+    selected_name  go to state 22
+    signal         go to state 124
+    expr           go to state 411
+
+
+State 390
+
+   83 architecture_item: label_opt "PROCESS" '(' signal_list ')' process_decl_list "BEGIN" process_body "END" . "PROCESS" name_opt ';'
+
+    "PROCESS"  shift, and go to state 412
+
+
+State 391
+
+  109 process_item: "EXIT" . ';'
+
+    ';'  shift, and go to state 413
+
+
+State 392
+
+  106 process_item: "FOR" . signal "IN" expr "TO" expr "LOOP" process_body "END" "LOOP" ';'
+  107             | "FOR" . signal "IN" expr "DOWNTO" expr "LOOP" process_body "END" "LOOP" ';'
+
+    TOK_IDENTIFIER  shift, and go to state 20
+
+    name           go to state 198
+    selected_name  go to state 22
+    signal         go to state 414
+
+
+State 393
+
+  105 process_item: "IF" . conditional_expr "THEN" process_body elsepart "END" "IF" ';'
+
+    '+'             shift, and go to state 115
+    '-'             shift, and go to state 116
+    "NOT"           shift, and go to state 200
+    TOK_NATURAL     shift, and go to state 118
+    TOK_STRING      shift, and go to state 119
+    TOK_BIT_STRING  shift, and go to state 120
+    TOK_CHAR        shift, and go to state 121
+    TOK_IDENTIFIER  shift, and go to state 20
+    '('             shift, and go to state 201
+
+    name              go to state 123
+    selected_name     go to state 22
+    signal            go to state 124
+    expr              go to state 202
+    conditional_expr  go to state 415
+    comparison        go to state 204
+
+
+State 394
+
+  110 process_item: "NULL" . ';'
+
+    ';'  shift, and go to state 416
+
+
+State 395
+
+  102 process_body: process_body process_item .
+
+    $default  reduce using rule 102 (process_body)
+
+
+State 396
+
+  103 process_item: signal . ':' '=' expr ';'
+  104             | signal . '<' '=' sigvalue
+
+    '<'  shift, and go to state 417
+    ':'  shift, and go to state 418
+
+
+State 397
+
+   99 process_decl: "VARIABLE" s_list ':' . type ';'
+  100             | "VARIABLE" s_list ':' . type ':' '=' expr ';'
+
+    "ACCESS"        shift, and go to state 84
+    "ARRAY"         shift, and go to state 85
+    "FILE"          shift, and go to state 86
+    "PROTECTED"     shift, and go to state 87
+    "RANGE"         shift, and go to state 88
+    "RECORD"        shift, and go to state 89
+    "TYPE"          shift, and go to state 90
+    TOK_IDENTIFIER  shift, and go to state 20
+    '('             shift, and go to state 91
+
+    name           go to state 92
+    selected_name  go to state 22
+    type           go to state 419
+
+
+State 398
+
+  124 sigvalue: expr delay_opt "WHEN" conditional_expr "ELSE" sigvalue .
+
+    $default  reduce using rule 124 (sigvalue)
+
+
+State 399
+
+   74 architecture_decl: "COMPONENT" name "GENERIC" '(' generic_list ')' ';' "PORT" '(' port_list ')' . ';' "END" "COMPONENT" ';'
+
+    ';'  shift, and go to state 420
+
+
+State 400
+
+   92 with_list: with_item_list ',' expr delay_opt . "WHEN" "OTHERS"
+   96 with_item: expr delay_opt . "WHEN" with_value_list
+
+    "WHEN"  shift, and go to state 421
+
+
+State 401
+
+   93 with_list: expr delay_opt "WHEN" "OTHERS" .
+
+    $default  reduce using rule 93 (with_list)
+
+
+State 402
+
+  118 with_value: TOK_STRING .
+
+    $default  reduce using rule 118 (with_value)
+
+
+State 403
+
+   14 selected_name: name . '.' TOK_IDENTIFIER
+   15              | name . '.' "ALL"
+  119 with_value: name .
+
+    '.'  shift, and go to state 32
+
+    $default  reduce using rule 119 (with_value)
+
+
+State 404
+
+   96 with_item: expr delay_opt "WHEN" with_value_list .
+  117 with_value_list: with_value_list . '|' with_value
+
+    '|'  shift, and go to state 422
+
+    $default  reduce using rule 96 (with_item)
+
+
+State 405
+
+  116 with_value_list: with_value .
+
+    $default  reduce using rule 116 (with_value_list)
+
+
+State 406
+
+  133 generic_map_item: name '=' '>' expr .
+  150 expr: expr . '&' expr
+  153     | expr . '+' expr
+  154     | expr . '-' expr
+  155     | expr . '*' expr
+  156     | expr . '/' expr
+  157     | expr . "MOD" expr
+  159     | expr . "AND" expr
+  160     | expr . "OR" expr
+  161     | expr . "XOR" expr
+
+    "OR"   shift, and go to state 171
+    "XOR"  shift, and go to state 172
+    "AND"  shift, and go to state 173
+    "MOD"  shift, and go to state 174
+    '+'    shift, and go to state 175
+    '-'    shift, and go to state 176
+    '&'    shift, and go to state 177
+    '*'    shift, and go to state 178
+    '/'    shift, and go to state 179
+
+    $default  reduce using rule 133 (generic_map_item)
+
+
+State 407
+
+   82 architecture_item: name ':' name "GENERIC" "MAP" '(' generic_map_list ')' "PORT" "MAP" . '(' map_list ')' ';'
+
+    '('  shift, and go to state 423
+
+
+State 408
+
+  130 map_item: name '=' '>' signal .
+
+    $default  reduce using rule 130 (map_item)
+
+
+State 409
+
+   86 architecture_item: label_opt "FOR" signal "IN" expr "DOWNTO" expr "GENERATE" architecture_body "END" . "GENERATE" name_opt ';'
+
+    "GENERATE"  shift, and go to state 424
+
+
+State 410
+
+   85 architecture_item: label_opt "FOR" signal "IN" expr "TO" expr "GENERATE" architecture_body "END" . "GENERATE" name_opt ';'
+
+    "GENERATE"  shift, and go to state 425
+
+
+State 411
+
+  108 process_item: "CASE" expr . "IS" cases "END" "CASE" ';'
+  150 expr: expr . '&' expr
+  153     | expr . '+' expr
+  154     | expr . '-' expr
+  155     | expr . '*' expr
+  156     | expr . '/' expr
+  157     | expr . "MOD" expr
+  159     | expr . "AND" expr
+  160     | expr . "OR" expr
+  161     | expr . "XOR" expr
+
+    "OR"   shift, and go to state 171
+    "XOR"  shift, and go to state 172
+    "AND"  shift, and go to state 173
+    "MOD"  shift, and go to state 174
+    '+'    shift, and go to state 175
+    '-'    shift, and go to state 176
+    '&'    shift, and go to state 177
+    '*'    shift, and go to state 178
+    '/'    shift, and go to state 179
+    "IS"   shift, and go to state 426
+
+
+State 412
+
+   83 architecture_item: label_opt "PROCESS" '(' signal_list ')' process_decl_list "BEGIN" process_body "END" "PROCESS" . name_opt ';'
+
+    TOK_IDENTIFIER  shift, and go to state 20
+
+    $default  reduce using rule 87 (name_opt)
+
+    name           go to state 139
+    selected_name  go to state 22
+    name_opt       go to state 427
+
+
+State 413
+
+  109 process_item: "EXIT" ';' .
+
+    $default  reduce using rule 109 (process_item)
+
+
+State 414
+
+  106 process_item: "FOR" signal . "IN" expr "TO" expr "LOOP" process_body "END" "LOOP" ';'
+  107             | "FOR" signal . "IN" expr "DOWNTO" expr "LOOP" process_body "END" "LOOP" ';'
+
+    "IN"  shift, and go to state 428
+
+
+State 415
+
+  105 process_item: "IF" conditional_expr . "THEN" process_body elsepart "END" "IF" ';'
+  168 conditional_expr: conditional_expr . "AND" conditional_expr
+  169                 | conditional_expr . "OR" conditional_expr
+
+    "OR"    shift, and go to state 256
+    "AND"   shift, and go to state 257
+    "THEN"  shift, and go to state 429
+
+
+State 416
+
+  110 process_item: "NULL" ';' .
+
+    $default  reduce using rule 110 (process_item)
+
+
+State 417
+
+  104 process_item: signal '<' . '=' sigvalue
+
+    '='  shift, and go to state 430
+
+
+State 418
+
+  103 process_item: signal ':' . '=' expr ';'
+
+    '='  shift, and go to state 431
+
+
+State 419
+
+   99 process_decl: "VARIABLE" s_list ':' type . ';'
+  100             | "VARIABLE" s_list ':' type . ':' '=' expr ';'
+
+    ';'  shift, and go to state 432
+    ':'  shift, and go to state 433
+
+
+State 420
+
+   74 architecture_decl: "COMPONENT" name "GENERIC" '(' generic_list ')' ';' "PORT" '(' port_list ')' ';' . "END" "COMPONENT" ';'
+
+    "END"  shift, and go to state 434
+
+
+State 421
+
+   92 with_list: with_item_list ',' expr delay_opt "WHEN" . "OTHERS"
+   96 with_item: expr delay_opt "WHEN" . with_value_list
+
+    "OTHERS"        shift, and go to state 435
+    TOK_STRING      shift, and go to state 402
+    TOK_IDENTIFIER  shift, and go to state 20
+
+    name             go to state 403
+    selected_name    go to state 22
+    with_value_list  go to state 404
+    with_value       go to state 405
+
+
+State 422
+
+  117 with_value_list: with_value_list '|' . with_value
+
+    TOK_STRING      shift, and go to state 402
+    TOK_IDENTIFIER  shift, and go to state 20
+
+    name           go to state 403
+    selected_name  go to state 22
+    with_value     go to state 436
+
+
+State 423
+
+   82 architecture_item: name ':' name "GENERIC" "MAP" '(' generic_map_list ')' "PORT" "MAP" '(' . map_list ')' ';'
+
+    TOK_IDENTIFIER  shift, and go to state 20
+
+    name           go to state 342
+    selected_name  go to state 22
+    map_list       go to state 437
+    map_item       go to state 344
+    signal         go to state 345
+
+
+State 424
+
+   86 architecture_item: label_opt "FOR" signal "IN" expr "DOWNTO" expr "GENERATE" architecture_body "END" "GENERATE" . name_opt ';'
+
+    TOK_IDENTIFIER  shift, and go to state 20
+
+    $default  reduce using rule 87 (name_opt)
+
+    name           go to state 139
+    selected_name  go to state 22
+    name_opt       go to state 438
+
+
+State 425
+
+   85 architecture_item: label_opt "FOR" signal "IN" expr "TO" expr "GENERATE" architecture_body "END" "GENERATE" . name_opt ';'
+
+    TOK_IDENTIFIER  shift, and go to state 20
+
+    $default  reduce using rule 87 (name_opt)
+
+    name           go to state 139
+    selected_name  go to state 22
+    name_opt       go to state 439
+
+
+State 426
+
+  108 process_item: "CASE" expr "IS" . cases "END" "CASE" ';'
+
+    "WHEN"  shift, and go to state 440
+
+    cases  go to state 441
+
+
+State 427
+
+   83 architecture_item: label_opt "PROCESS" '(' signal_list ')' process_decl_list "BEGIN" process_body "END" "PROCESS" name_opt . ';'
+
+    ';'  shift, and go to state 442
+
+
+State 428
+
+  106 process_item: "FOR" signal "IN" . expr "TO" expr "LOOP" process_body "END" "LOOP" ';'
+  107             | "FOR" signal "IN" . expr "DOWNTO" expr "LOOP" process_body "END" "LOOP" ';'
+
+    '+'             shift, and go to state 115
+    '-'             shift, and go to state 116
+    "NOT"           shift, and go to state 117
+    TOK_NATURAL     shift, and go to state 118
+    TOK_STRING      shift, and go to state 119
+    TOK_BIT_STRING  shift, and go to state 120
+    TOK_CHAR        shift, and go to state 121
+    TOK_IDENTIFIER  shift, and go to state 20
+    '('             shift, and go to state 122
+
+    name           go to state 123
+    selected_name  go to state 22
+    signal         go to state 124
+    expr           go to state 443
+
+
+State 429
+
+  105 process_item: "IF" conditional_expr "THEN" . process_body elsepart "END" "IF" ';'
+
+    $default  reduce using rule 101 (process_body)
+
+    process_body  go to state 444
+
+
+State 430
+
+  104 process_item: signal '<' '=' . sigvalue
+
+    '+'             shift, and go to state 115
+    '-'             shift, and go to state 116
+    "NOT"           shift, and go to state 117
+    TOK_NATURAL     shift, and go to state 118
+    TOK_STRING      shift, and go to state 119
+    TOK_BIT_STRING  shift, and go to state 120
+    TOK_CHAR        shift, and go to state 121
+    TOK_IDENTIFIER  shift, and go to state 20
+    '('             shift, and go to state 122
+
+    name           go to state 123
+    selected_name  go to state 22
+    sigvalue       go to state 445
+    signal         go to state 124
+    expr           go to state 262
+
+
+State 431
+
+  103 process_item: signal ':' '=' . expr ';'
+
+    '+'             shift, and go to state 115
+    '-'             shift, and go to state 116
+    "NOT"           shift, and go to state 117
+    TOK_NATURAL     shift, and go to state 118
+    TOK_STRING      shift, and go to state 119
+    TOK_BIT_STRING  shift, and go to state 120
+    TOK_CHAR        shift, and go to state 121
+    TOK_IDENTIFIER  shift, and go to state 20
+    '('             shift, and go to state 122
+
+    name           go to state 123
+    selected_name  go to state 22
+    signal         go to state 124
+    expr           go to state 446
+
+
+State 432
+
+   99 process_decl: "VARIABLE" s_list ':' type ';' .
+
+    $default  reduce using rule 99 (process_decl)
+
+
+State 433
+
+  100 process_decl: "VARIABLE" s_list ':' type ':' . '=' expr ';'
+
+    '='  shift, and go to state 447
+
+
+State 434
+
+   74 architecture_decl: "COMPONENT" name "GENERIC" '(' generic_list ')' ';' "PORT" '(' port_list ')' ';' "END" . "COMPONENT" ';'
+
+    "COMPONENT"  shift, and go to state 448
+
+
+State 435
+
+   92 with_list: with_item_list ',' expr delay_opt "WHEN" "OTHERS" .
+
+    $default  reduce using rule 92 (with_list)
+
+
+State 436
+
+  117 with_value_list: with_value_list '|' with_value .
+
+    $default  reduce using rule 117 (with_value_list)
+
+
+State 437
+
+   82 architecture_item: name ':' name "GENERIC" "MAP" '(' generic_map_list ')' "PORT" "MAP" '(' map_list . ')' ';'
+
+    ')'  shift, and go to state 449
+
+
+State 438
+
+   86 architecture_item: label_opt "FOR" signal "IN" expr "DOWNTO" expr "GENERATE" architecture_body "END" "GENERATE" name_opt . ';'
+
+    ';'  shift, and go to state 450
+
+
+State 439
+
+   85 architecture_item: label_opt "FOR" signal "IN" expr "TO" expr "GENERATE" architecture_body "END" "GENERATE" name_opt . ';'
+
+    ';'  shift, and go to state 451
+
+
+State 440
+
+  114 cases: "WHEN" . with_value_list '=' '>' process_body cases
+  115      | "WHEN" . "OTHERS" '=' '>' process_body
+
+    "OTHERS"        shift, and go to state 452
+    TOK_STRING      shift, and go to state 402
+    TOK_IDENTIFIER  shift, and go to state 20
+
+    name             go to state 403
+    selected_name    go to state 22
+    with_value_list  go to state 453
+    with_value       go to state 405
+
+
+State 441
+
+  108 process_item: "CASE" expr "IS" cases . "END" "CASE" ';'
+
+    "END"  shift, and go to state 454
+
+
+State 442
+
+   83 architecture_item: label_opt "PROCESS" '(' signal_list ')' process_decl_list "BEGIN" process_body "END" "PROCESS" name_opt ';' .
+
+    $default  reduce using rule 83 (architecture_item)
+
+
+State 443
+
+  106 process_item: "FOR" signal "IN" expr . "TO" expr "LOOP" process_body "END" "LOOP" ';'
+  107             | "FOR" signal "IN" expr . "DOWNTO" expr "LOOP" process_body "END" "LOOP" ';'
+  150 expr: expr . '&' expr
+  153     | expr . '+' expr
+  154     | expr . '-' expr
+  155     | expr . '*' expr
+  156     | expr . '/' expr
+  157     | expr . "MOD" expr
+  159     | expr . "AND" expr
+  160     | expr . "OR" expr
+  161     | expr . "XOR" expr
+
+    "OR"      shift, and go to state 171
+    "XOR"     shift, and go to state 172
+    "AND"     shift, and go to state 173
+    "MOD"     shift, and go to state 174
+    '+'       shift, and go to state 175
+    '-'       shift, and go to state 176
+    '&'       shift, and go to state 177
+    '*'       shift, and go to state 178
+    '/'       shift, and go to state 179
+    "DOWNTO"  shift, and go to state 455
+    "TO"      shift, and go to state 456
+
+
+State 444
+
+  102 process_body: process_body . process_item
+  105 process_item: "IF" conditional_expr "THEN" process_body . elsepart "END" "IF" ';'
+
+    "CASE"          shift, and go to state 389
+    "ELSE"          shift, and go to state 457
+    "ELSIF"         shift, and go to state 458
+    "EXIT"          shift, and go to state 391
+    "FOR"           shift, and go to state 392
+    "IF"            shift, and go to state 393
+    "NULL"          shift, and go to state 394
+    TOK_IDENTIFIER  shift, and go to state 20
+
+    $default  reduce using rule 111 (elsepart)
+
+    name           go to state 198
+    selected_name  go to state 22
+    process_item   go to state 395
+    elsepart       go to state 459
+    signal         go to state 396
+
+
+State 445
+
+  104 process_item: signal '<' '=' sigvalue .
+
+    $default  reduce using rule 104 (process_item)
+
+
+State 446
+
+  103 process_item: signal ':' '=' expr . ';'
+  150 expr: expr . '&' expr
+  153     | expr . '+' expr
+  154     | expr . '-' expr
+  155     | expr . '*' expr
+  156     | expr . '/' expr
+  157     | expr . "MOD" expr
+  159     | expr . "AND" expr
+  160     | expr . "OR" expr
+  161     | expr . "XOR" expr
+
+    "OR"   shift, and go to state 171
+    "XOR"  shift, and go to state 172
+    "AND"  shift, and go to state 173
+    "MOD"  shift, and go to state 174
+    '+'    shift, and go to state 175
+    '-'    shift, and go to state 176
+    '&'    shift, and go to state 177
+    '*'    shift, and go to state 178
+    '/'    shift, and go to state 179
+    ';'    shift, and go to state 460
+
+
+State 447
+
+  100 process_decl: "VARIABLE" s_list ':' type ':' '=' . expr ';'
+
+    '+'             shift, and go to state 115
+    '-'             shift, and go to state 116
+    "NOT"           shift, and go to state 117
+    TOK_NATURAL     shift, and go to state 118
+    TOK_STRING      shift, and go to state 119
+    TOK_BIT_STRING  shift, and go to state 120
+    TOK_CHAR        shift, and go to state 121
+    TOK_IDENTIFIER  shift, and go to state 20
+    '('             shift, and go to state 122
+
+    name           go to state 123
+    selected_name  go to state 22
+    signal         go to state 124
+    expr           go to state 461
+
+
+State 448
+
+   74 architecture_decl: "COMPONENT" name "GENERIC" '(' generic_list ')' ';' "PORT" '(' port_list ')' ';' "END" "COMPONENT" . ';'
+
+    ';'  shift, and go to state 462
+
+
+State 449
+
+   82 architecture_item: name ':' name "GENERIC" "MAP" '(' generic_map_list ')' "PORT" "MAP" '(' map_list ')' . ';'
+
+    ';'  shift, and go to state 463
+
+
+State 450
+
+   86 architecture_item: label_opt "FOR" signal "IN" expr "DOWNTO" expr "GENERATE" architecture_body "END" "GENERATE" name_opt ';' .
+
+    $default  reduce using rule 86 (architecture_item)
+
+
+State 451
+
+   85 architecture_item: label_opt "FOR" signal "IN" expr "TO" expr "GENERATE" architecture_body "END" "GENERATE" name_opt ';' .
+
+    $default  reduce using rule 85 (architecture_item)
+
+
+State 452
+
+  115 cases: "WHEN" "OTHERS" . '=' '>' process_body
+
+    '='  shift, and go to state 464
+
+
+State 453
+
+  114 cases: "WHEN" with_value_list . '=' '>' process_body cases
+  117 with_value_list: with_value_list . '|' with_value
+
+    '='  shift, and go to state 465
+    '|'  shift, and go to state 422
+
+
+State 454
+
+  108 process_item: "CASE" expr "IS" cases "END" . "CASE" ';'
+
+    "CASE"  shift, and go to state 466
+
+
+State 455
+
+  107 process_item: "FOR" signal "IN" expr "DOWNTO" . expr "LOOP" process_body "END" "LOOP" ';'
+
+    '+'             shift, and go to state 115
+    '-'             shift, and go to state 116
+    "NOT"           shift, and go to state 117
+    TOK_NATURAL     shift, and go to state 118
+    TOK_STRING      shift, and go to state 119
+    TOK_BIT_STRING  shift, and go to state 120
+    TOK_CHAR        shift, and go to state 121
+    TOK_IDENTIFIER  shift, and go to state 20
+    '('             shift, and go to state 122
+
+    name           go to state 123
+    selected_name  go to state 22
+    signal         go to state 124
+    expr           go to state 467
+
+
+State 456
+
+  106 process_item: "FOR" signal "IN" expr "TO" . expr "LOOP" process_body "END" "LOOP" ';'
+
+    '+'             shift, and go to state 115
+    '-'             shift, and go to state 116
+    "NOT"           shift, and go to state 117
+    TOK_NATURAL     shift, and go to state 118
+    TOK_STRING      shift, and go to state 119
+    TOK_BIT_STRING  shift, and go to state 120
+    TOK_CHAR        shift, and go to state 121
+    TOK_IDENTIFIER  shift, and go to state 20
+    '('             shift, and go to state 122
+
+    name           go to state 123
+    selected_name  go to state 22
+    signal         go to state 124
+    expr           go to state 468
+
+
+State 457
+
+  113 elsepart: "ELSE" . process_body
+
+    $default  reduce using rule 101 (process_body)
+
+    process_body  go to state 469
+
+
+State 458
+
+  112 elsepart: "ELSIF" . conditional_expr "THEN" process_body elsepart
+
+    '+'             shift, and go to state 115
+    '-'             shift, and go to state 116
+    "NOT"           shift, and go to state 200
+    TOK_NATURAL     shift, and go to state 118
+    TOK_STRING      shift, and go to state 119
+    TOK_BIT_STRING  shift, and go to state 120
+    TOK_CHAR        shift, and go to state 121
+    TOK_IDENTIFIER  shift, and go to state 20
+    '('             shift, and go to state 201
+
+    name              go to state 123
+    selected_name     go to state 22
+    signal            go to state 124
+    expr              go to state 202
+    conditional_expr  go to state 470
+    comparison        go to state 204
+
+
+State 459
+
+  105 process_item: "IF" conditional_expr "THEN" process_body elsepart . "END" "IF" ';'
+
+    "END"  shift, and go to state 471
+
+
+State 460
+
+  103 process_item: signal ':' '=' expr ';' .
+
+    $default  reduce using rule 103 (process_item)
+
+
+State 461
+
+  100 process_decl: "VARIABLE" s_list ':' type ':' '=' expr . ';'
+  150 expr: expr . '&' expr
+  153     | expr . '+' expr
+  154     | expr . '-' expr
+  155     | expr . '*' expr
+  156     | expr . '/' expr
+  157     | expr . "MOD" expr
+  159     | expr . "AND" expr
+  160     | expr . "OR" expr
+  161     | expr . "XOR" expr
+
+    "OR"   shift, and go to state 171
+    "XOR"  shift, and go to state 172
+    "AND"  shift, and go to state 173
+    "MOD"  shift, and go to state 174
+    '+'    shift, and go to state 175
+    '-'    shift, and go to state 176
+    '&'    shift, and go to state 177
+    '*'    shift, and go to state 178
+    '/'    shift, and go to state 179
+    ';'    shift, and go to state 472
+
+
+State 462
+
+   74 architecture_decl: "COMPONENT" name "GENERIC" '(' generic_list ')' ';' "PORT" '(' port_list ')' ';' "END" "COMPONENT" ';' .
+
+    $default  reduce using rule 74 (architecture_decl)
+
+
+State 463
+
+   82 architecture_item: name ':' name "GENERIC" "MAP" '(' generic_map_list ')' "PORT" "MAP" '(' map_list ')' ';' .
+
+    $default  reduce using rule 82 (architecture_item)
+
+
+State 464
+
+  115 cases: "WHEN" "OTHERS" '=' . '>' process_body
+
+    '>'  shift, and go to state 473
+
+
+State 465
+
+  114 cases: "WHEN" with_value_list '=' . '>' process_body cases
+
+    '>'  shift, and go to state 474
+
+
+State 466
+
+  108 process_item: "CASE" expr "IS" cases "END" "CASE" . ';'
+
+    ';'  shift, and go to state 475
+
+
+State 467
+
+  107 process_item: "FOR" signal "IN" expr "DOWNTO" expr . "LOOP" process_body "END" "LOOP" ';'
+  150 expr: expr . '&' expr
+  153     | expr . '+' expr
+  154     | expr . '-' expr
+  155     | expr . '*' expr
+  156     | expr . '/' expr
+  157     | expr . "MOD" expr
+  159     | expr . "AND" expr
+  160     | expr . "OR" expr
+  161     | expr . "XOR" expr
+
+    "OR"    shift, and go to state 171
+    "XOR"   shift, and go to state 172
+    "AND"   shift, and go to state 173
+    "MOD"   shift, and go to state 174
+    '+'     shift, and go to state 175
+    '-'     shift, and go to state 176
+    '&'     shift, and go to state 177
+    '*'     shift, and go to state 178
+    '/'     shift, and go to state 179
+    "LOOP"  shift, and go to state 476
+
+
+State 468
+
+  106 process_item: "FOR" signal "IN" expr "TO" expr . "LOOP" process_body "END" "LOOP" ';'
+  150 expr: expr . '&' expr
+  153     | expr . '+' expr
+  154     | expr . '-' expr
+  155     | expr . '*' expr
+  156     | expr . '/' expr
+  157     | expr . "MOD" expr
+  159     | expr . "AND" expr
+  160     | expr . "OR" expr
+  161     | expr . "XOR" expr
+
+    "OR"    shift, and go to state 171
+    "XOR"   shift, and go to state 172
+    "AND"   shift, and go to state 173
+    "MOD"   shift, and go to state 174
+    '+'     shift, and go to state 175
+    '-'     shift, and go to state 176
+    '&'     shift, and go to state 177
+    '*'     shift, and go to state 178
+    '/'     shift, and go to state 179
+    "LOOP"  shift, and go to state 477
+
+
+State 469
+
+  102 process_body: process_body . process_item
+  113 elsepart: "ELSE" process_body .
+
+    "CASE"          shift, and go to state 389
+    "EXIT"          shift, and go to state 391
+    "FOR"           shift, and go to state 392
+    "IF"            shift, and go to state 393
+    "NULL"          shift, and go to state 394
+    TOK_IDENTIFIER  shift, and go to state 20
+
+    $default  reduce using rule 113 (elsepart)
+
+    name           go to state 198
+    selected_name  go to state 22
+    process_item   go to state 395
+    signal         go to state 396
+
+
+State 470
+
+  112 elsepart: "ELSIF" conditional_expr . "THEN" process_body elsepart
+  168 conditional_expr: conditional_expr . "AND" conditional_expr
+  169                 | conditional_expr . "OR" conditional_expr
+
+    "OR"    shift, and go to state 256
+    "AND"   shift, and go to state 257
+    "THEN"  shift, and go to state 478
+
+
+State 471
+
+  105 process_item: "IF" conditional_expr "THEN" process_body elsepart "END" . "IF" ';'
+
+    "IF"  shift, and go to state 479
+
+
+State 472
+
+  100 process_decl: "VARIABLE" s_list ':' type ':' '=' expr ';' .
+
+    $default  reduce using rule 100 (process_decl)
+
+
+State 473
+
+  115 cases: "WHEN" "OTHERS" '=' '>' . process_body
+
+    $default  reduce using rule 101 (process_body)
+
+    process_body  go to state 480
+
+
+State 474
+
+  114 cases: "WHEN" with_value_list '=' '>' . process_body cases
+
+    $default  reduce using rule 101 (process_body)
+
+    process_body  go to state 481
+
+
+State 475
+
+  108 process_item: "CASE" expr "IS" cases "END" "CASE" ';' .
+
+    $default  reduce using rule 108 (process_item)
+
+
+State 476
+
+  107 process_item: "FOR" signal "IN" expr "DOWNTO" expr "LOOP" . process_body "END" "LOOP" ';'
+
+    $default  reduce using rule 101 (process_body)
+
+    process_body  go to state 482
+
+
+State 477
+
+  106 process_item: "FOR" signal "IN" expr "TO" expr "LOOP" . process_body "END" "LOOP" ';'
+
+    $default  reduce using rule 101 (process_body)
+
+    process_body  go to state 483
+
+
+State 478
+
+  112 elsepart: "ELSIF" conditional_expr "THEN" . process_body elsepart
+
+    $default  reduce using rule 101 (process_body)
+
+    process_body  go to state 484
+
+
+State 479
+
+  105 process_item: "IF" conditional_expr "THEN" process_body elsepart "END" "IF" . ';'
+
+    ';'  shift, and go to state 485
+
+
+State 480
+
+  102 process_body: process_body . process_item
+  115 cases: "WHEN" "OTHERS" '=' '>' process_body .
+
+    "CASE"          shift, and go to state 389
+    "EXIT"          shift, and go to state 391
+    "FOR"           shift, and go to state 392
+    "IF"            shift, and go to state 393
+    "NULL"          shift, and go to state 394
+    TOK_IDENTIFIER  shift, and go to state 20
+
+    $default  reduce using rule 115 (cases)
+
+    name           go to state 198
+    selected_name  go to state 22
+    process_item   go to state 395
+    signal         go to state 396
+
+
+State 481
+
+  102 process_body: process_body . process_item
+  114 cases: "WHEN" with_value_list '=' '>' process_body . cases
+
+    "CASE"          shift, and go to state 389
+    "EXIT"          shift, and go to state 391
+    "FOR"           shift, and go to state 392
+    "IF"            shift, and go to state 393
+    "NULL"          shift, and go to state 394
+    "WHEN"          shift, and go to state 440
+    TOK_IDENTIFIER  shift, and go to state 20
+
+    name           go to state 198
+    selected_name  go to state 22
+    process_item   go to state 395
+    cases          go to state 486
+    signal         go to state 396
+
+
+State 482
+
+  102 process_body: process_body . process_item
+  107 process_item: "FOR" signal "IN" expr "DOWNTO" expr "LOOP" process_body . "END" "LOOP" ';'
+
+    "CASE"          shift, and go to state 389
+    "END"           shift, and go to state 487
+    "EXIT"          shift, and go to state 391
+    "FOR"           shift, and go to state 392
+    "IF"            shift, and go to state 393
+    "NULL"          shift, and go to state 394
+    TOK_IDENTIFIER  shift, and go to state 20
+
+    name           go to state 198
+    selected_name  go to state 22
+    process_item   go to state 395
+    signal         go to state 396
+
+
+State 483
+
+  102 process_body: process_body . process_item
+  106 process_item: "FOR" signal "IN" expr "TO" expr "LOOP" process_body . "END" "LOOP" ';'
+
+    "CASE"          shift, and go to state 389
+    "END"           shift, and go to state 488
+    "EXIT"          shift, and go to state 391
+    "FOR"           shift, and go to state 392
+    "IF"            shift, and go to state 393
+    "NULL"          shift, and go to state 394
+    TOK_IDENTIFIER  shift, and go to state 20
+
+    name           go to state 198
+    selected_name  go to state 22
+    process_item   go to state 395
+    signal         go to state 396
+
+
+State 484
+
+  102 process_body: process_body . process_item
+  112 elsepart: "ELSIF" conditional_expr "THEN" process_body . elsepart
+
+    "CASE"          shift, and go to state 389
+    "ELSE"          shift, and go to state 457
+    "ELSIF"         shift, and go to state 458
+    "EXIT"          shift, and go to state 391
+    "FOR"           shift, and go to state 392
+    "IF"            shift, and go to state 393
+    "NULL"          shift, and go to state 394
+    TOK_IDENTIFIER  shift, and go to state 20
+
+    $default  reduce using rule 111 (elsepart)
+
+    name           go to state 198
+    selected_name  go to state 22
+    process_item   go to state 395
+    elsepart       go to state 489
+    signal         go to state 396
+
+
+State 485
+
+  105 process_item: "IF" conditional_expr "THEN" process_body elsepart "END" "IF" ';' .
+
+    $default  reduce using rule 105 (process_item)
+
+
+State 486
+
+  114 cases: "WHEN" with_value_list '=' '>' process_body cases .
+
+    $default  reduce using rule 114 (cases)
+
+
+State 487
+
+  107 process_item: "FOR" signal "IN" expr "DOWNTO" expr "LOOP" process_body "END" . "LOOP" ';'
+
+    "LOOP"  shift, and go to state 490
+
+
+State 488
+
+  106 process_item: "FOR" signal "IN" expr "TO" expr "LOOP" process_body "END" . "LOOP" ';'
+
+    "LOOP"  shift, and go to state 491
+
+
+State 489
+
+  112 elsepart: "ELSIF" conditional_expr "THEN" process_body elsepart .
+
+    $default  reduce using rule 112 (elsepart)
+
+
+State 490
+
+  107 process_item: "FOR" signal "IN" expr "DOWNTO" expr "LOOP" process_body "END" "LOOP" . ';'
+
+    ';'  shift, and go to state 492
+
+
+State 491
+
+  106 process_item: "FOR" signal "IN" expr "TO" expr "LOOP" process_body "END" "LOOP" . ';'
+
+    ';'  shift, and go to state 493
+
+
+State 492
+
+  107 process_item: "FOR" signal "IN" expr "DOWNTO" expr "LOOP" process_body "END" "LOOP" ';' .
+
+    $default  reduce using rule 107 (process_item)
+
+
+State 493
+
+  106 process_item: "FOR" signal "IN" expr "TO" expr "LOOP" process_body "END" "LOOP" ';' .
+
+    $default  reduce using rule 106 (process_item)

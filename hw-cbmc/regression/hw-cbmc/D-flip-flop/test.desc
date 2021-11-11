@@ -1,0 +1,6 @@
+CORE
+main.c
+--module top --bound 5 main.v
+^EXIT=0$
+^SIGNAL=0$
+

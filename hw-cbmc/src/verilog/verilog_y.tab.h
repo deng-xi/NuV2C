@@ -1,0 +1,640 @@
+/* A Bison parser, made by GNU Bison 3.0.2.  */
+
+/* Bison interface for Yacc-like parsers in C
+
+   Copyright (C) 1984, 1989-1990, 2000-2013 Free Software Foundation, Inc.
+
+   This program is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
+
+/* As a special exception, you may create a larger work that contains
+   part or all of the Bison parser skeleton and distribute that work
+   under terms of your choice, so long as that work isn't itself a
+   parser generator using the skeleton or a modified version thereof
+   as a parser skeleton.  Alternatively, if you modify or redistribute
+   the parser skeleton itself, you may (at your option) remove this
+   special exception, which will cause the skeleton and the resulting
+   Bison output files to be licensed under the GNU General Public
+   License without this special exception.
+
+   This special exception was added by the Free Software Foundation in
+   version 2.2 of Bison.  */
+
+#ifndef YY_YYVERILOG_VERILOG_Y_TAB_HPP_INCLUDED
+# define YY_YYVERILOG_VERILOG_Y_TAB_HPP_INCLUDED
+/* Debug traces.  */
+#ifndef YYDEBUG
+# define YYDEBUG 0
+#endif
+#if YYDEBUG
+extern int yyverilogdebug;
+#endif
+
+/* Token type.  */
+#ifndef YYTOKENTYPE
+# define YYTOKENTYPE
+  enum yytokentype
+  {
+    TOK_PARSE_LANGUAGE = 258,
+    TOK_PARSE_EXPRESSION = 259,
+    TOK_PARSE_TYPE = 260,
+    TOK_PARENASTERIC = 261,
+    TOK_ASTERICPAREN = 262,
+    TOK_EXCLAM = 263,
+    TOK_TILDE = 264,
+    TOK_AMPER = 265,
+    TOK_TILDEAMPER = 266,
+    TOK_TILDEVERTBAR = 267,
+    TOK_CARET = 268,
+    TOK_TILDECARET = 269,
+    TOK_CARETTILDE = 270,
+    TOK_MINUSGREATER = 271,
+    TOK_ASTERIC = 272,
+    TOK_SLASH = 273,
+    TOK_PERCENT = 274,
+    TOK_EQUALEQUAL = 275,
+    TOK_EXCLAMEQUAL = 276,
+    TOK_EQUALEQUALEQUAL = 277,
+    TOK_EXCLAMEQUALEQUAL = 278,
+    TOK_AMPERAMPER = 279,
+    TOK_VERTBARVERTBAR = 280,
+    TOK_LESS = 281,
+    TOK_LESSEQUAL = 282,
+    TOK_GREATER = 283,
+    TOK_GREATEREQUAL = 284,
+    TOK_GREATERGREATER = 285,
+    TOK_GREATERGREATERGREATER = 286,
+    TOK_LESSLESS = 287,
+    TOK_LESSLESSLESS = 288,
+    TOK_PLUS = 289,
+    TOK_MINUS = 290,
+    TOK_VERTBAR = 291,
+    TOK_QUESTION = 292,
+    TOK_COLON = 293,
+    TOK_ALWAYS = 294,
+    TOK_AND = 295,
+    TOK_ASSIGN = 296,
+    TOK_AUTOMATIC = 297,
+    TOK_BEGIN = 298,
+    TOK_BUF = 299,
+    TOK_BUFIF0 = 300,
+    TOK_BUFIF1 = 301,
+    TOK_CASE = 302,
+    TOK_CASEX = 303,
+    TOK_CASEZ = 304,
+    TOK_CMOS = 305,
+    TOK_DEASSIGN = 306,
+    TOK_DEFAULT = 307,
+    TOK_DEFPARAM = 308,
+    TOK_DISABLE = 309,
+    TOK_EDGE = 310,
+    TOK_ELSE = 311,
+    TOK_END = 312,
+    TOK_ENDCASE = 313,
+    TOK_ENDFUNCTION = 314,
+    TOK_ENDGENERATE = 315,
+    TOK_ENDMODULE = 316,
+    TOK_ENDPRIMITIVE = 317,
+    TOK_ENDSPECIFY = 318,
+    TOK_ENDTABLE = 319,
+    TOK_ENDTASK = 320,
+    TOK_EVENT = 321,
+    TOK_FOR = 322,
+    TOK_FORCE = 323,
+    TOK_FOREVER = 324,
+    TOK_FORK = 325,
+    TOK_FUNCTION = 326,
+    TOK_GENERATE = 327,
+    TOK_GENVAR = 328,
+    TOK_HIGHZ0 = 329,
+    TOK_HIGHZ1 = 330,
+    TOK_IF = 331,
+    TOK_IFNONE = 332,
+    TOK_INITIAL = 333,
+    TOK_INOUT = 334,
+    TOK_INPUT = 335,
+    TOK_INTEGER = 336,
+    TOK_JOIN = 337,
+    TOK_LARGE = 338,
+    TOK_LOCALPARAM = 339,
+    TOK_MACROMODULE = 340,
+    TOK_MEDIUM = 341,
+    TOK_MODULE = 342,
+    TOK_NAND = 343,
+    TOK_NEGEDGE = 344,
+    TOK_NMOS = 345,
+    TOK_NOR = 346,
+    TOK_NOT = 347,
+    TOK_NOTIF0 = 348,
+    TOK_NOTIF1 = 349,
+    TOK_OR = 350,
+    TOK_OUTPUT = 351,
+    TOK_PARAMETER = 352,
+    TOK_PMOS = 353,
+    TOK_POSEDGE = 354,
+    TOK_PRIMITIVE = 355,
+    TOK_PULL0 = 356,
+    TOK_PULL1 = 357,
+    TOK_PULLDOWN = 358,
+    TOK_PULLUP = 359,
+    TOK_RCMOS = 360,
+    TOK_REAL = 361,
+    TOK_REALTIME = 362,
+    TOK_REG = 363,
+    TOK_RELEASE = 364,
+    TOK_REPEAT = 365,
+    TOK_RNMOS = 366,
+    TOK_RPMOS = 367,
+    TOK_RTRAN = 368,
+    TOK_RTRANIF0 = 369,
+    TOK_RTRANIF1 = 370,
+    TOK_SCALARED = 371,
+    TOK_SIGNED = 372,
+    TOK_SMALL = 373,
+    TOK_SPECIFY = 374,
+    TOK_SPECPARAM = 375,
+    TOK_STRONG0 = 376,
+    TOK_STRONG1 = 377,
+    TOK_SUPPLY0 = 378,
+    TOK_SUPPLY1 = 379,
+    TOK_TABLE = 380,
+    TOK_TASK = 381,
+    TOK_TIME = 382,
+    TOK_TRAN = 383,
+    TOK_TRANIF0 = 384,
+    TOK_TRANIF1 = 385,
+    TOK_TRI = 386,
+    TOK_TRI0 = 387,
+    TOK_TRI1 = 388,
+    TOK_TRIAND = 389,
+    TOK_TRIOR = 390,
+    TOK_TRIREG = 391,
+    TOK_UNSIGNED = 392,
+    TOK_VECTORED = 393,
+    TOK_WAIT = 394,
+    TOK_WAND = 395,
+    TOK_WEAK0 = 396,
+    TOK_WEAK1 = 397,
+    TOK_WHILE = 398,
+    TOK_WIRE = 399,
+    TOK_WOR = 400,
+    TOK_XNOR = 401,
+    TOK_XOR = 402,
+    TOK_SETUP = 403,
+    TOK_HOLD = 404,
+    TOK_RECOVERY = 405,
+    TOK_REMOVAL = 406,
+    TOK_WIDTH = 407,
+    TOK_SKEW = 408,
+    TOK_VERTBARMINUSGREATER = 409,
+    TOK_VERTBAREQUALGREATER = 410,
+    TOK_PLUSPLUS = 411,
+    TOK_MINUSMINUS = 412,
+    TOK_PLUSEQUAL = 413,
+    TOK_PLUSCOLON = 414,
+    TOK_MINUSEQUAL = 415,
+    TOK_MINUSCOLON = 416,
+    TOK_ASTERICEQUAL = 417,
+    TOK_SLASHEQUAL = 418,
+    TOK_PERCENTEQUAL = 419,
+    TOK_AMPEREQUAL = 420,
+    TOK_CARETEQUAL = 421,
+    TOK_VERTBAREQUAL = 422,
+    TOK_LESSLESSEQUAL = 423,
+    TOK_GREATERGREATEREQUAL = 424,
+    TOK_LESSLESSLESSEQUAL = 425,
+    TOK_GREATERGREATERGREATEREQUAL = 426,
+    TOK_HASHHASH = 427,
+    TOK_ACCEPT_ON = 428,
+    TOK_ALIAS = 429,
+    TOK_ALWAYS_COMB = 430,
+    TOK_ALWAYS_FF = 431,
+    TOK_ALWAYS_LATCH = 432,
+    TOK_ASSERT = 433,
+    TOK_ASSUME = 434,
+    TOK_BEFORE = 435,
+    TOK_BIND = 436,
+    TOK_BINS = 437,
+    TOK_BINSOF = 438,
+    TOK_BIT = 439,
+    TOK_BREAK = 440,
+    TOK_BYTE = 441,
+    TOK_CHANDLE = 442,
+    TOK_CHECKER = 443,
+    TOK_CLASS = 444,
+    TOK_CLOCKING = 445,
+    TOK_CONFIG = 446,
+    TOK_CONST = 447,
+    TOK_CONSTRAINT = 448,
+    TOK_CONTEXT = 449,
+    TOK_CONTINUE = 450,
+    TOK_COVER = 451,
+    TOK_COVERGROUP = 452,
+    TOK_COVERPOINT = 453,
+    TOK_CROSS = 454,
+    TOK_DIST = 455,
+    TOK_DO = 456,
+    TOK_ENDCLASS = 457,
+    TOK_ENDCLOCKING = 458,
+    TOK_ENDCONFIG = 459,
+    TOK_ENDGROUP = 460,
+    TOK_ENDINTERFACE = 461,
+    TOK_ENDPACKAGE = 462,
+    TOK_ENDPROGRAM = 463,
+    TOK_ENDPROPERTY = 464,
+    TOK_ENDSEQUENCE = 465,
+    TOK_ENUM = 466,
+    TOK_EVENTUALLY = 467,
+    TOK_EXPECT = 468,
+    TOK_EXPORT = 469,
+    TOK_EXTENDS = 470,
+    TOK_EXTERN = 471,
+    TOK_FINAL = 472,
+    TOK_FIRST_MATCH = 473,
+    TOK_FOREACH = 474,
+    TOK_IFF = 475,
+    TOK_IGNORE_BINS = 476,
+    TOK_ILLEGAL_BINS = 477,
+    TOK_IMPORT = 478,
+    TOK_INSIDE = 479,
+    TOK_INT = 480,
+    TOK_INTERFACE = 481,
+    TOK_INTERSECT = 482,
+    TOK_JOIN_ANY = 483,
+    TOK_JOIN_NONE = 484,
+    TOK_LOCAL = 485,
+    TOK_LOGIC = 486,
+    TOK_LONGINT = 487,
+    TOK_MATCHES = 488,
+    TOK_MODPORT = 489,
+    TOK_NEW = 490,
+    TOK_NEXTTIME = 491,
+    TOK_NULL = 492,
+    TOK_PACKAGE = 493,
+    TOK_PACKED = 494,
+    TOK_PRIORITY = 495,
+    TOK_PROGRAM = 496,
+    TOK_PROPERTY = 497,
+    TOK_PROTECTED = 498,
+    TOK_PURE = 499,
+    TOK_RAND = 500,
+    TOK_RANDC = 501,
+    TOK_RANDCASE = 502,
+    TOK_RANDSEQUENCE = 503,
+    TOK_REF = 504,
+    TOK_RETURN = 505,
+    TOK_S_ALWAYS = 506,
+    TOK_S_EVENTUALLY = 507,
+    TOK_S_NEXTTIME = 508,
+    TOK_S_UNTIL = 509,
+    TOK_S_UNTIL_WITH = 510,
+    TOK_SEQUENCE = 511,
+    TOK_SHORTINT = 512,
+    TOK_SHORTREAL = 513,
+    TOK_SOLVE = 514,
+    TOK_STATIC = 515,
+    TOK_STRING = 516,
+    TOK_STRUCT = 517,
+    TOK_SUPER = 518,
+    TOK_TAGGED = 519,
+    TOK_THIS = 520,
+    TOK_THROUGHOUT = 521,
+    TOK_TIMEPRECISION = 522,
+    TOK_TIMEUNIT = 523,
+    TOK_TYPE = 524,
+    TOK_TYPEDEF = 525,
+    TOK_UNION = 526,
+    TOK_UNIQUE = 527,
+    TOK_UNTIL = 528,
+    TOK_UNTIL_WITH = 529,
+    TOK_VAR = 530,
+    TOK_VIRTUAL = 531,
+    TOK_VOID = 532,
+    TOK_WAIT_ORDER = 533,
+    TOK_WILDCARD = 534,
+    TOK_WITH = 535,
+    TOK_WITHIN = 536,
+    TOK_ENDOFFILE = 537,
+    TOK_CHARSTR = 538,
+    TOK_NUMBER = 539,
+    TOK_QSTRING = 540,
+    TOK_SYSIDENT = 541,
+    TOK_SCANNER_ERROR = 542,
+    TOK_AMPERTILDE = 543,
+    TOK_ASTERICASTERIC = 544,
+    LT_TOK_ELSE = 545
+  };
+#endif
+/* Tokens.  */
+#define TOK_PARSE_LANGUAGE 258
+#define TOK_PARSE_EXPRESSION 259
+#define TOK_PARSE_TYPE 260
+#define TOK_PARENASTERIC 261
+#define TOK_ASTERICPAREN 262
+#define TOK_EXCLAM 263
+#define TOK_TILDE 264
+#define TOK_AMPER 265
+#define TOK_TILDEAMPER 266
+#define TOK_TILDEVERTBAR 267
+#define TOK_CARET 268
+#define TOK_TILDECARET 269
+#define TOK_CARETTILDE 270
+#define TOK_MINUSGREATER 271
+#define TOK_ASTERIC 272
+#define TOK_SLASH 273
+#define TOK_PERCENT 274
+#define TOK_EQUALEQUAL 275
+#define TOK_EXCLAMEQUAL 276
+#define TOK_EQUALEQUALEQUAL 277
+#define TOK_EXCLAMEQUALEQUAL 278
+#define TOK_AMPERAMPER 279
+#define TOK_VERTBARVERTBAR 280
+#define TOK_LESS 281
+#define TOK_LESSEQUAL 282
+#define TOK_GREATER 283
+#define TOK_GREATEREQUAL 284
+#define TOK_GREATERGREATER 285
+#define TOK_GREATERGREATERGREATER 286
+#define TOK_LESSLESS 287
+#define TOK_LESSLESSLESS 288
+#define TOK_PLUS 289
+#define TOK_MINUS 290
+#define TOK_VERTBAR 291
+#define TOK_QUESTION 292
+#define TOK_COLON 293
+#define TOK_ALWAYS 294
+#define TOK_AND 295
+#define TOK_ASSIGN 296
+#define TOK_AUTOMATIC 297
+#define TOK_BEGIN 298
+#define TOK_BUF 299
+#define TOK_BUFIF0 300
+#define TOK_BUFIF1 301
+#define TOK_CASE 302
+#define TOK_CASEX 303
+#define TOK_CASEZ 304
+#define TOK_CMOS 305
+#define TOK_DEASSIGN 306
+#define TOK_DEFAULT 307
+#define TOK_DEFPARAM 308
+#define TOK_DISABLE 309
+#define TOK_EDGE 310
+#define TOK_ELSE 311
+#define TOK_END 312
+#define TOK_ENDCASE 313
+#define TOK_ENDFUNCTION 314
+#define TOK_ENDGENERATE 315
+#define TOK_ENDMODULE 316
+#define TOK_ENDPRIMITIVE 317
+#define TOK_ENDSPECIFY 318
+#define TOK_ENDTABLE 319
+#define TOK_ENDTASK 320
+#define TOK_EVENT 321
+#define TOK_FOR 322
+#define TOK_FORCE 323
+#define TOK_FOREVER 324
+#define TOK_FORK 325
+#define TOK_FUNCTION 326
+#define TOK_GENERATE 327
+#define TOK_GENVAR 328
+#define TOK_HIGHZ0 329
+#define TOK_HIGHZ1 330
+#define TOK_IF 331
+#define TOK_IFNONE 332
+#define TOK_INITIAL 333
+#define TOK_INOUT 334
+#define TOK_INPUT 335
+#define TOK_INTEGER 336
+#define TOK_JOIN 337
+#define TOK_LARGE 338
+#define TOK_LOCALPARAM 339
+#define TOK_MACROMODULE 340
+#define TOK_MEDIUM 341
+#define TOK_MODULE 342
+#define TOK_NAND 343
+#define TOK_NEGEDGE 344
+#define TOK_NMOS 345
+#define TOK_NOR 346
+#define TOK_NOT 347
+#define TOK_NOTIF0 348
+#define TOK_NOTIF1 349
+#define TOK_OR 350
+#define TOK_OUTPUT 351
+#define TOK_PARAMETER 352
+#define TOK_PMOS 353
+#define TOK_POSEDGE 354
+#define TOK_PRIMITIVE 355
+#define TOK_PULL0 356
+#define TOK_PULL1 357
+#define TOK_PULLDOWN 358
+#define TOK_PULLUP 359
+#define TOK_RCMOS 360
+#define TOK_REAL 361
+#define TOK_REALTIME 362
+#define TOK_REG 363
+#define TOK_RELEASE 364
+#define TOK_REPEAT 365
+#define TOK_RNMOS 366
+#define TOK_RPMOS 367
+#define TOK_RTRAN 368
+#define TOK_RTRANIF0 369
+#define TOK_RTRANIF1 370
+#define TOK_SCALARED 371
+#define TOK_SIGNED 372
+#define TOK_SMALL 373
+#define TOK_SPECIFY 374
+#define TOK_SPECPARAM 375
+#define TOK_STRONG0 376
+#define TOK_STRONG1 377
+#define TOK_SUPPLY0 378
+#define TOK_SUPPLY1 379
+#define TOK_TABLE 380
+#define TOK_TASK 381
+#define TOK_TIME 382
+#define TOK_TRAN 383
+#define TOK_TRANIF0 384
+#define TOK_TRANIF1 385
+#define TOK_TRI 386
+#define TOK_TRI0 387
+#define TOK_TRI1 388
+#define TOK_TRIAND 389
+#define TOK_TRIOR 390
+#define TOK_TRIREG 391
+#define TOK_UNSIGNED 392
+#define TOK_VECTORED 393
+#define TOK_WAIT 394
+#define TOK_WAND 395
+#define TOK_WEAK0 396
+#define TOK_WEAK1 397
+#define TOK_WHILE 398
+#define TOK_WIRE 399
+#define TOK_WOR 400
+#define TOK_XNOR 401
+#define TOK_XOR 402
+#define TOK_SETUP 403
+#define TOK_HOLD 404
+#define TOK_RECOVERY 405
+#define TOK_REMOVAL 406
+#define TOK_WIDTH 407
+#define TOK_SKEW 408
+#define TOK_VERTBARMINUSGREATER 409
+#define TOK_VERTBAREQUALGREATER 410
+#define TOK_PLUSPLUS 411
+#define TOK_MINUSMINUS 412
+#define TOK_PLUSEQUAL 413
+#define TOK_PLUSCOLON 414
+#define TOK_MINUSEQUAL 415
+#define TOK_MINUSCOLON 416
+#define TOK_ASTERICEQUAL 417
+#define TOK_SLASHEQUAL 418
+#define TOK_PERCENTEQUAL 419
+#define TOK_AMPEREQUAL 420
+#define TOK_CARETEQUAL 421
+#define TOK_VERTBAREQUAL 422
+#define TOK_LESSLESSEQUAL 423
+#define TOK_GREATERGREATEREQUAL 424
+#define TOK_LESSLESSLESSEQUAL 425
+#define TOK_GREATERGREATERGREATEREQUAL 426
+#define TOK_HASHHASH 427
+#define TOK_ACCEPT_ON 428
+#define TOK_ALIAS 429
+#define TOK_ALWAYS_COMB 430
+#define TOK_ALWAYS_FF 431
+#define TOK_ALWAYS_LATCH 432
+#define TOK_ASSERT 433
+#define TOK_ASSUME 434
+#define TOK_BEFORE 435
+#define TOK_BIND 436
+#define TOK_BINS 437
+#define TOK_BINSOF 438
+#define TOK_BIT 439
+#define TOK_BREAK 440
+#define TOK_BYTE 441
+#define TOK_CHANDLE 442
+#define TOK_CHECKER 443
+#define TOK_CLASS 444
+#define TOK_CLOCKING 445
+#define TOK_CONFIG 446
+#define TOK_CONST 447
+#define TOK_CONSTRAINT 448
+#define TOK_CONTEXT 449
+#define TOK_CONTINUE 450
+#define TOK_COVER 451
+#define TOK_COVERGROUP 452
+#define TOK_COVERPOINT 453
+#define TOK_CROSS 454
+#define TOK_DIST 455
+#define TOK_DO 456
+#define TOK_ENDCLASS 457
+#define TOK_ENDCLOCKING 458
+#define TOK_ENDCONFIG 459
+#define TOK_ENDGROUP 460
+#define TOK_ENDINTERFACE 461
+#define TOK_ENDPACKAGE 462
+#define TOK_ENDPROGRAM 463
+#define TOK_ENDPROPERTY 464
+#define TOK_ENDSEQUENCE 465
+#define TOK_ENUM 466
+#define TOK_EVENTUALLY 467
+#define TOK_EXPECT 468
+#define TOK_EXPORT 469
+#define TOK_EXTENDS 470
+#define TOK_EXTERN 471
+#define TOK_FINAL 472
+#define TOK_FIRST_MATCH 473
+#define TOK_FOREACH 474
+#define TOK_IFF 475
+#define TOK_IGNORE_BINS 476
+#define TOK_ILLEGAL_BINS 477
+#define TOK_IMPORT 478
+#define TOK_INSIDE 479
+#define TOK_INT 480
+#define TOK_INTERFACE 481
+#define TOK_INTERSECT 482
+#define TOK_JOIN_ANY 483
+#define TOK_JOIN_NONE 484
+#define TOK_LOCAL 485
+#define TOK_LOGIC 486
+#define TOK_LONGINT 487
+#define TOK_MATCHES 488
+#define TOK_MODPORT 489
+#define TOK_NEW 490
+#define TOK_NEXTTIME 491
+#define TOK_NULL 492
+#define TOK_PACKAGE 493
+#define TOK_PACKED 494
+#define TOK_PRIORITY 495
+#define TOK_PROGRAM 496
+#define TOK_PROPERTY 497
+#define TOK_PROTECTED 498
+#define TOK_PURE 499
+#define TOK_RAND 500
+#define TOK_RANDC 501
+#define TOK_RANDCASE 502
+#define TOK_RANDSEQUENCE 503
+#define TOK_REF 504
+#define TOK_RETURN 505
+#define TOK_S_ALWAYS 506
+#define TOK_S_EVENTUALLY 507
+#define TOK_S_NEXTTIME 508
+#define TOK_S_UNTIL 509
+#define TOK_S_UNTIL_WITH 510
+#define TOK_SEQUENCE 511
+#define TOK_SHORTINT 512
+#define TOK_SHORTREAL 513
+#define TOK_SOLVE 514
+#define TOK_STATIC 515
+#define TOK_STRING 516
+#define TOK_STRUCT 517
+#define TOK_SUPER 518
+#define TOK_TAGGED 519
+#define TOK_THIS 520
+#define TOK_THROUGHOUT 521
+#define TOK_TIMEPRECISION 522
+#define TOK_TIMEUNIT 523
+#define TOK_TYPE 524
+#define TOK_TYPEDEF 525
+#define TOK_UNION 526
+#define TOK_UNIQUE 527
+#define TOK_UNTIL 528
+#define TOK_UNTIL_WITH 529
+#define TOK_VAR 530
+#define TOK_VIRTUAL 531
+#define TOK_VOID 532
+#define TOK_WAIT_ORDER 533
+#define TOK_WILDCARD 534
+#define TOK_WITH 535
+#define TOK_WITHIN 536
+#define TOK_ENDOFFILE 537
+#define TOK_CHARSTR 538
+#define TOK_NUMBER 539
+#define TOK_QSTRING 540
+#define TOK_SYSIDENT 541
+#define TOK_SCANNER_ERROR 542
+#define TOK_AMPERTILDE 543
+#define TOK_ASTERICASTERIC 544
+#define LT_TOK_ELSE 545
+
+/* Value type.  */
+#if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
+typedef int YYSTYPE;
+# define YYSTYPE_IS_TRIVIAL 1
+# define YYSTYPE_IS_DECLARED 1
+#endif
+
+
+extern YYSTYPE yyveriloglval;
+
+int yyverilogparse (void);
+
+#endif /* !YY_YYVERILOG_VERILOG_Y_TAB_HPP_INCLUDED  */
