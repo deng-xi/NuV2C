@@ -52,7 +52,7 @@ Purpose: top level function
 
 bool vtoexpr(symbol_tablet &symbol_table, const irep_idt &module, std::ostream &out) {
     namespacet ns(symbol_table);
-    symbol_table.show(std::cout);
+//    symbol_table.show(std::cout);
     verilog_exprt verilog_expr(symbol_table, module);
     const symbolt &symbol = ns.lookup(module);
     out << "#include <stdio.h>" << std::endl;
@@ -1838,9 +1838,16 @@ codet verilog_exprt::translate_block_assign(
         to_integer(lhs.op2(), size_b);
         to_integer(rhs.op1(), size_c);
         to_integer(rhs.op2(), size_d);
-        constant_exprt lhs_constant = from_integer((power(2, 8) - 1)-(power(2, size_a) - power(2, size_b) + power(2, size_a)), integer_typet());
+        int width_of_out = atoi(
+                id2string(lhs.op0().get_named_sub().cbegin()->second.get_named_sub().cbegin()->second.id()).c_str());
+//        if (lhs.op0().get_named_sub().find(ID_type) != lhs.op0().get_named_sub().end()) {
+//        }
+        constant_exprt lhs_constant = from_integer(
+                (power(2, width_of_out) - 1) - (power(2, size_a) - power(2, size_b) + power(2, size_a)),
+                integer_typet());
         bitand_exprt lhs_andexpr(lhs_symbol, lhs_constant);
-        constant_exprt rhs_constant = from_integer(power(2, size_c) - power(2, size_d) + power(2, size_c), integer_typet());
+        constant_exprt rhs_constant = from_integer(power(2, size_c) - power(2, size_d) + power(2, size_c),
+                                                   integer_typet());
         bitand_exprt rhs_andexpr(rhs_symbol, rhs_constant);
         ashr_exprt shr(rhs_andexpr, rhs.op2());
         shl_exprt shl(shr, lhs.op2());
