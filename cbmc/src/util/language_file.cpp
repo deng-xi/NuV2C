@@ -159,7 +159,7 @@ bool language_filest::typecheck(symbol_tablet &symbol_table)
   for(filemapt::iterator fm_it=filemap.begin();
       fm_it!=filemap.end(); fm_it++)
   {
-    const language_filet::modulest &modules=
+    const language_filet::modulest &modules= //字符串
       fm_it->second.modules;
 
     for(language_filet::modulest::const_iterator
@@ -227,7 +227,7 @@ bool language_filest::final(
       it!=filemap.end(); it++)
   {
     if(languages.insert(it->second.language->id()).second)
-      if(it->second.language->final(symbol_table))
+      if(it->second.language->final(symbol_table)) //final函数体return false
         return true;
   }
 

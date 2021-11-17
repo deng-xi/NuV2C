@@ -32,7 +32,7 @@ void verilog_typecheckt::module_interface()
   
   module_identifier=module_symbol.name;
 
-  const irept &module_source=module_symbol.type.find(ID_module_source);
+  const irept &module_source=module_symbol.type.find(ID_module_source);//module_symbol中好像存储了模块信息,具体项没有
   const irept &module_items=module_source.find(ID_module_items);
 
   // first do module items

@@ -52,6 +52,7 @@ Purpose: top level function
 
 bool vtoexpr(symbol_tablet &symbol_table, const irep_idt &module, std::ostream &out) {
     namespacet ns(symbol_table);
+    symbol_table.show(std::cout);
     verilog_exprt verilog_expr(symbol_table, module);
     const symbolt &symbol = ns.lookup(module);
     out << "#include <stdio.h>" << std::endl;
@@ -59,7 +60,7 @@ bool vtoexpr(symbol_tablet &symbol_table, const irep_idt &module, std::ostream &
     out << "#define TRUE 1" << std::endl;
     out << "#define FALSE 0" << std::endl;
     // save the top module
-    verilog_expr.top_name = symbol.name;
+    verilog_expr.top_name = symbol.name; //"Verilog::main"
     return verilog_expr.convert_module(symbol, out); //这个函数很重要
 }
 
@@ -79,7 +80,7 @@ static std::string verilog_expression2c(const exprt &expr, const namespacet &ns)
     std::string code;
     datatypet exprdt(ns);
     exprdt.get_shorthands(expr);
-    return exprdt.convert(expr); //转换verilog的每一项
+    return exprdt.convert(expr); //cbmc::expr2c.cpp,转换verilog的每一项
 }
 
 /*******************************************************************\
@@ -213,7 +214,7 @@ bool verilog_exprt::convert_module(const symbolt &symbol, std::ostream &out) {
 
 
             codet codefinal =
-                    convert_module_item(static_cast<const verilog_module_itemt &>(*it));
+                    convert_module_item(static_cast<const verilog_module_itemt &>(*it));//给模块赋具体值
 
             if (codefinal.get_statement() != ID_block)
                 code_verilogblock.operands().push_back(codefinal);
@@ -315,7 +316,7 @@ bool verilog_exprt::do_conversion(code_blockt &code_verilogblock, const symbolt 
             }
         }
         out << "};" << std::endl;
-        out << "struct state_elements_" << symbol.base_name << " s" << symbol.base_name << std::endl <<std::endl;
+        out << "struct state_elements_" << symbol.base_name << " s" << symbol.base_name << std::endl << std::endl;
     }
     // Function definition printing here
     code_typet typev;
@@ -1829,17 +1830,27 @@ codet verilog_exprt::translate_block_assign(
     else if (lhs.id() == ID_extractbits && rhs.id() == ID_extractbits) {
         if (rhs.operands().size() != 3)
             throw "extractbits takes three operands";
+        code_block_assignv.lhs() = lhs.op0();
+        symbol_exprt lhs_symbol = to_symbol_expr(lhs.op0());
         symbol_exprt rhs_symbol = to_symbol_expr(rhs.op0());
-        mp_integer size_op1;
-        to_integer(rhs.op1(), size_op1);
-        mp_integer size_op2;
-        to_integer(rhs.op2(), size_op2);
-        unsigned diff = integer2unsigned(size_op1 - size_op2);
-        ashr_exprt shr(rhs_symbol, rhs.op2());
-        constant_exprt constant1 = from_integer(power(2, diff + 1) - 1, integer_typet());
-        bitand_exprt andexpr(shr, constant1);
-        rhs = andexpr;
-        code_block_assignv.rhs() = rhs;
+        mp_integer size_a, size_b, size_c, size_d;
+        to_integer(lhs.op1(), size_a);
+        to_integer(lhs.op2(), size_b);
+        to_integer(rhs.op1(), size_c);
+        to_integer(rhs.op2(), size_d);
+        constant_exprt lhs_constant = from_integer((power(2, 8) - 1)-(power(2, size_a) - power(2, size_b) + power(2, size_a)), integer_typet());
+        bitand_exprt lhs_andexpr(lhs_symbol, lhs_constant);
+        constant_exprt rhs_constant = from_integer(power(2, size_c) - power(2, size_d) + power(2, size_c), integer_typet());
+        bitand_exprt rhs_andexpr(rhs_symbol, rhs_constant);
+        ashr_exprt shr(rhs_andexpr, rhs.op2());
+        shl_exprt shl(shr, lhs.op2());
+        bitor_exprt orexpr(lhs_andexpr, shl);
+//        unsigned diff = integer2unsigned(size_op1 - size_op2);
+//        ashr_exprt shr(rhs_symbol, rhs.op2());
+//        constant_exprt constant1 = from_integer(power(2, diff + 1) - 1, integer_typet());
+//        bitand_exprt andexpr(shr, constant1);
+//        rhs = andexpr;
+        code_block_assignv.rhs() = orexpr;
     } else if (rhs.id() == ID_concatenation || rhs.id() == ID_xor) {
         // handle ID_concatenation
         exprt concat_expr = rhs;

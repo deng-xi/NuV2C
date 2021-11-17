@@ -176,7 +176,7 @@ bool language_uit::typecheck()
   
   language_files.set_message_handler(*message_handler);
 
-  if(language_files.typecheck(symbol_table)) //typecheck
+  if(language_files.typecheck(symbol_table)) //typecheck symbol_table目前为空
   {
     if(get_ui()==ui_message_handlert::PLAIN)
       std::cerr << "CONVERSION ERROR" << std::endl;

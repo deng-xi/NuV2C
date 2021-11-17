@@ -14,7 +14,7 @@
 #include "cpp_member_spec.h"
 #include "cpp_enum_type.h"
 
-//#define DEBUG
+#define DEBUG
 
 #ifdef DEBUG
 #include <iostream>

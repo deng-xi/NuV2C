@@ -1509,7 +1509,7 @@ bool verilog_typecheck(
   }
 
   return verilog_typecheck(
-    symbol_table, it->second->verilog_module, message_handler);
+    symbol_table, it->second->verilog_module, message_handler);//symbol_table赋值
 }
 
 /*******************************************************************\

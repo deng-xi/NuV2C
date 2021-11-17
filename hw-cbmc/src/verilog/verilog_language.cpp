@@ -159,7 +159,7 @@ bool verilog_languaget::typecheck(
 {
   if(module=="") return false;
 
-  if(verilog_typecheck(parse_tree, symbol_table, module, get_message_handler())) //symbol_table空的
+  if(verilog_typecheck(parse_tree, symbol_table, module, get_message_handler())) //symbol_table赋值的地方
     return true;
     
   print(9, "Synthesis "+module);

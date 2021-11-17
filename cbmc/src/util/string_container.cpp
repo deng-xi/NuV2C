@@ -139,7 +139,7 @@ unsigned string_containert::get(const std::string &s)
 
   hash_tablet::iterator it=hash_table.find(string_ptr);
   
-  if(it!=hash_table.end())
+  if(it!=hash_table.end()) //hash_table根据string找数字
     return it->second;
 
   size_t r=hash_table.size();
