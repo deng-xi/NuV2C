@@ -3,22 +3,21 @@
 #define TRUE 1
 #define FALSE 0
 struct state_elements_main{
-unsigned short int out1;
-unsigned char in1;
+_Bool in1;
+_Bool out1;
 };
 struct state_elements_main smain
 
 void main(void)
 {
-  unsigned char in1_old;
-  unsigned short int out1_old;
-}
-void initial_main(){
-  {
-    smain.out1 = smain.out1 & 455 | ((smain.in1 & 28) >> 2) << 3;
-  }
+  _Bool in1_old;
+  _Bool out1_old;
+  _Bool t1;
+  in1_old = smain.in1;
+  out1_old = smain.out1;
+  smain.out1 = in1_old;
+  t1 = smain.out1;
 }
 void main() {//main function
-initial_main();
 main();
 }

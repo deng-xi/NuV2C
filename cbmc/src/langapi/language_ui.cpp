@@ -203,7 +203,7 @@ bool language_uit::final()
 {
   language_files.set_message_handler(*message_handler);
 
-  if(language_files.final(symbol_table))
+  if(language_files.final(symbol_table)) //一定是条件为false
   {
     if(get_ui()==ui_message_handlert::PLAIN)
       std::cerr << "CONVERSION ERROR" << std::endl;

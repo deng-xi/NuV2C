@@ -54,7 +54,7 @@ bool vtoexpr(symbol_tablet &symbol_table, const irep_idt &module, std::ostream &
     namespacet ns(symbol_table);
 //    symbol_table.show(std::cout);
     verilog_exprt verilog_expr(symbol_table, module);
-    const symbolt &symbol = ns.lookup(module);
+    const symbolt &symbol = ns.lookup(module);//信息存储在type和value中
     out << "#include <stdio.h>" << std::endl;
     out << "#include <assert.h>" << std::endl;
     out << "#define TRUE 1" << std::endl;
@@ -116,7 +116,7 @@ bool verilog_exprt::convert_module(const symbolt &symbol, std::ostream &out) {
     std::set<irep_idt>::iterator
             in_progress_it = modules_in_progress.insert(symbol.name).first;
 
-    // Process module local symbols
+    // Process module local symbols, symbols是模块名和本地变量名
     forall_symbol_module_map(it, symbol_table.symbol_module_map, symbol.name) {
         const symbolt &symbol1 = ns.lookup(it->second);
         if (symbol1.type.id() != ID_module && symbol1.type.id() != ID_module_instance)
@@ -124,7 +124,7 @@ bool verilog_exprt::convert_module(const symbolt &symbol, std::ostream &out) {
     }
 
     // Store the name of the structure
-    module_infot &modulevb = module_info[current_module];
+    module_infot &modulevb = module_info[current_module];//modulevb
     modulevb.struct_name = std::string("s") + id2string(symbol.base_name);
     modulevb.st.set_tag(current_module);
     code_blockt code_verilogb;
@@ -226,7 +226,7 @@ bool verilog_exprt::convert_module(const symbolt &symbol, std::ostream &out) {
 
     code_blockt code_temp;
     code_temp.swap(code_verilogblock);
-
+//std::string s = id2string(dstring(729, 0));//-debug
     // Declare all new temporary shadow variables introduced for non-blocking and blocking assignment
     for (std::list<code_declt>::const_iterator it4 = modulevb.new_var.begin();
          it4 != modulevb.new_var.end(); ++it4)
@@ -551,6 +551,12 @@ codet verilog_exprt::convert_decl(
 
                 // this is handled for blocking assignment, this must be handled elsewhere because always_counter
                 // is updated only after looking at an always block
+                // 增加影子变量初始化
+                if (modulevb.nb_duplicate.insert(old_reg.get_identifier()).second) {
+                    modulevb.registers(reg_member);
+                    code_assignt code_nb(old_reg, reg_member);
+                    modulevb.shadowassign.push_back(code_nb);
+                }
 
             }
                 // check for integer variable
@@ -1279,7 +1285,7 @@ codet verilog_exprt::convert_continuous_assign(
         } // end for
 
 
-    // replace all register-type variables by member accesses (RHS only)
+    // replace all register-type variables by member accesses (RHS only)  ???
     bool noreg = modulevb.registers.replace(code_assignv.rhs());
 
     // add dereferencing to all (remaining) output variables (RHS only)
@@ -1838,12 +1844,11 @@ codet verilog_exprt::translate_block_assign(
         to_integer(lhs.op2(), size_b);
         to_integer(rhs.op1(), size_c);
         to_integer(rhs.op2(), size_d);
-        int width_of_out = atoi(
+        int width = atoi(
                 id2string(lhs.op0().get_named_sub().cbegin()->second.get_named_sub().cbegin()->second.id()).c_str());
-//        if (lhs.op0().get_named_sub().find(ID_type) != lhs.op0().get_named_sub().end()) {
-//        }
+        assert(width == 0 || width == 1 || width == 8 || width == 16 || width == 32 || width == 64 || width == 128);
         constant_exprt lhs_constant = from_integer(
-                (power(2, width_of_out) - 1) - (power(2, size_a) - power(2, size_b) + power(2, size_a)),
+                (power(2, width) - 1) - (power(2, size_a) - power(2, size_b) + power(2, size_a)),
                 integer_typet());
         bitand_exprt lhs_andexpr(lhs_symbol, lhs_constant);
         constant_exprt rhs_constant = from_integer(power(2, size_c) - power(2, size_d) + power(2, size_c),
@@ -1857,7 +1862,8 @@ codet verilog_exprt::translate_block_assign(
 //        constant_exprt constant1 = from_integer(power(2, diff + 1) - 1, integer_typet());
 //        bitand_exprt andexpr(shr, constant1);
 //        rhs = andexpr;
-        code_block_assignv.rhs() = orexpr;
+        rhs = orexpr;
+        code_block_assignv.rhs() = rhs;
     } else if (rhs.id() == ID_concatenation || rhs.id() == ID_xor) {
         // handle ID_concatenation
         exprt concat_expr = rhs;
