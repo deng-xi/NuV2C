@@ -259,6 +259,9 @@ bool verilog_exprt::convert_module(const symbolt &symbol, std::ostream &out) {
                                      curr_module_backup, in_progress_it, out);//这里写入文件
     identifier_name = identifier_name_backup;
 
+    std::ofstream string_out("string.h");
+    string_container.my_showall(string_out);
+
     return return_conv;
 }
 
@@ -301,7 +304,7 @@ bool verilog_exprt::do_conversion(code_blockt &code_verilogblock, const symbolt 
             symbol_exprt symstruct(it->first, ns.lookup(it->first).type);
             code_declt dstruct(symstruct);
             std::string d_str = verilog_expression2c(dstruct, ns);
-            out << d_str.substr(0, d_str.size()) << std::endl;
+            out << "  " << d_str.substr(0, d_str.size()) << std::endl;
         }
         // A module instance is also member of structure
         forall_symbol_module_map(it, symbol_table.symbol_module_map, symbol.name) {
@@ -312,7 +315,7 @@ bool verilog_exprt::do_conversion(code_blockt &code_verilogblock, const symbolt 
                 const symbolt &module_symbol = ns.lookup(symbol.value.get(ID_module));
                 out << "  struct state_elements_"
                     << module_symbol.base_name
-                    << " " << symbol.base_name << ";\n ";
+                    << " s" << symbol.base_name << ";\n ";
             }
         }
         out << "};" << std::endl;
@@ -362,15 +365,15 @@ bool verilog_exprt::do_conversion(code_blockt &code_verilogblock, const symbolt 
              it != modulevb.local_sym.end(); ++it) {
             symbol_exprt var = *it;
             const symbol_exprt sym(var.get_identifier(), var.type());
-            str_print << verilog_expression2c(code_declt(sym), ns) << std::endl;
+            str_print << "  " << verilog_expression2c(code_declt(sym), ns) << std::endl;
         }
         if (modulevb.initial == true)
-            str_print << "initial_" + id2string(symbol.base_name) + "();\n";
+            str_print << "  initial_" + id2string(symbol.base_name) + "();\n";
 
         // print the while loop only for top level module call from the main function
         // and if the design is sequential circuit
         if (symbol.base_name != top_name && sequential)
-            str_print << "while(1) {" << std::endl;
+            str_print << "  while(1) {" << std::endl;
 
         // Just call the top level verilog module given as command line argument
         code_function_callt code_function_callv;
@@ -389,11 +392,12 @@ bool verilog_exprt::do_conversion(code_blockt &code_verilogblock, const symbolt 
         }
         // Insert all modules having a always(poesdge clk) block
         // into a code block
-        str_print << verilog_expression2c(code_function_callv, ns) << std::endl;
         if (modulevb.always == true) {
             // End of while(1) loop
-            str_print << "}" << std::endl;
-        }
+            str_print << "    " << verilog_expression2c(code_function_callv, ns) << std::endl;
+            str_print << "  }" << std::endl;
+        } else
+            str_print << "  " << verilog_expression2c(code_function_callv, ns) << std::endl;
         // End of top level function
         str_print << "}" << std::endl;
     }
@@ -557,7 +561,6 @@ codet verilog_exprt::convert_decl(
                     code_assignt code_nb(old_reg, reg_member);
                     modulevb.shadowassign.push_back(code_nb);
                 }
-
             }
                 // check for integer variable
             else if (statement.get(ID_class) == ID_integer) {
@@ -1844,9 +1847,8 @@ codet verilog_exprt::translate_block_assign(
         to_integer(lhs.op2(), size_b);
         to_integer(rhs.op1(), size_c);
         to_integer(rhs.op2(), size_d);
-        int width = atoi(
-                id2string(lhs.op0().get_named_sub().cbegin()->second.get_named_sub().cbegin()->second.id()).c_str());
-        assert(width == 0 || width == 1 || width == 8 || width == 16 || width == 32 || width == 64 || width == 128);
+        int width = lhs.op0().find(ID_type).get_int(ID_width);
+        //assert(width == 0 || width == 1 || width == 8 || width == 16 || width == 32 || width == 64 || width == 128);
         constant_exprt lhs_constant = from_integer(
                 (power(2, width) - 1) - (power(2, size_a) - power(2, size_b) + power(2, size_a)),
                 integer_typet());

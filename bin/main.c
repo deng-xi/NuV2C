@@ -3,21 +3,31 @@
 #define TRUE 1
 #define FALSE 0
 struct state_elements_main{
-_Bool in1;
-_Bool out1;
+  _Bool val;
+  unsigned char rega;
+  unsigned char regb;
 };
 struct state_elements_main smain
 
 void main(void)
 {
-  _Bool in1_old;
-  _Bool out1_old;
-  _Bool t1;
-  in1_old = smain.in1;
-  out1_old = smain.out1;
-  smain.out1 = in1_old;
-  t1 = smain.out1;
+  _Bool val_old;
+  unsigned char rega_old;
+  unsigned char regb_old;
+  val_old = smain.val;
+  rega_old = smain.rega;
+  regb_old = smain.regb;
+}
+void initial_main(){
+  {
+    smain.rega = 4;
+    smain.regb = 15;
+  }
+  {
+    smain.val = 4==0;
+  }
 }
 void main() {//main function
-main();
+  initial_main();
+  main();
 }
