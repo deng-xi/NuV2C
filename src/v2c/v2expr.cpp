@@ -547,7 +547,8 @@ codet verilog_exprt::convert_decl(
                 member_exprt reg_member(symbol_exprt(modulevb.struct_name, modulevb.st), symbol.base_name);
                 module_info[current_module].registers.insert(symbol.name, reg_member);
                 // this is handled for non-blocking assignment
-                symbol_exprt old_reg(symbol_exprt(id2string(symbol.base_name)+"_old"));
+                symbol_exprt
+                old_reg(symbol_exprt(id2string(symbol.base_name) + "_old"));
                 module_info[current_module].oldvar.insert(symbol.name, old_reg);
                 old_reg.type() = symbol.type;
                 // insert the newly created symbol into new_var
@@ -853,15 +854,20 @@ codet verilog_exprt::convert_continuous_assign(
                     bitand_exprt andexpr(shr, constant1);
                     rhs = andexpr;
                 }
-                // Processing of statements like assign out[5] = tmp;
-                if (lhs.id() == ID_extractbit && rhs.id() != ID_extractbit) {
+                // Processing of statements like assign out[5] = tmp;我认为是out=out&(2^width_of_out-1-2^5)|tmp<<5
+                if (lhs.id() == ID_extractbit && rhs.id() != ID_extractbit) {//好像不太对 in1 = in1 | smain.x << 5;
                     if (lhs.operands().size() != 2)
                         throw "extractbits takes two operands";
                     symbol_exprt lhs_symbol = to_symbol_expr(lhs.op0());
                     mp_integer size_opl1;
                     to_integer(lhs.op1(), size_opl1);
                     shl_exprt shl(rhs, lhs.op1());
-                    bitor_exprt bitor_expr(lhs_symbol, shl);
+                    //增加4line,删除1line
+                    int width = lhs_symbol.find(ID_type).get_int(ID_width);
+                    constant_exprt zero = from_integer(power(2, width) - 1 - power(2, size_opl1), integer_typet());
+                    bitand_exprt bitand_expr(lhs_symbol, zero);
+                    bitor_exprt bitor_expr(bitand_expr, shl);
+//                    bitor_exprt bitor_expr(lhs_symbol, shl);
                     rhs = bitor_expr;
                     lhs = lhs_symbol;
                 }
@@ -871,49 +877,70 @@ codet verilog_exprt::convert_continuous_assign(
 
                 // Processing of statements like out[a:b] = tmp[c:d];
                 // out = (out & !(2^(width_of_out - 1) - 2^b)) | ((tmp & (2^(width_of_tmp - 1) - 2^d) >> d) << b);
-            else if (lhs.id() == ID_extractbits && rhs.id() == ID_extractbits) {
+            else if (lhs.id() == ID_extractbits && rhs.id() == ID_extractbits) { //修改了处理方式
                 if (rhs.operands().size() != 3)
                     throw "extractbits takes three operands";
+//                symbol_exprt lhs_symbol = to_symbol_expr(lhs.op0());
+//                symbol_exprt rhs_symbol = to_symbol_expr(rhs.op0());
+//
+//                // create the first operand of rhs
+//                mp_integer size_opl1;
+//                to_integer(lhs.op2(), size_opl1);
+//                constant_exprt constant0 = from_integer(power(2, size_opl1), integer_typet());
+//                mp_integer width = pointer_offset_bits(lhs.type(), ns);
+//                assert(width > 0);
+//
+//                constant_exprt cwidth = from_integer(power(2, width - 1) - power(2, size_opl1), integer_typet());
+//                bitnot_exprt notexp(cwidth);
+//                bitand_exprt andexp(lhs_symbol, notexp);
+//
+//
+//                // create the second operand of rhs
+//                mp_integer size_op1;
+//                to_integer(rhs.op1(), size_op1);
+//                mp_integer size_op2;
+//                to_integer(rhs.op2(), size_op2);
+//                constant_exprt constant1 = from_integer(power(2, size_op2), integer_typet());
+//                mp_integer widthr = pointer_offset_bits(rhs.type(), ns);
+//                assert(widthr > 0);
+//
+//                constant_exprt cwidthr = from_integer(power(2, widthr - 1) - power(2, size_op2), integer_typet());
+//                bitand_exprt andexpr(rhs_symbol, cwidthr);
+//                ashr_exprt shrr(andexpr, rhs.op2());size_opl1
+//                shl_exprt shlr(shrr, lhs.op2());
+//
+//
+//                bitor_exprt bitor_expr(andexp, shlr);
+//                rhs = bitor_expr;
+//                lhs = lhs_symbol;
+//                code_assignv.rhs() = rhs;
+//                code_assignv.lhs() = lhs;
+                code_assignv.lhs() = lhs.op0();
                 symbol_exprt lhs_symbol = to_symbol_expr(lhs.op0());
                 symbol_exprt rhs_symbol = to_symbol_expr(rhs.op0());
-
-                // create the first operand of rhs
-                mp_integer size_opl1;
-                to_integer(lhs.op2(), size_opl1);
-                constant_exprt constant0 = from_integer(power(2, size_opl1), integer_typet());
-                mp_integer width = pointer_offset_bits(lhs.type(), ns);
-                assert(width > 0);
-
-                constant_exprt cwidth = from_integer(power(2, width - 1) - power(2, size_opl1), integer_typet());
-                bitnot_exprt notexp(cwidth);
-                bitand_exprt andexp(lhs_symbol, notexp);
-
-
-                // create the second operand of rhs
-                mp_integer size_op1;
-                to_integer(rhs.op1(), size_op1);
-                mp_integer size_op2;
-                to_integer(rhs.op2(), size_op2);
-                constant_exprt constant1 = from_integer(power(2, size_op2), integer_typet());
-                mp_integer widthr = pointer_offset_bits(rhs.type(), ns);
-                assert(widthr > 0);
-
-                constant_exprt cwidthr = from_integer(power(2, widthr - 1) - power(2, size_op2), integer_typet());
-                bitand_exprt andexpr(rhs_symbol, cwidthr);
-                ashr_exprt shrr(andexpr, rhs.op2());
-                shl_exprt shlr(shrr, lhs.op2());
-
-
-                bitor_exprt bitor_expr(andexp, shlr);
-                rhs = bitor_expr;
-                lhs = lhs_symbol;
+                mp_integer size_a, size_b, size_c, size_d;
+                to_integer(lhs.op1(), size_a);
+                to_integer(lhs.op2(), size_b);
+                to_integer(rhs.op1(), size_c);
+                to_integer(rhs.op2(), size_d);
+                int width = lhs.op0().find(ID_type).get_int(ID_width);
+                constant_exprt lhs_constant = from_integer(
+                        (power(2, width) - 1) - (power(2, size_a) - power(2, size_b) + power(2, size_a)),
+                        integer_typet());
+                bitand_exprt lhs_andexpr(lhs_symbol, lhs_constant);
+                constant_exprt rhs_constant = from_integer(power(2, size_c) - power(2, size_d) + power(2, size_c),
+                                                           integer_typet());
+                bitand_exprt rhs_andexpr(rhs_symbol, rhs_constant);
+                ashr_exprt shr(rhs_andexpr, rhs.op2());
+                shl_exprt shl(shr, lhs.op2());
+                bitor_exprt orexpr(lhs_andexpr, shl);
+                rhs = orexpr;
                 code_assignv.rhs() = rhs;
-                code_assignv.lhs() = lhs;
             }
 
-            // Processing of statement like out[i] = tmp[k];
-            // out = (out & ((2^(width_of_out)-1) - 2^i)) | (((tmp & 2^k) >> k) << i)
-            if (lhs.id() == ID_extractbit && rhs.id() == ID_extractbit) {
+                // Processing of statement like out[i] = tmp[k];
+                // out = (out & ((2^(width_of_out)-1) - 2^i)) | (((tmp & 2^k) >> k) << i)
+            else if (lhs.id() == ID_extractbit && rhs.id() == ID_extractbit) { //增加else
                 if (lhs.operands().size() != 2)
                     throw "extractbit takes two operands";
                 symbol_exprt lhs_symbol = to_symbol_expr(lhs.op0());
@@ -985,7 +1012,7 @@ codet verilog_exprt::convert_continuous_assign(
                     // create the second operand of rhs
                     mp_integer size_opl0;
                     to_integer(lhs.op1(), size_opl0);
-                    unsigned diff = integer2unsigned(size_opl1 - size_opl0);
+                    unsigned diff = integer2unsigned(size_opl1 - size_opl0);//修改正负号出错
                     constant_exprt constant1 = from_integer(power(2, diff + 1) - 1, integer_typet());
                     bitand_exprt andexpr(rhs.op0(), constant1);
                     shl_exprt shl1(andexpr, lhs.op2());
@@ -1848,7 +1875,6 @@ codet verilog_exprt::translate_block_assign(
         to_integer(rhs.op1(), size_c);
         to_integer(rhs.op2(), size_d);
         int width = lhs.op0().find(ID_type).get_int(ID_width);
-        //assert(width == 0 || width == 1 || width == 8 || width == 16 || width == 32 || width == 64 || width == 128);
         constant_exprt lhs_constant = from_integer(
                 (power(2, width) - 1) - (power(2, size_a) - power(2, size_b) + power(2, size_a)),
                 integer_typet());
