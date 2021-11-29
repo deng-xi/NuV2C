@@ -2306,9 +2306,14 @@ std::string expr2ct::convert_constant(
         return convert(src.op0(), precedence);
     }
   }
+  else if (as_string(value) == "x") {
+      return "nondet()";
+  }
+  else if (as_string(value) == "z") {
+      return "Z_value";
+  }
   else
     return convert_norep(src, precedence);
-
   return dest;
 }
 

@@ -3,32 +3,21 @@
 #define TRUE 1
 #define FALSE 0
 struct state_elements_main{
-  _Bool clk;
-  _Bool b;
-  _Bool t;
+  _Bool x;
 };
 struct state_elements_main smain
 
 void main(void)
 {
-  _Bool clk_old;
-  _Bool in;
-  _Bool a;
-  _Bool b_old;
-  _Bool t_old;
-  _Bool a;
-  _Bool c;
-  _Bool d;
-  clk_old = smain.clk;
-  b_old = smain.b;
-  t_old = smain.t;
-  smain.b = a;
-  c = smain.b;
-  d = c;
-  smain.t = b_old;
+  _Bool x_old;
+  x_old = smain.x;
+}
+void initial_main(){
+  {
+    smain.x = Z_value >> 0 & 1;
+  }
 }
 void main() {//main function
-  while(1) {
-    main();
-  }
+  initial_main();
+  main();
 }
