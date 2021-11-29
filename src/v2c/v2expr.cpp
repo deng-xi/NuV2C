@@ -226,7 +226,6 @@ bool verilog_exprt::convert_module(const symbolt &symbol, std::ostream &out) {
 
     code_blockt code_temp;
     code_temp.swap(code_verilogblock);
-//std::string s = id2string(dstring(729, 0));//-debug
     // Declare all new temporary shadow variables introduced for non-blocking and blocking assignment
     for (std::list<code_declt>::const_iterator it4 = modulevb.new_var.begin();
          it4 != modulevb.new_var.end(); ++it4)
@@ -239,27 +238,44 @@ bool verilog_exprt::convert_module(const symbolt &symbol, std::ostream &out) {
         code_verilogblock.operands().push_back(*it3);
 
     // Handle the case of continuous assignment
-    for (std::list<code_assignt>::const_iterator it3 = modulevb.cassign.begin();
-         it3 != modulevb.cassign.end(); ++it3)
-        code_verilogblock.operands().push_back(*it3);
+//    for (std::list<code_assignt>::const_iterator it3 = modulevb.cassign.begin();
+//         it3 != modulevb.cassign.end(); ++it3)
+//        code_verilogblock.operands().push_back(*it3);
 
     forall_operands(it, code_temp) {
-            if (*it != codet())
+            if (*it != codet()) {
                 code_verilogblock.operands().push_back(*it);
+                //增加依赖分析，便于实现连续赋值的 Read-After-Write 顺序
+                std::string lhs = (*it).op0().get_string(ID_component_name);
+                for (std::list<code_assignt>::const_iterator it3 = modulevb.cassignReg.begin();
+                     it3 != modulevb.cassignReg.end(); ++it3) {
+                    std::string cassignReg_rhs = (*it3).op1().get_string(ID_component_name);
+                    if (cassignReg_rhs == lhs) { //右边的寄存器变量更新了
+                        code_verilogblock.operands().push_back(*it3);
+                        std::string cassignReg_lhs = (*it3).op0().get_string(ID_identifier);
+                        for (std::list<code_assignt>::const_iterator it3 = modulevb.cassign.begin();
+                             it3 != modulevb.cassign.end(); ++it3) {
+                            std::string cassign_rhs = (*it3).op1().get_string(ID_identifier);
+                            if (cassign_rhs == cassignReg_lhs) //右边的线网变量更新了
+                                code_verilogblock.operands().push_back(*it3);
+                        }
+                    }
+                }
+            }
         }
 
     // **************** Dependency Analysis *********************
     // Handle the case of continuous assignment with Registers on the RHS
     // Place these assignment statements after all the next states have been updated
-    for (std::list<code_assignt>::const_iterator it3 = modulevb.cassignReg.begin();
-         it3 != modulevb.cassignReg.end(); ++it3)
-        code_verilogblock.operands().push_back(*it3);
+//    for (std::list<code_assignt>::const_iterator it3 = modulevb.cassignReg.begin();
+//         it3 != modulevb.cassignReg.end(); ++it3)
+//        code_verilogblock.operands().push_back(*it3);
 
     bool return_conv = do_conversion(code_verilogblock, symbol,
                                      curr_module_backup, in_progress_it, out);//这里写入文件
     identifier_name = identifier_name_backup;
 
-    std::ofstream string_out("string.h");
+    std::ofstream string_out("/home/aqian/myv2c/bin/string.h");
     string_container.my_showall(string_out);
 
     return return_conv;
@@ -1319,7 +1335,7 @@ codet verilog_exprt::convert_continuous_assign(
     bool noreg = modulevb.registers.replace(code_assignv.rhs());
 
     // add dereferencing to all (remaining) output variables (RHS only)
-    modulevb.output_var(code_assignv.rhs());
+    modulevb.output_var(code_assignv.rhs()); //()重载为replace()
     // create backup copies
     // NEW: code_orig
     code_assignt code_reg = code_assignv, code_orig = code_assignv;
