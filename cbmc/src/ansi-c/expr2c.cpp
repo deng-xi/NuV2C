@@ -738,8 +738,8 @@ std::string expr2ct::convert_typecast(
      from_type.id()==ID_c_bool)
     return convert(src.op(), precedence);
 
-  std::string dest="("+convert(src.type())+")";
-
+//  std::string dest="("+convert(src.type())+")";
+  std::string dest= ""; //删除强制类型转换
   unsigned p;
   std::string tmp=convert(src.op(), p);
 
