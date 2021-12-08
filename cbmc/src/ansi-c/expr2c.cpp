@@ -3341,7 +3341,9 @@ std::string expr2ct::convert_code_for(
   dest+="for(";
 
   if(!src.op0().is_nil())
-    dest+=convert(src.op0());
+//    dest+=convert(src.op0()); //修改for循环
+    dest+="int "+id2string(shorthands.find(src.op0().op0().get(ID_identifier))->second)+" = "
+            +src.op0().op1().op0().get_string(ID_value);
   else
     dest+=' ';
   dest+="; ";
@@ -3349,8 +3351,9 @@ std::string expr2ct::convert_code_for(
     dest+=convert(src.op1());
   dest+="; ";
   if(!src.op2().is_nil())
-    dest+=convert(src.op2());
-
+//    dest+=convert(src.op2()); //修改for循环
+    dest+=id2string(shorthands.find(src.op2().op0().get_string(ID_identifier))->second)+" = "
+            +id2string(shorthands.find(src.op2().op0().get_string(ID_identifier))->second)+" + 1";
   if(src.body().is_nil())
     dest+=");\n";
   else

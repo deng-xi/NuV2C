@@ -41,7 +41,7 @@ void main(_Bool clock, _Bool alloc_raw, _Bool *nack, unsigned char *alloc_addr, 
 }
 void initial_main(){
   {
-    for(i = 0 & 4294967295; i < 16; i = i + 1 & 4294967295)
+    for(int i = 0; i < 16; i = i + 1)
       smain.busy[i] = 0;
     smain.count = 0;
     smain.alloc = FALSE;
