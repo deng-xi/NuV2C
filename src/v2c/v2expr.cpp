@@ -318,9 +318,9 @@ bool verilog_exprt::convert_module(const symbolt &symbol, std::ostream &out) {
     // **************** Dependency Analysis *********************
     // Handle the case of continuous assignment with Registers on the RHS
     // Place these assignment statements after all the next states have been updated
-    for (std::list<code_assignt>::const_iterator it3 = modulevb.cassignReg.begin();
-         it3 != modulevb.cassignReg.end(); ++it3)
-        code_verilogblock.operands().push_back(*it3);
+//    for (std::list<code_assignt>::const_iterator it3 = modulevb.cassignReg.begin();
+//         it3 != modulevb.cassignReg.end(); ++it3)
+//        code_verilogblock.operands().push_back(*it3);
 
     bool return_conv = do_conversion(code_verilogblock, symbol,
                                      curr_module_backup, in_progress_it, out);//这里写入文件

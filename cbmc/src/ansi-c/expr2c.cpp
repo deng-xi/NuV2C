@@ -50,6 +50,24 @@ c
 
 */
 
+//字符串替换函数
+std::string replace(std::string strSrc,
+                    const std::string &oldStr, const std::string &newStr,int count=-1)
+{
+    std::string strRet=strSrc;
+    size_t pos = 0;
+    int l_count=0;
+    if(-1 == count) // replace all
+        count = strRet.size();
+    while ((pos = strRet.find(oldStr, pos)) != std::string::npos)
+    {
+        strRet.replace(pos, oldStr.size(), newStr);
+        if(++l_count >= count) break;
+        pos += newStr.size();
+    }
+    return strRet;
+}
+
 /*******************************************************************\
 
 Function: expr2ct::id_shorthand
@@ -1049,23 +1067,6 @@ Function: expr2ct::convert_binary
 
 \*******************************************************************/
 
-std::string replace(std::string strSrc,
-                 const std::string &oldStr, const std::string &newStr,int count=-1)
-{
-    std::string strRet=strSrc;
-    size_t pos = 0;
-    int l_count=0;
-    if(-1 == count) // replace all
-        count = strRet.size();
-    while ((pos = strRet.find(oldStr, pos)) != std::string::npos)
-    {
-        strRet.replace(pos, oldStr.size(), newStr);
-        if(++l_count >= count) break;
-        pos += newStr.size();
-    }
-    return strRet;
-}
-
 std::string expr2ct::convert_binary(
   const exprt &src,
   const std::string &symbol,
@@ -1110,8 +1111,9 @@ std::string expr2ct::convert_binary(
   }
 
   dest = replace(dest, " >> 0", ""); //删除>>0和修改0&1,1&1
-  dest = replace(dest, "0 & 1", "1");
-  dest = replace(dest, "1 & 1", "0");
+  dest = replace(dest, " << 0", "");
+  dest = replace(dest, "0 & 1", "0");
+  dest = replace(dest, "1 & 1", "1");
 
   return dest;
 }
@@ -4522,12 +4524,7 @@ std::string expr2ct::convert(
     return convert_unary(src, "!", precedence=15);
 
   else if(src.id()==ID_bitnot)
-  {
-      if (src.op0().id() == ID_index) //单个数组元素按位与修改为取非
-          return convert_unary(src, "!", precedence=15);
-      else
-          return convert_unary(src, "~", precedence=15);
-  }
+      return convert_unary(src, "~", precedence=15);
 
   else if(src.id()==ID_mult)
     return convert_binary(src, "*", precedence=13, false);
