@@ -240,11 +240,11 @@ void verilog_preprocessort::preprocessor()
 
     char ch, last_out=0;
 
-    while(files.back().get(ch))
+    while(files.back().get(ch)) //对输入文件的每个字符进行处理
     {
       switch(ch)
       {
-       case '`':
+       case '`': //预处理
         directive();
         break;
 

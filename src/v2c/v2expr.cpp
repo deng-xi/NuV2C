@@ -261,8 +261,12 @@ bool verilog_exprt::convert_module(const symbolt &symbol, std::ostream &out) {
 
     // handle the case of shadow assignments to be put before the clocked block
     for (std::list<codet>::const_iterator it3 = modulevb.shadowassign.begin();
-         it3 != modulevb.shadowassign.end(); ++it3)
+         it3 != modulevb.shadowassign.end(); ++it3) {
         code_verilogblock.operands().push_back(*it3);
+//        if ((*it3).op0().get(ID_type) == ID_array) {
+//
+//        }
+    }
 
     // Handle the case of continuous assignment
 //    for (std::list<code_assignt>::const_iterator it3 = modulevb.cassign.begin();
@@ -297,8 +301,7 @@ bool verilog_exprt::convert_module(const symbolt &symbol, std::ostream &out) {
                             } else {
                                 code_verilogblock.operands().back().operands()[1].operands().push_back(to_code(*it3));
                             }
-                        }
-                        else code_verilogblock.operands().push_back(*it3);
+                        } else code_verilogblock.operands().push_back(*it3);
 
                         std::string cassignReg_lhs = (*it3).op0().get_string(ID_identifier);
                         for (std::list<code_assignt>::const_iterator it4 = modulevb.cassign.begin();
