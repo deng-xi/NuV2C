@@ -27,6 +27,7 @@
 #include <util/std_code.h>
 #include <util/find_symbols.h>
 #include <util/pointer_offset_size.h>
+#include <unistd.h>
 
 #include <verilog/expr2verilog.h>
 #include <verilog/expr2verilog.cpp>
@@ -326,6 +327,8 @@ bool verilog_exprt::convert_module(const symbolt &symbol, std::ostream &out) {
                                      curr_module_backup, in_progress_it, out);//这里写入文件
     identifier_name = identifier_name_backup;
 
+//    char *hostname;
+//    gethostname(hostname, 20);
     std::ofstream string_out("/home/aqian/myv2c/bin/string.h");
     string_container.my_showall(string_out);
 

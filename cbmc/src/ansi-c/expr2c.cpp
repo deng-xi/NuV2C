@@ -34,6 +34,7 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <util/suffix.h>
 #include <util/find_symbols.h>
 #include <util/pointer_offset_size.h>
+#include <util/symbol_table.h>
 
 #include "expr2c.h"
 #include "c_types.h"
@@ -756,8 +757,8 @@ std::string expr2ct::convert_typecast(
      from_type.id()==ID_c_bool)
     return convert(src.op(), precedence);
 
-//  std::string dest="("+convert(src.type())+")";
-  std::string dest= ""; //删除强制类型转换
+  std::string dest="("+convert(src.type())+")";
+//  std::string dest= ""; //删除强制类型转换
   unsigned p;
   std::string tmp=convert(src.op(), p);
 
@@ -1073,13 +1074,14 @@ std::string expr2ct::convert_binary(
   unsigned precedence,
   bool full_parentheses)
 {
-  if(src.operands().size()<2)
+  if(src.operands().size() < 2)
     return convert_norep(src, precedence);
 
+  exprt src_tmp = src;
   std::string dest;
   bool first=true;
 
-  forall_operands(it, src)
+  Forall_operands(it, src_tmp)
   {
     if(first)
       first=false;
@@ -1088,6 +1090,11 @@ std::string expr2ct::convert_binary(
       if(symbol!=", ") dest+=' ';
       dest+=symbol;
       dest+=' ';
+    }
+
+    while((*it).id() == ID_typecast) { //从上层删除强制类型转换
+        assert((*it).operands().size() == 1);
+        (*it) = (*it).op0();
     }
 
     unsigned p;
@@ -1103,7 +1110,7 @@ std::string expr2ct::convert_binary(
     bool use_parentheses=
       precedence>p ||
       (precedence==p && full_parentheses) ||
-      (precedence==p && src.id()!=it->id());
+      (precedence==p && src_tmp.id() != it->id());
 
     if(use_parentheses) dest+='(';
     dest+=op;

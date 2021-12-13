@@ -61,8 +61,8 @@ protected:
     const exprt &src, unsigned &precedence);
 
   std::string convert_binary(
-    const exprt &src, const std::string &symbol,
-    unsigned precedence, bool full_parentheses);
+          const exprt &src_tmp, const std::string &symbol,
+          unsigned precedence, bool full_parentheses);
 
   std::string convert_cond(
     const exprt &src, unsigned precedence);
