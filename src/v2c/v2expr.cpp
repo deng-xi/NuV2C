@@ -2093,7 +2093,8 @@ codet verilog_exprt::translate_block_assign(
         if (!flag) cexpr = rhsexp;
         else cexpr = conjunction(expressions);
         unsigned width = lhs.type().id() == ID_integer ? 32 : 1;
-        if (width > 1) {
+        //修改过程赋值rhs是否增加&判定
+        if (width > 0 && width != 1 && width != 8 && width != 16 && width != 32 && width != 64 && width != 128) {
             bitand_exprt band(cexpr,
                               from_integer(power(2, width) - 1, rhs.type()));
             code_block_assignv.rhs() = band;
