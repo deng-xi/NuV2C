@@ -3,13 +3,13 @@
 #define TRUE 1
 #define FALSE 0
 struct state_elements_main{
-  unsigned char free_addr;
   _Bool busy[16];
   unsigned char count;
   _Bool alloc;
   _Bool free;
+  unsigned char free_addr;
 };
-struct state_elements_main smain
+struct state_elements_main smain;
 
 void main(_Bool clock, _Bool alloc_raw, _Bool *nack, unsigned char *alloc_addr, _Bool free_raw, unsigned char free_addr_raw)
 {
@@ -24,8 +24,7 @@ void main(_Bool clock, _Bool alloc_raw, _Bool *nack, unsigned char *alloc_addr, 
   alloc_old = smain.alloc;
   free_old = smain.free;
   free_addr_old = smain.free_addr;
-  i = 1;
-  smain.count = (smain.count + (smain.alloc && !(*nack))) - (smain.free && smain.busy[smain.free_addr]);
+  smain.count = ((smain.count & 31) + (smain.alloc && !(*nack))) - (smain.free && smain.busy[smain.free_addr & 15]) & 31;
   if(free_old)
     smain.busy[smain.free_addr] = 0;
 

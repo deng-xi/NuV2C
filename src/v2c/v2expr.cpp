@@ -327,8 +327,6 @@ bool verilog_exprt::convert_module(const symbolt &symbol, std::ostream &out) {
                                      curr_module_backup, in_progress_it, out);//这里写入文件
     identifier_name = identifier_name_backup;
 
-//    char *hostname;
-//    gethostname(hostname, 20);
     std::ofstream string_out("/home/aqian/myv2c/bin/string.h");
     string_container.my_showall(string_out);
 
@@ -389,7 +387,7 @@ bool verilog_exprt::do_conversion(code_blockt &code_verilogblock, const symbolt 
             }
         }
         out << "};" << std::endl;
-        out << "struct state_elements_" << symbol.base_name << " s" << symbol.base_name << std::endl << std::endl;
+        out << "struct state_elements_" << symbol.base_name << " s" << symbol.base_name << ";\n\n";
     }
     // Function definition printing here
     code_typet typev;
@@ -2092,7 +2090,38 @@ codet verilog_exprt::translate_block_assign(
             }
         if (!flag) cexpr = rhsexp;
         else cexpr = conjunction(expressions);
+
+        exprt *expr_ref = &cexpr; //DFS给过程赋值单个bv类型与位宽不匹配时加&
+        std::stack<exprt *> exp_st;
+        exp_st.push(expr_ref);
+        while (!exp_st.empty()) {
+            exprt *exp_tmp = exp_st.top();
+            exp_st.pop();
+            while (exp_tmp->id() == ID_typecast)
+                exp_tmp = &(exp_tmp->operands().back());
+            if (exp_tmp->operands().size() == 2) { //二元运算符连接的表达式或数组名+索引
+                exprt *firstexp = &(exp_tmp->operands()[0]), *secondexp = &(exp_tmp->operands()[1]);
+                exp_st.push(firstexp);
+                exp_st.push(secondexp);
+            } else if (exp_tmp->operands().size() == 0) {
+                if (exp_tmp->id() == ID_symbol) {
+                    if (exp_tmp->type().id() == ID_unsignedbv) { //数组索引也符合条件,数组名不符合
+                        int width = exp_tmp->type().get_int(ID_width);
+                        if (width > 0 && width != 1 && width != 8 && width != 16 && width != 32 && width != 64 &&
+                            width != 128) {
+                            bitand_exprt band(*exp_tmp,
+                                              from_integer(power(2, width) - 1, integer_typet()));
+                            *exp_tmp = band;
+                        }
+                    }
+                }
+            }
+        }
+
         unsigned width = lhs.type().id() == ID_integer ? 32 : 1;
+        if (lhs.type().id() == ID_unsignedbv) { //过程赋值左值bv类型与位宽不匹配时右边增加&
+            width = lhs.type().get_int(ID_width);
+        }
         //修改过程赋值rhs是否增加&判定
         if (width > 0 && width != 1 && width != 8 && width != 16 && width != 32 && width != 64 && width != 128) {
             bitand_exprt band(cexpr,
