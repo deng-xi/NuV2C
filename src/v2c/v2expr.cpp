@@ -2119,11 +2119,12 @@ codet verilog_exprt::translate_block_assign(
         }
 
         unsigned width = lhs.type().id() == ID_integer ? 32 : 1;
-        if (lhs.type().id() == ID_unsignedbv) { //过程赋值左值bv类型与位宽不匹配时右边增加&
+        if (lhs.type().id() == ID_unsignedbv && rhs.operands().size() > 1) { //过程赋值左值bv类型与位宽不匹配时右边增加&
             width = lhs.type().get_int(ID_width);
         }
         //修改过程赋值rhs是否增加&判定
-        if (width > 0 && width != 1 && width != 8 && width != 16 && width != 32 && width != 64 && width != 128) {
+        if (width > 0 && width != 1 && width != 8 && width != 16 && width != 32 && width != 64 && width != 128)
+        {
             bitand_exprt band(cexpr,
                               from_integer(power(2, width) - 1, rhs.type()));
             code_block_assignv.rhs() = band;

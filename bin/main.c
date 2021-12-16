@@ -24,13 +24,7 @@ void main(_Bool clock, _Bool alloc_raw, _Bool *nack, unsigned char *alloc_addr, 
   alloc_old = smain.alloc;
   free_old = smain.free;
   free_addr_old = smain.free_addr;
-  smain.count = ((smain.count & 31) + (smain.alloc && !(*nack))) - (smain.free && smain.busy[smain.free_addr & 15]) & 31;
-  if(free_old)
-    smain.busy[smain.free_addr] = 0;
-
-  if(alloc_old && !nack)
-    smain.busy[*alloc_addr] = 1;
-
+  smain.free_addr = free_addr_raw & 15;
 }
 void main() {//main function
   _Bool clock;
