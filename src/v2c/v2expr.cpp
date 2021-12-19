@@ -327,8 +327,16 @@ bool verilog_exprt::convert_module(const symbolt &symbol, std::ostream &out) {
                                      curr_module_backup, in_progress_it, out);//这里写入文件
     identifier_name = identifier_name_backup;
 
-    std::ofstream string_out("/home/aqian/myv2c/bin/string.h");
-    string_container.my_showall(string_out);
+    char fullname[30]; //输出string容器到解析目录下
+    gethostname(fullname, 30);
+    std::string realname = fullname;
+    size_t pos = realname.find("-VirtualBox");
+    if (pos != std::string::npos)
+        realname = realname.substr(0, pos);
+    std::string path = "/home/" + realname + "/myv2c/bin/string.h";
+    std::ofstream string_out(path);
+    if (string_out)
+        string_container.my_showall(string_out);
 
     return return_conv;
 }
@@ -594,6 +602,7 @@ codet verilog_exprt::convert_decl(
                 //symbol_exprt symb = symbol.symbol_expr();
                 //to_code_type(symb.type());
                 module_info[current_module].local_sym.push_back(symbol.symbol_expr());
+
             } else if (statement.get(ID_class) == ID_output) {
                 assert(it->id() == ID_symbol);
                 // Prepare symbol for the module local symbol
@@ -2123,8 +2132,7 @@ codet verilog_exprt::translate_block_assign(
             width = lhs.type().get_int(ID_width);
         }
         //修改过程赋值rhs是否增加&判定
-        if (width > 0 && width != 1 && width != 8 && width != 16 && width != 32 && width != 64 && width != 128)
-        {
+        if (width > 0 && width != 1 && width != 8 && width != 16 && width != 32 && width != 64 && width != 128) {
             bitand_exprt band(cexpr,
                               from_integer(power(2, width) - 1, rhs.type()));
             code_block_assignv.rhs() = band;
