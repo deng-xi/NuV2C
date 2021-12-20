@@ -7,6 +7,7 @@ Module: Main Module
 #include <cstdlib>
 #include <iostream>
 #include <fstream>
+#include <unistd.h>
 
 #include <util/config.h>
 #include <util/get_module.h>
@@ -51,8 +52,20 @@ int v2c_parseoptionst::doit() {
         exit(1);
     }
 
-    if (!translator() && !translate_module())
+    if (!translator() && !translate_module()) {
+        char fullname[30]; //输出string容器到解析目录下
+        gethostname(fullname, 30);
+        std::string realname = fullname;
+        size_t pos = realname.find("-VirtualBox");
+        if (pos != std::string::npos)
+            realname = realname.substr(0, pos);
+        std::string path = "/home/" + realname + "/myv2c/bin/string.h";
+        std::ofstream string_out(path);
+        if (string_out)
+            string_container.my_showall(string_out);
+        symbol_table.show(string_out);
         return 0;
+    }
     else
         return 1;
 }
@@ -180,7 +193,6 @@ bool v2c_parseoptionst::translate_module() {
         try {
             const symbolt &symbol =
                     get_module(symbol_table, module, get_message_handler());
-//            std::string s = id2string(dstring(141, 0)); //s="module"
             const irep_idt &module1 = symbol.name; //"Verilog::main"
 
             status() << "Translating Verilog to C" << eom;
@@ -193,6 +205,7 @@ bool v2c_parseoptionst::translate_module() {
             }
 
             vtoexpr(symbol_table, module1, out);//这个函数很重要,开始向文件中写入程序
+
             return false;
         }
         catch (int e) {

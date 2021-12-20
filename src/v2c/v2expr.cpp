@@ -27,7 +27,6 @@
 #include <util/std_code.h>
 #include <util/find_symbols.h>
 #include <util/pointer_offset_size.h>
-#include <unistd.h>
 
 #include <verilog/expr2verilog.h>
 #include <verilog/expr2verilog.cpp>
@@ -264,9 +263,6 @@ bool verilog_exprt::convert_module(const symbolt &symbol, std::ostream &out) {
     for (std::list<codet>::const_iterator it3 = modulevb.shadowassign.begin();
          it3 != modulevb.shadowassign.end(); ++it3) {
         code_verilogblock.operands().push_back(*it3);
-//        if ((*it3).op0().get(ID_type) == ID_array) {
-//
-//        }
     }
 
     // Handle the case of continuous assignment
@@ -326,17 +322,6 @@ bool verilog_exprt::convert_module(const symbolt &symbol, std::ostream &out) {
     bool return_conv = do_conversion(code_verilogblock, symbol,
                                      curr_module_backup, in_progress_it, out);//这里写入文件
     identifier_name = identifier_name_backup;
-
-    char fullname[30]; //输出string容器到解析目录下
-    gethostname(fullname, 30);
-    std::string realname = fullname;
-    size_t pos = realname.find("-VirtualBox");
-    if (pos != std::string::npos)
-        realname = realname.substr(0, pos);
-    std::string path = "/home/" + realname + "/myv2c/bin/string.h";
-    std::ofstream string_out(path);
-    if (string_out)
-        string_container.my_showall(string_out);
 
     return return_conv;
 }
@@ -450,6 +435,28 @@ bool verilog_exprt::do_conversion(code_blockt &code_verilogblock, const symbolt 
         // and if the design is sequential circuit
         if (symbol.base_name != top_name && sequential)
             str_print << "  while(1) {" << std::endl;
+
+        //增加input变量非确定性赋值
+        for (symbol_tablet::symbolst::const_iterator it = symbol_table.symbols.begin();
+             it != symbol_table.symbols.end(); ++it) {
+            if (it->second.is_input) {
+                std::string nondet;
+                datatypet myexpr2ct(ns);
+                nondet = id2string(it->second.base_name);
+                std::string typeString = myexpr2ct.convert(it->second.type);
+                if (typeString == "_Bool") {
+                    typeString = "bool";
+                } else if (typeString == "unsigned char") {
+                    typeString = "uchar";
+                } else if (typeString == "unsigned int") {
+                    typeString = "uint";
+                }
+                nondet = nondet + " = nondet_" + typeString + "();\n";
+                if (symbol.base_name != top_name && sequential)
+                    str_print << "    " << nondet;
+                    else str_print << "  " << nondet;
+            }
+        }
 
         // Just call the top level verilog module given as command line argument
         code_function_callt code_function_callv;
@@ -624,8 +631,7 @@ codet verilog_exprt::convert_decl(
                 member_exprt reg_member(symbol_exprt(modulevb.struct_name, modulevb.st), symbol.base_name);
                 module_info[current_module].registers.insert(symbol.name, reg_member);
                 // this is handled for non-blocking assignment
-                symbol_exprt
-                old_reg(symbol_exprt(id2string(symbol.base_name) + "_old"));
+                symbol_exprt old_reg(symbol_exprt(id2string(symbol.base_name) +"_old"));
                 module_info[current_module].oldvar.insert(symbol.name, old_reg);
                 old_reg.type() = symbol.type;
                 // insert the newly created symbol into new_var
