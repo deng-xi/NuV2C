@@ -63,7 +63,7 @@ int v2c_parseoptionst::doit() {
         std::ofstream string_out(path);
         if (string_out)
             string_container.my_showall(string_out);
-        symbol_table.show(string_out);
+//        symbol_table.show(string_out);
         return 0;
     }
     else

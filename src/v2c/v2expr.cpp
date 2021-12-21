@@ -454,7 +454,7 @@ bool verilog_exprt::do_conversion(code_blockt &code_verilogblock, const symbolt 
                 nondet = nondet + " = nondet_" + typeString + "();\n";
                 if (symbol.base_name != top_name && sequential)
                     str_print << "    " << nondet;
-                    else str_print << "  " << nondet;
+                else str_print << "  " << nondet;
             }
         }
 
@@ -1515,9 +1515,10 @@ codet verilog_exprt::convert_assert(const verilog_assertt &module_item) {
     const symbolt &symbol = ns.lookup(identifier);
 
     // translate all register elements in the assertion with struct elements
-    //modulevb.registers(to_symbol_expr(symbol.value.op0()));
-    //code_assertv.copy_to_operands(translate_statement(symbol.value.op0()));
-    code_assertv.copy_to_operands(symbol.value.op0());
+    symbolt symbol_tmp = symbol;
+    modulevb.registers(symbol_tmp.value.op0());
+    code_assertv.copy_to_operands(symbol_tmp.value.op0());
+//    code_assertv.copy_to_operands(symbol.value.op0());
     return code_assertv;
 }
 
