@@ -806,7 +806,7 @@ exprt verilog_exprt::convert_expr(const exprt &expression, bool *changed) {
         exprt rhs = expression;
         if (rhs.operands().size() != 3)
             throw "extractbits takes three operands";
-        symbol_exprt rhs_symbol = to_symbol_expr(rhs);
+        symbol_exprt rhs_symbol = to_symbol_expr(rhs.op0()); //只取符号
         mp_integer size_op1;
         to_integer(rhs.op1(), size_op1);
         mp_integer size_op2;
@@ -1515,9 +1515,34 @@ codet verilog_exprt::convert_assert(const verilog_assertt &module_item) {
     const symbolt &symbol = ns.lookup(identifier);
 
     // translate all register elements in the assertion with struct elements
-    symbolt symbol_tmp = symbol;
-    modulevb.registers(symbol_tmp.value.op0());
-    code_assertv.copy_to_operands(symbol_tmp.value.op0());
+    exprt condition = symbol.value.op0();
+    modulevb.registers(condition);
+
+    //将assert中表达式转换为对应位操作
+    std::stack<exprt *> condition_stack;
+    condition_stack.push(&condition);
+    while (!condition_stack.empty()) {
+        exprt *condition_tmp = condition_stack.top();
+        condition_stack.pop();
+        while (condition_tmp->id() == ID_typecast)
+            condition_tmp->op0();
+        if (condition_tmp->id() == ID_or || condition_tmp->id() == ID_and) {
+            condition_stack.push(&condition.op1());
+            condition_stack.push(&condition.op0());
+        } else if (condition_tmp->id() == ID_not) {
+            condition_stack.push(&condition.op0());
+        } else if (condition_tmp->id() == ID_equal) {
+            bool changed;
+            exprt lhs = condition_tmp->op0();
+            while (lhs.id() == ID_typecast)
+                lhs = lhs.op0();
+            lhs = convert_expr(lhs, &changed);
+            if (changed) {
+                condition_tmp->op0() = lhs;
+            }
+        }
+    }
+    code_assertv.copy_to_operands(condition);
 //    code_assertv.copy_to_operands(symbol.value.op0());
     return code_assertv;
 }
