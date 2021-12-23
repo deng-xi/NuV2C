@@ -315,9 +315,13 @@ bool verilog_exprt::convert_module(const symbolt &symbol, std::ostream &out) {
     // **************** Dependency Analysis *********************
     // Handle the case of continuous assignment with Registers on the RHS
     // Place these assignment statements after all the next states have been updated
-//    for (std::list<code_assignt>::const_iterator it3 = modulevb.cassignReg.begin();
-//         it3 != modulevb.cassignReg.end(); ++it3)
-//        code_verilogblock.operands().push_back(*it3);
+    for (std::list<code_assignt>::const_iterator it3 = modulevb.cassignReg.begin();
+         it3 != modulevb.cassignReg.end(); ++it3) { //将连续赋值移动到assert前
+        if (code_verilogblock.operands().rbegin()->get(ID_statement) == ID_assert) {
+            code_verilogblock.operands().insert(code_verilogblock.operands().end() - 1, *it3);
+        } else
+            code_verilogblock.operands().push_back(*it3);
+    }
 
     bool return_conv = do_conversion(code_verilogblock, symbol,
                                      curr_module_backup, in_progress_it, out);//这里写入文件
@@ -1818,7 +1822,7 @@ codet verilog_exprt::translate_if(
     codet save_thenpair = translate_statement(statement.true_case());
     codeif.then_case() = save_thenpair;
 
-    modulevb.oldvar(codeif.cond());
+//    modulevb.oldvar(codeif.cond()); //将if条件中的oldvar改为原来的结构成员变量
     modulevb.registers(codeif.cond());
     codet save_elsepair;
     //codet final_assignment;
