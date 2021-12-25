@@ -316,7 +316,7 @@ bool verilog_exprt::convert_module(const symbolt &symbol, std::ostream &out) {
     // Handle the case of continuous assignment with Registers on the RHS
     // Place these assignment statements after all the next states have been updated
     for (std::list<code_assignt>::const_iterator it3 = modulevb.cassignReg.begin();
-         it3 != modulevb.cassignReg.end(); ++it3) { //将连续赋值移动到assert前
+         it3 != modulevb.cassignReg.end(); ++it3) { //将最后一个连续赋值移动到assert前
         if (code_verilogblock.operands().rbegin()->get(ID_statement) == ID_assert) {
             code_verilogblock.operands().insert(code_verilogblock.operands().end() - 1, *it3);
         } else
@@ -634,21 +634,21 @@ codet verilog_exprt::convert_decl(
                 module_info[current_module].register_present = 1;
                 member_exprt reg_member(symbol_exprt(modulevb.struct_name, modulevb.st), symbol.base_name);
                 module_info[current_module].registers.insert(symbol.name, reg_member);
-                // this is handled for non-blocking assignment
-                symbol_exprt old_reg(symbol_exprt(id2string(symbol.base_name) +"_old"));
-                module_info[current_module].oldvar.insert(symbol.name, old_reg);
-                old_reg.type() = symbol.type;
-                // insert the newly created symbol into new_var
-                module_info[current_module].new_var.push_back(code_declt(old_reg));
+                // this is handled for non-blocking assignment 先删去所有的影子变量定义
+//                symbol_exprt old_reg(symbol_exprt(id2string(symbol.base_name) +"_old"));
+//                module_info[current_module].oldvar.insert(symbol.name, old_reg);
+//                old_reg.type() = symbol.type;
+//                // insert the newly created symbol into new_var
+//                module_info[current_module].new_var.push_back(code_declt(old_reg));
 
                 // this is handled for blocking assignment, this must be handled elsewhere because always_counter
                 // is updated only after looking at an always block
                 // 增加影子变量初始化
-                if (modulevb.nb_duplicate.insert(old_reg.get_identifier()).second) {
-                    modulevb.registers(reg_member);
-                    code_assignt code_nb(old_reg, reg_member);
-                    modulevb.shadowassign.push_back(code_nb);
-                }
+//                if (modulevb.nb_duplicate.insert(old_reg.get_identifier()).second) {
+//                    modulevb.registers(reg_member);
+//                    code_assignt code_nb(old_reg, reg_member);
+//                    modulevb.shadowassign.push_back(code_nb);
+//                }
             }
                 // check for integer variable
             else if (statement.get(ID_class) == ID_integer) {
@@ -2272,7 +2272,7 @@ codet verilog_exprt::translate_nb_assign(const verilog_statementt &statement) {
     code_blockv.lhs() = nvar;
 
     if (modulevb.nb_duplicate.insert(nvar.get_identifier()).second) {
-        //modulevb.new_var.push_back(code_declt(nvar));
+        modulevb.new_var.push_back(code_declt(nvar)); //出现nb_assign才定义影子变量
         exprt reg_lhs = statement.op0();
         modulevb.registers(reg_lhs);
         code_assignt code_nb(nvar, reg_lhs);
