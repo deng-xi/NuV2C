@@ -95,6 +95,22 @@ Outputs:
 Purpose:
 
 \*******************************************************************/
+std::vector<std::string> exprSymbols(irept ireptTmp) {
+    std::vector<std::string> res;
+    if (ireptTmp.id() == ID_member) {
+        res.emplace_back(ireptTmp.get_string(ID_component_name));
+        return res;
+    }
+    irept::subt myOperands = ireptTmp.get_sub();
+    forall_irep(it, myOperands) {
+        auto subRes = exprSymbols(*it);
+        if (!subRes.empty()) {
+            res.insert(res.end(), subRes.begin(), subRes.end());
+        }
+    }
+    return res;
+}
+
 std::string bfs(std::queue<irept> myqueue) {
     if (myqueue.empty()) return "";
     irept ireptTmp = myqueue.front();
@@ -287,6 +303,7 @@ bool verilog_exprt::convert_module(const symbolt &symbol, std::ostream &out) {
                         std::queue<irept> cassignRhsQueue;
                         cassignRhsQueue.push((*it3).op1());
                         cassignReg_rhs = bfs(cassignRhsQueue);
+                        auto symbols = exprSymbols((*it3).op1()); //获取连续赋值右边表达式所有变量名
                     }
                     if (cassignReg_rhs != "" && cassignReg_rhs == lhs) { //右边的寄存器变量更新了
                         if ((*it).get(ID_statement) == ID_ifthenelse) {//暂时只考虑then块
@@ -1822,7 +1839,7 @@ codet verilog_exprt::translate_if(
     codet save_thenpair = translate_statement(statement.true_case());
     codeif.then_case() = save_thenpair;
 
-//    modulevb.oldvar(codeif.cond()); //将if条件中的oldvar改为原来的结构成员变量
+    modulevb.oldvar(codeif.cond());
     modulevb.registers(codeif.cond());
     codet save_elsepair;
     //codet final_assignment;

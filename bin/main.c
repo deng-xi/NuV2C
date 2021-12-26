@@ -14,8 +14,6 @@ struct state_elements_main smain;
 void main(_Bool clock, _Bool alloc_raw, _Bool *nack, unsigned char *alloc_addr, _Bool free_raw, unsigned char free_addr_raw)
 {
   int i;
-  _Bool alloc_old;
-  alloc_old = smain.alloc;
   smain.alloc = alloc_raw;
   *nack = smain.alloc && smain.count == 16;
   smain.free = free_raw;
