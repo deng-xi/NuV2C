@@ -286,26 +286,85 @@ bool verilog_exprt::convert_module(const symbolt &symbol, std::ostream &out) {
 //         it3 != modulevb.cassign.end(); ++it3)
 //        code_verilogblock.operands().push_back(*it3);
 
+//    Forall_operands(it, code_temp) {
+//            if (*it != codet()) { //是指不为空?
+//                code_verilogblock.operands().push_back(*it);
+//                //增加依赖分析，便于实现连续赋值的 Read-After-Write 顺序
+//                std::string lhs = (*it).op0().get_string(ID_component_name);
+//                if ((*it).get(ID_statement) == ID_ifthenelse) {
+//                    std::stack<irept> lhsStack;
+//                    lhsStack.push(*it);
+//                    lhs = dfs(lhsStack);
+//                }
+//                for (std::list<code_assignt>::const_iterator it3 = modulevb.cassignReg.begin();
+//                     it3 != modulevb.cassignReg.end(); ++it3) {
+//                    std::string cassignReg_rhs = (*it3).op1().get_string(ID_component_name); //暂时只考虑到简单赋值
+//                    if (cassignReg_rhs == "") {
+//                        std::queue<irept> cassignRhsQueue;
+//                        cassignRhsQueue.push((*it3).op1());
+//                        cassignReg_rhs = bfs(cassignRhsQueue);
+//                        auto symbols = exprSymbols((*it3).op1()); //获取连续赋值右边表达式所有变量名
+//                    }
+//                    if (cassignReg_rhs != "" && cassignReg_rhs == lhs) { //右边的寄存器变量更新了
+//                        if ((*it).get(ID_statement) == ID_ifthenelse) {//暂时只考虑then块
+//                            if ((*it).op1().get(ID_statement) != ID_block) {
+//                                code_blockt mycode;
+//                                mycode.copy_to_operands(code_verilogblock.operands().back().operands()[1]);
+//                                mycode.add(to_code(*it3));
+//                                code_verilogblock.operands().back().operands()[1] = mycode;
+//                            } else {
+//                                code_verilogblock.operands().back().operands()[1].operands().push_back(to_code(*it3));
+//                            }
+//                        } else code_verilogblock.operands().push_back(*it3);
+//
+//                        std::string cassignReg_lhs = (*it3).op0().get_string(ID_identifier);
+//                        for (std::list<code_assignt>::const_iterator it4 = modulevb.cassign.begin();
+//                             it4 != modulevb.cassign.end(); ++it4) {
+//                            std::string cassign_rhs = (*it4).op1().get_string(ID_identifier);
+//                            if (cassignReg_rhs != "" && cassign_rhs == cassignReg_lhs) //右边的线网变量更新了
+//                                code_verilogblock.operands().push_back(*it4);
+//                        }
+//                    }
+//                }
+//            }
+//        }
+
+    std::tr1::unordered_set<std::string> lhSymbols;
     Forall_operands(it, code_temp) {
             if (*it != codet()) { //是指不为空?
                 code_verilogblock.operands().push_back(*it);
                 //增加依赖分析，便于实现连续赋值的 Read-After-Write 顺序
+                if (it->get(ID_statement) == ID_assert) //去除assert对依赖分析的影响
+                    continue;
                 std::string lhs = (*it).op0().get_string(ID_component_name);
                 if ((*it).get(ID_statement) == ID_ifthenelse) {
-                    std::stack<irept> lhsStack;
-                    lhsStack.push(*it);
-                    lhs = dfs(lhsStack);
+                    if (it->op1().id() == ID_code && it->op1().get(ID_statement) == ID_assign) { //todo then是一个block则把左值放到一个集合中
+                        if (it->op1().op0().id() == ID_index) {
+                            lhs = it->op1().op0().op0().get_string(ID_component_name);
+                        } else
+                            lhs = it->op1().op0().get_string(ID_component_name);
+                        assert(lhs != "");
+                    }
                 }
+                lhSymbols.insert(lhs);
                 for (std::list<code_assignt>::const_iterator it3 = modulevb.cassignReg.begin();
                      it3 != modulevb.cassignReg.end(); ++it3) {
-                    std::string cassignReg_rhs = (*it3).op1().get_string(ID_component_name); //暂时只考虑到简单赋值
-                    if (cassignReg_rhs == "") {
-                        std::queue<irept> cassignRhsQueue;
-                        cassignRhsQueue.push((*it3).op1());
-                        cassignReg_rhs = bfs(cassignRhsQueue);
-                        auto symbols = exprSymbols((*it3).op1()); //获取连续赋值右边表达式所有变量名
+                    bool allUpdated = true;
+                    auto rhSymbols = exprSymbols((*it3).op1()); //获取连续赋值右边表达式所有变量名
+                    bool rhsUpdated = false;
+                    for (auto rhSymbol: rhSymbols) {
+                        if (rhSymbol == lhs) {
+                            rhsUpdated = true;
+                        }
                     }
-                    if (cassignReg_rhs != "" && cassignReg_rhs == lhs) { //右边的寄存器变量更新了
+                    if (!rhsUpdated)
+                        continue;
+                    for (auto rhSymbol: rhSymbols) {
+                        if (!lhSymbols.count(rhSymbol)) {
+                            allUpdated = false;
+                        }
+                    }
+                    if (allUpdated) { //右边的寄存器变量更新了
                         if ((*it).get(ID_statement) == ID_ifthenelse) {//暂时只考虑then块
                             if ((*it).op1().get(ID_statement) != ID_block) {
                                 code_blockt mycode;
@@ -313,7 +372,8 @@ bool verilog_exprt::convert_module(const symbolt &symbol, std::ostream &out) {
                                 mycode.add(to_code(*it3));
                                 code_verilogblock.operands().back().operands()[1] = mycode;
                             } else {
-                                code_verilogblock.operands().back().operands()[1].operands().push_back(to_code(*it3));
+                                code_verilogblock.operands().back().operands()[1].operands().push_back(
+                                        to_code(*it3));
                             }
                         } else code_verilogblock.operands().push_back(*it3);
 
@@ -321,23 +381,33 @@ bool verilog_exprt::convert_module(const symbolt &symbol, std::ostream &out) {
                         for (std::list<code_assignt>::const_iterator it4 = modulevb.cassign.begin();
                              it4 != modulevb.cassign.end(); ++it4) {
                             std::string cassign_rhs = (*it4).op1().get_string(ID_identifier);
-                            if (cassignReg_rhs != "" && cassign_rhs == cassignReg_lhs) //右边的线网变量更新了
+                            if (cassign_rhs == cassignReg_lhs) //右边的线网变量更新了
                                 code_verilogblock.operands().push_back(*it4);
                         }
                     }
                 }
             }
         }
-
     // **************** Dependency Analysis *********************
     // Handle the case of continuous assignment with Registers on the RHS
     // Place these assignment statements after all the next states have been updated
     for (std::list<code_assignt>::const_iterator it3 = modulevb.cassignReg.begin();
          it3 != modulevb.cassignReg.end(); ++it3) { //将最后一个连续赋值移动到assert前
-        if (code_verilogblock.operands().rbegin()->get(ID_statement) == ID_assert) {
-            code_verilogblock.operands().insert(code_verilogblock.operands().end() - 1, *it3);
-        } else
-            code_verilogblock.operands().push_back(*it3);
+//        if (code_verilogblock.operands().rbegin()->get(ID_statement) == ID_assert) {
+//            code_verilogblock.operands().insert(code_verilogblock.operands().end() - 1, *it3);
+//        } else
+        code_verilogblock.operands().push_back(*it3);
+    }
+
+    //将assert放到最后
+    for (std::vector<exprt>::iterator it = code_verilogblock.operands().begin();
+         it != code_verilogblock.operands().end(); ++it) {
+        if (it->get(ID_statement) == ID_assert) {
+            auto itTmp = *it;
+            code_verilogblock.operands().erase(it);
+            code_verilogblock.operands().push_back(itTmp);
+            break;
+        }
     }
 
     bool return_conv = do_conversion(code_verilogblock, symbol,

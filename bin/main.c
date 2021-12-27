@@ -15,17 +15,20 @@ void main(_Bool clock, _Bool alloc_raw, _Bool *nack, unsigned char *alloc_addr, 
 {
   int i;
   smain.alloc = alloc_raw;
-  *nack = smain.alloc && smain.count == 16;
   smain.free = free_raw;
   smain.free_addr = free_addr_raw & 15;
   smain.count = ((smain.count & 31) + (smain.alloc && !(*nack))) - (smain.free && smain.busy[smain.free_addr & 15]) & 31;
+  *nack = smain.alloc && smain.count == 16;
   if(smain.free)
+  {
     smain.busy[smain.free_addr] = 0;
+    *alloc_addr = !smain.busy[0] ? 0 : (!smain.busy[1] ? 1 : (!smain.busy[2] ? 2 : (!smain.busy[3] ? 3 : (!smain.busy[4] ? 4 : (!smain.busy[5] ? 5 : (!smain.busy[6] ? 6 : (!smain.busy[7] ? 7 : (!smain.busy[8] ? 8 : (!smain.busy[9] ? 9 : (!smain.busy[10] ? 10 : (!smain.busy[11] ? 11 : (!smain.busy[12] ? 12 : (!smain.busy[13] ? 13 : (!smain.busy[14] ? 14 : (!smain.busy[15] ? 15 : 0)))))))))))))));
+  }
 
   if(smain.alloc && !nack)
   {
     smain.busy[*alloc_addr] = 1;
-    *nack = smain.alloc && smain.count == 16;
+    *alloc_addr = !smain.busy[0] ? 0 : (!smain.busy[1] ? 1 : (!smain.busy[2] ? 2 : (!smain.busy[3] ? 3 : (!smain.busy[4] ? 4 : (!smain.busy[5] ? 5 : (!smain.busy[6] ? 6 : (!smain.busy[7] ? 7 : (!smain.busy[8] ? 8 : (!smain.busy[9] ? 9 : (!smain.busy[10] ? 10 : (!smain.busy[11] ? 11 : (!smain.busy[12] ? 12 : (!smain.busy[13] ? 13 : (!smain.busy[14] ? 14 : (!smain.busy[15] ? 15 : 0)))))))))))))));
   }
 
   *nack = smain.alloc && smain.count == 16;
