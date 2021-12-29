@@ -507,6 +507,13 @@ bool verilog_exprt::do_conversion(code_blockt &code_verilogblock, const symbolt 
 
         if (modulevb.initial == true) { //初始化函数
             str_print << "void initial_" + id2string(symbol.base_name) + "()";
+            if (initial_block.op0().id() == ID_code && initial_block.operands().size() == 1) { //优化initial输出格式
+                exprt exprBlock = initial_block.op0();
+                initial_block.operands().pop_back();
+                for (auto exprTmp: exprBlock.operands()) {
+                    initial_block.operands().push_back(exprTmp);
+                }
+            }
             str_print << verilog_expression2c(initial_block, ns) << std::endl;
         }
 

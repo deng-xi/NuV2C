@@ -36,14 +36,12 @@ void main(_Bool clock, _Bool alloc_raw, _Bool *nack, unsigned char *alloc_addr, 
   assert(!((smain.count & 15) == 0));
 }
 void initial_main(){
-  {
-    for(i = 0; i < 16; i = i + 1)
-      smain.busy[(unsigned char)i] = 0;
-    smain.count = 0;
-    smain.alloc = 0;
-    smain.free = 0;
-    smain.free_addr = 0;
-  }
+  for(i = 0; i < 16; i = i + 1)
+    smain.busy[(unsigned char)i] = 0;
+  smain.count = 0;
+  smain.alloc = 0;
+  smain.free = 0;
+  smain.free_addr = 0;
 }
 void main() {//main function
   _Bool clock;
