@@ -6,7 +6,7 @@ all: v2c
 
 $(SUBDIRS):
 	$(MAKE) -C $@; cp $@/v2c ../bin/
-#	$(MAKE) -C ../cbmc/src; $(MAKE) -C ../hw-cbmc/src; $(MAKE) -C $@; cp $@/v2c ../bin/
+	$(MAKE) -C ../cbmc/src; $(MAKE) -C ../hw-cbmc/src; $(MAKE) -C $@; cp $@/v2c ../bin/
 # Dependencies
 
 #v2c: verilog

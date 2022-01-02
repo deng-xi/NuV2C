@@ -111,32 +111,32 @@ std::vector<std::string> exprSymbols(irept ireptTmp) {
     return res;
 }
 
-std::string bfs(std::queue<irept> myqueue) {
-    if (myqueue.empty()) return "";
-    irept ireptTmp = myqueue.front();
-    myqueue.pop();
-    if (ireptTmp.id() == ID_member)
-        return ireptTmp.get_string(ID_component_name);
-    irept::subt myOperands = ireptTmp.get_sub();
-    forall_irep(it, myOperands) {
-        myqueue.push(*it);
-    }
-    return bfs(myqueue);
-}
+//std::string bfs(std::queue<irept> myqueue) {
+//    if (myqueue.empty()) return "";
+//    irept ireptTmp = myqueue.front();
+//    myqueue.pop();
+//    if (ireptTmp.id() == ID_member)
+//        return ireptTmp.get_string(ID_component_name);
+//    irept::subt myOperands = ireptTmp.get_sub();
+//    forall_irep(it, myOperands) {
+//        myqueue.push(*it);
+//    }
+//    return bfs(myqueue);
+//}
 
-std::string dfs(std::stack<irept> mystack) {
-    if (mystack.empty()) return "";
-    irept ireptTmp = mystack.top();
-    mystack.pop();
-    if (ireptTmp.id() == ID_member)
-        return ireptTmp.get_string(ID_component_name);
-    irept::subt myOperands = ireptTmp.get_sub();
-    std::reverse(myOperands.begin(), myOperands.end());
-    forall_irep(it, myOperands) {
-        mystack.push(*it);
-    }
-    return dfs(mystack);
-}
+//std::string dfs(std::stack<irept> mystack) {
+//    if (mystack.empty()) return "";
+//    irept ireptTmp = mystack.top();
+//    mystack.pop();
+//    if (ireptTmp.id() == ID_member)
+//        return ireptTmp.get_string(ID_component_name);
+//    irept::subt myOperands = ireptTmp.get_sub();
+//    std::reverse(myOperands.begin(), myOperands.end());
+//    forall_irep(it, myOperands) {
+//        mystack.push(*it);
+//    }
+//    return dfs(mystack);
+//}
 
 bool verilog_exprt::convert_module(const symbolt &symbol, std::ostream &out) {
     assert(symbol.value.id() == ID_verilog_module);
@@ -282,53 +282,6 @@ bool verilog_exprt::convert_module(const symbolt &symbol, std::ostream &out) {
     }
 
     // Handle the case of continuous assignment
-//    for (std::list<code_assignt>::const_iterator it3 = modulevb.cassign.begin();
-//         it3 != modulevb.cassign.end(); ++it3)
-//        code_verilogblock.operands().push_back(*it3);
-
-//    Forall_operands(it, code_temp) {
-//            if (*it != codet()) { //是指不为空?
-//                code_verilogblock.operands().push_back(*it);
-//                //增加依赖分析，便于实现连续赋值的 Read-After-Write 顺序
-//                std::string lhs = (*it).op0().get_string(ID_component_name);
-//                if ((*it).get(ID_statement) == ID_ifthenelse) {
-//                    std::stack<irept> lhsStack;
-//                    lhsStack.push(*it);
-//                    lhs = dfs(lhsStack);
-//                }
-//                for (std::list<code_assignt>::const_iterator it3 = modulevb.cassignReg.begin();
-//                     it3 != modulevb.cassignReg.end(); ++it3) {
-//                    std::string cassignReg_rhs = (*it3).op1().get_string(ID_component_name); //暂时只考虑到简单赋值
-//                    if (cassignReg_rhs == "") {
-//                        std::queue<irept> cassignRhsQueue;
-//                        cassignRhsQueue.push((*it3).op1());
-//                        cassignReg_rhs = bfs(cassignRhsQueue);
-//                        auto symbols = exprSymbols((*it3).op1()); //获取连续赋值右边表达式所有变量名
-//                    }
-//                    if (cassignReg_rhs != "" && cassignReg_rhs == lhs) { //右边的寄存器变量更新了
-//                        if ((*it).get(ID_statement) == ID_ifthenelse) {//暂时只考虑then块
-//                            if ((*it).op1().get(ID_statement) != ID_block) {
-//                                code_blockt mycode;
-//                                mycode.copy_to_operands(code_verilogblock.operands().back().operands()[1]);
-//                                mycode.add(to_code(*it3));
-//                                code_verilogblock.operands().back().operands()[1] = mycode;
-//                            } else {
-//                                code_verilogblock.operands().back().operands()[1].operands().push_back(to_code(*it3));
-//                            }
-//                        } else code_verilogblock.operands().push_back(*it3);
-//
-//                        std::string cassignReg_lhs = (*it3).op0().get_string(ID_identifier);
-//                        for (std::list<code_assignt>::const_iterator it4 = modulevb.cassign.begin();
-//                             it4 != modulevb.cassign.end(); ++it4) {
-//                            std::string cassign_rhs = (*it4).op1().get_string(ID_identifier);
-//                            if (cassignReg_rhs != "" && cassign_rhs == cassignReg_lhs) //右边的线网变量更新了
-//                                code_verilogblock.operands().push_back(*it4);
-//                        }
-//                    }
-//                }
-//            }
-//        }
-
     std::tr1::unordered_set<std::string> lhSymbols;
     Forall_operands(it, code_temp) {
             if (*it != codet()) { //是指不为空?
