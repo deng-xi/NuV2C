@@ -291,7 +291,8 @@ bool verilog_exprt::convert_module(const symbolt &symbol, std::ostream &out) {
                     continue;
                 std::string lhs = (*it).op0().get_string(ID_component_name);
                 if ((*it).get(ID_statement) == ID_ifthenelse) {
-                    if (it->op1().id() == ID_code && it->op1().get(ID_statement) == ID_assign) { //todo then是一个block则把左值放到一个集合中
+                    if (it->op1().id() == ID_code &&
+                        it->op1().get(ID_statement) == ID_assign) { //todo then是一个block则把左值放到一个集合中
                         if (it->op1().op0().id() == ID_index) {
                             lhs = it->op1().op0().op0().get_string(ID_component_name);
                         } else
@@ -1709,7 +1710,6 @@ codet verilog_exprt::translate_statement(
     else if (statement.id() == ID_assert)
         return translate_assert(to_verilog_assert(statement));
 
-
     else if (statement.id() == ID_assume)
         return translate_assume(to_verilog_assume(statement));
 
@@ -2002,6 +2002,21 @@ codet verilog_exprt::translate_block_assign(
         bitand_exprt andexpr(shr, constant1);
         rhs = andexpr;
         code_block_assignv.rhs() = rhs;
+        //增加阻塞赋值语句lhs数组索引位与
+        if (lhs.id() == ID_index && lhs.op0().id() == ID_symbol && lhs.op1().id() == ID_symbol) {
+            exprt expr_array = lhs.op0();
+            exprt expr_index = lhs.op1();
+            if (expr_index.type().id() == ID_unsignedbv) {
+                int width = expr_index.type().get_int(ID_width);
+                if (width > 0 && width != 1 && width != 8 && width != 16 && width != 32 && width != 64 && width != 128) {
+                    bitand_exprt band(expr_index, from_integer(power(2, width) - 1, integer_typet()));
+                    expr_index = band;
+                    lhs.operands().pop_back();
+                    lhs.operands().push_back(expr_index);
+                    code_block_assignv.lhs() = lhs;
+                }
+            }
+        }
     }
 
         // Processing of statements like out = tmp[5:3];
