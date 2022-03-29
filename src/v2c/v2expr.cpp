@@ -137,6 +137,7 @@ std::vector<std::string> exprSymbols(irept ireptTmp) {
 //    }
 //    return dfs(mystack);
 //}
+codet myCodeAssert;
 
 bool verilog_exprt::convert_module(const symbolt &symbol, std::ostream &out) {
     assert(symbol.value.id() == ID_verilog_module);
@@ -258,6 +259,9 @@ bool verilog_exprt::convert_module(const symbolt &symbol, std::ostream &out) {
             codet codefinal =
                     convert_module_item(static_cast<const verilog_module_itemt &>(*it));//给模块每个项赋具体值
 
+            if (codefinal.get_statement() == ID_assert) {
+                myCodeAssert = codefinal;
+            }
             if (codefinal.get_statement() != ID_block)
                 code_verilogblock.operands().push_back(codefinal);
             else
@@ -404,9 +408,11 @@ bool verilog_exprt::do_conversion(code_blockt &code_verilogblock, const symbolt 
     code_blockt code_parameterblock;
     // print the parameters without any enclosing {}
     if (modulevb.parameter) {
+        out << std::endl;
         forall_operands(itp, parameter_block) { //str_print改为out,首先输出parameter
                 out << verilog_expression2c(*itp, ns) << std::endl; // This is also correct
             }
+        out << std::endl;
     }
 
     // Finally, iterate over a module to replace all reg type variables with its corresponding structure
@@ -437,6 +443,19 @@ bool verilog_exprt::do_conversion(code_blockt &code_verilogblock, const symbolt 
         out << "};" << std::endl;
         out << "struct state_elements_" << symbol.base_name << " s" << symbol.base_name << ";\n\n";
     }
+
+    if (modulevb.initial == true) { //初始化函数
+        out << "void initial_" + id2string(symbol.base_name) + "()";
+        if (initial_block.op0().id() == ID_code && initial_block.operands().size() == 1) { //优化initial输出格式
+            exprt exprBlock = initial_block.op0();
+            initial_block.operands().pop_back();
+            for (auto exprTmp: exprBlock.operands()) {
+                initial_block.operands().push_back(exprTmp);
+            }
+        }
+        out << verilog_expression2c(initial_block, ns) << std::endl << std::endl;
+    }
+
     // Function definition printing here
     code_typet typev;
     typev.return_type() = empty_typet();
@@ -468,18 +487,6 @@ bool verilog_exprt::do_conversion(code_blockt &code_verilogblock, const symbolt 
 
     // Print the void main function
     if (symbol.name == module) {
-
-        if (modulevb.initial == true) { //初始化函数
-            str_print << "void initial_" + id2string(symbol.base_name) + "()";
-            if (initial_block.op0().id() == ID_code && initial_block.operands().size() == 1) { //优化initial输出格式
-                exprt exprBlock = initial_block.op0();
-                initial_block.operands().pop_back();
-                for (auto exprTmp: exprBlock.operands()) {
-                    initial_block.operands().push_back(exprTmp);
-                }
-            }
-            str_print << verilog_expression2c(initial_block, ns) << std::endl;
-        }
 
         str_print << "void main() {" << "//main function" << std::endl;
         code_blockt code_blockv;
@@ -540,6 +547,30 @@ bool verilog_exprt::do_conversion(code_blockt &code_verilogblock, const symbolt 
         if (modulevb.always == true) {
             // End of while(1) loop
             str_print << "    " << verilog_expression2c(code_function_callv, ns) << std::endl;
+
+            //增加assert
+            if (myCodeAssert.get_statement() == ID_assert && myCodeAssert.has_operands() &&
+                myCodeAssert.get_sub().front().id() == ID_overlapped_implication) {
+                exprt before_implication = myCodeAssert.op0().op0();
+                exprt after_implication = myCodeAssert.op0().op1();
+                str_print << "    if(" << verilog_expression2c(before_implication, ns) << ") {\n";
+                if (after_implication.id() == ID_sva_cycle_delay) {
+                    int delay_time = after_implication.op0().get_int(ID_value);
+                    int decimalNumber = 0, i = 0, remainder;
+                    while (delay_time != 0) {
+                        remainder = delay_time % 10;
+                        delay_time /= 10;
+                        decimalNumber += remainder * pow(2, i);
+                        ++i;
+                    }
+                    for (; decimalNumber > 0; --decimalNumber) {
+                        str_print << "      " << verilog_expression2c(code_function_callv, ns) << std::endl;
+                    }
+                    str_print << "      assert(" << verilog_expression2c(after_implication.op2(), ns) << ");\n";
+                    str_print << "    }\n";
+                }
+            }
+
             str_print << "  }" << std::endl;
         } else
             str_print << "  " << verilog_expression2c(code_function_callv, ns) << std::endl;
@@ -2018,7 +2049,8 @@ codet verilog_exprt::translate_block_assign(
             exprt expr_index = lhs.op1();
             if (expr_index.type().id() == ID_unsignedbv) {
                 int width = expr_index.type().get_int(ID_width);
-                if (width > 0 && width != 1 && width != 8 && width != 16 && width != 32 && width != 64 && width != 128) {
+                if (width > 0 && width != 1 && width != 8 && width != 16 && width != 32 && width != 64 &&
+                    width != 128) {
                     bitand_exprt band(expr_index, from_integer(power(2, width) - 1, integer_typet()));
                     expr_index = band;
                     lhs.operands().pop_back();
