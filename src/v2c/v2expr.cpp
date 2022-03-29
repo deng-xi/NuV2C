@@ -172,7 +172,7 @@ bool verilog_exprt::convert_module(const symbolt &symbol, std::ostream &out) {
     modulevb.st.set_tag(current_module);
     code_blockt code_verilogb;
     forall_operands(it, symbol.value) {
-            if (it->id() != ID_decl)
+            if (it->id() != ID_decl) //排除所有非ID_decl类型,对ID_decl类型进行操作
                 continue;
             const verilog_declt &statement = to_verilog_decl(*it);
 
@@ -192,7 +192,7 @@ bool verilog_exprt::convert_module(const symbolt &symbol, std::ostream &out) {
     // intersect({value(input,a),value(input,b)},{value(output,a),value(output,b)})
     // intersect({M1,M2},{M1,M2})
     // *****************************************************************************
-    forall_operands(it, symbol.value) {
+    forall_operands(it, symbol.value) { //模块之间的依赖分析
             if (it->id() == ID_inst) {
                 const irep_idt &identifier = it->get(ID_module);
                 // must be in symbol_table
@@ -236,7 +236,7 @@ bool verilog_exprt::convert_module(const symbolt &symbol, std::ostream &out) {
     }
 
     // Process module items
-    forall_operands(it, symbol.value) {
+    forall_operands(it, symbol.value) { //一个模块
             if (it->id() == ID_inst) {
                 const irep_idt &identifier = it->get(ID_module);
                 // must be in symbol_table
@@ -255,9 +255,8 @@ bool verilog_exprt::convert_module(const symbolt &symbol, std::ostream &out) {
             // guards and the second part contains actual assignment with guards. This
             // is also needed with same if-else blocks defined in multiple clocked blocks.
 
-
             codet codefinal =
-                    convert_module_item(static_cast<const verilog_module_itemt &>(*it));//给模块赋具体值
+                    convert_module_item(static_cast<const verilog_module_itemt &>(*it));//给模块每个项赋具体值
 
             if (codefinal.get_statement() != ID_block)
                 code_verilogblock.operands().push_back(codefinal);
@@ -394,8 +393,8 @@ bool verilog_exprt::do_conversion(code_blockt &code_verilogblock, const symbolt 
     code_blockt code_parameterblock;
     // print the parameters without any enclosing {}
     if (modulevb.parameter) {
-        forall_operands(itp, parameter_block) {
-                str_print << verilog_expression2c(*itp, ns) << std::endl; // This is also correct
+        forall_operands(itp, parameter_block) { //str_print改为out,首先输出parameter
+                out << verilog_expression2c(*itp, ns) << std::endl; // This is also correct
             }
     }
 
@@ -2159,6 +2158,10 @@ codet verilog_exprt::translate_block_assign(
                     if (it->id() == ID_xor) {
                     }
 
+                    if (it->id() == ID_symbol) { //赋值给异或表达式
+                        xor_expr.push_back(*it);
+                    }
+
                     if (it->id() == ID_extractbit) {
                         exprt rhs = it->op0();
                         if (it->operands().size() != 2)
@@ -2174,8 +2177,9 @@ codet verilog_exprt::translate_block_assign(
                         xor_expr.push_back(andexpr);
                     }
                 }
-            exprt conjunction_expr = conjunction(xor_expr);
-            code_block_assignv.rhs() = conjunction_expr;
+//            exprt conjunction_expr = conjunction(xor_expr);
+//            code_block_assignv.rhs() = conjunction_expr;
+            code_block_assignv.rhs() = bitxor_expr; //这里先直接将异或赋值
         }
     } // end of ID_concatenation or ID_bitor
         // handle the case of ID_constant and normal assignments
