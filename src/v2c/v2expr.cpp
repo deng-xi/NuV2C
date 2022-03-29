@@ -352,6 +352,17 @@ bool verilog_exprt::convert_module(const symbolt &symbol, std::ostream &out) {
         code_verilogblock.operands().push_back(*it3);
     }
 
+    //对所有输出增加赋值
+    for (replace_symbolt::expr_mapt::const_iterator it = modulevb.output_var.expr_map.begin();
+         it != modulevb.output_var.expr_map.end(); ++it) {
+        if (modulevb.registers.expr_map.count(it->first)) {
+            exprt lhs = it->second;
+            exprt rhs = modulevb.registers.expr_map.find(it->first)->second;
+            code_assignt myassign(lhs, rhs);
+            code_verilogblock.operands().push_back(myassign);
+        }
+    }
+
     //将assert放到最后
     for (std::vector<exprt>::iterator it = code_verilogblock.operands().begin();
          it != code_verilogblock.operands().end(); ++it) {
