@@ -137,7 +137,7 @@ std::vector<std::string> exprSymbols(irept ireptTmp) {
 //    }
 //    return dfs(mystack);
 //}
-codet myCodeAssert;
+std::list<codet> myCodeAssert;
 
 bool verilog_exprt::convert_module(const symbolt &symbol, std::ostream &out) {
     assert(symbol.value.id() == ID_verilog_module);
@@ -260,7 +260,7 @@ bool verilog_exprt::convert_module(const symbolt &symbol, std::ostream &out) {
                     convert_module_item(static_cast<const verilog_module_itemt &>(*it));//给模块每个项赋具体值
 
             if (codefinal.get_statement() == ID_assert) {
-                myCodeAssert = codefinal;
+                myCodeAssert.push_back(codefinal);
             }
             if (codefinal.get_statement() != ID_block)
                 code_verilogblock.operands().push_back(codefinal);
@@ -544,38 +544,46 @@ bool verilog_exprt::do_conversion(code_blockt &code_verilogblock, const symbolt 
         }
         // Insert all modules having a always(poesdge clk) block
         // into a code block
-        if (modulevb.always == true) {
+//        if (modulevb.always == true) {
             // End of while(1) loop
             str_print << "    " << verilog_expression2c(code_function_callv, ns) << std::endl;
 
             //增加assert
-            if (myCodeAssert.get_statement() == ID_assert && myCodeAssert.has_operands() &&
-                myCodeAssert.get_sub().front().id() == ID_overlapped_implication) {
-                exprt before_implication = myCodeAssert.op0().op0();
-                exprt after_implication = myCodeAssert.op0().op1();
-                str_print << "    if(" << verilog_expression2c(before_implication, ns) << ") {\n";
-                if (after_implication.id() == ID_sva_cycle_delay) {
-                    int delay_time = after_implication.op0().get_int(ID_value);
-                    int decimalNumber = 0, i = 0, remainder;
-                    while (delay_time != 0) {
-                        remainder = delay_time % 10;
-                        delay_time /= 10;
-                        decimalNumber += remainder * pow(2, i);
-                        ++i;
+            for (std::list<codet>::const_iterator it_assert = myCodeAssert.begin();
+                 it_assert != myCodeAssert.end(); ++it_assert) {
+                if (it_assert->get_statement() == ID_assert && it_assert->has_operands() &&
+                    it_assert->get_sub().front().id() == ID_overlapped_implication) {
+                    exprt before_implication = it_assert->op0().op0();
+                    exprt after_implication = it_assert->op0().op1();
+                    str_print << "    if(" << verilog_expression2c(before_implication, ns) << ") {\n";
+                    if (after_implication.id() == ID_sva_cycle_delay) {
+                        int delay_time = after_implication.op0().get_int(ID_value);
+                        //二进制转换为十进制
+                        int decimalNumber = 0, i = 0, remainder;
+                        while (delay_time != 0) {
+                            remainder = delay_time % 10;
+                            delay_time /= 10;
+                            decimalNumber += remainder * pow(2, i);
+                            ++i;
+                        }
+                        for (; decimalNumber > 0; --decimalNumber) {
+                            str_print << "      " << verilog_expression2c(code_function_callv, ns) << std::endl;
+                        }
+                        str_print << "      assert(" << verilog_expression2c(after_implication.op2(), ns) << ");\n";
+                        str_print << "    }\n";
                     }
-                    for (; decimalNumber > 0; --decimalNumber) {
-                        str_print << "      " << verilog_expression2c(code_function_callv, ns) << std::endl;
+                    else {
+                        str_print << "      assert(" << verilog_expression2c(after_implication, ns) << ");\n";
+                        str_print << "    }\n";
                     }
-                    str_print << "      assert(" << verilog_expression2c(after_implication.op2(), ns) << ");\n";
-                    str_print << "    }\n";
                 }
             }
 
             str_print << "  }" << std::endl;
-        } else
-            str_print << "  " << verilog_expression2c(code_function_callv, ns) << std::endl;
-        // End of top level function
-        str_print << "}" << std::endl;
+//        } else
+//            str_print << "  " << verilog_expression2c(code_function_callv, ns) << std::endl;
+//        // End of top level function
+//        str_print << "}" << std::endl;
     }
     out << str_print.str();
 
