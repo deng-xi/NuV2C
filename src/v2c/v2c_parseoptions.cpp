@@ -53,20 +53,21 @@ int v2c_parseoptionst::doit() {
     }
 
     if (!translator() && !translate_module()) {
-        char fullname[30]; //输出string容器到解析目录下
-        gethostname(fullname, 30);
-        std::string realname = fullname;
-        size_t pos = realname.find("-VirtualBox");
-        if (pos != std::string::npos)
-            realname = realname.substr(0, pos);
-        std::string path = "/home/" + realname + "/myv2c/bin/string.h";
-        std::ofstream string_out(path);
-        if (string_out)
-            string_container.my_showall(string_out);
+        if (cmdline.isset("debug")) {
+            char fullname[30]; //输出string容器到解析目录下
+            gethostname(fullname, 30);
+            std::string realname = fullname;
+            size_t pos = realname.find("-VirtualBox");
+            if (pos != std::string::npos)
+                realname = realname.substr(0, pos);
+            std::string path = "/home/" + realname + "/myv2c/bin/string.h";
+            std::ofstream string_out(path);
+            if (string_out)
+                string_container.my_showall(string_out);
 //        symbol_table.show(string_out);
+        }
         return 0;
-    }
-    else
+    } else
         return 1;
 }
 
