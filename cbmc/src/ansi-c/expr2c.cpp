@@ -10,6 +10,8 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <cctype>
 #include <cstdio>
 
+#include <algorithm>
+
 #ifdef _WIN32
                                                                                                                         #ifndef __MINGW32__
 #define snprintf sprintf_s
@@ -2004,6 +2006,19 @@ std::string expr2ct::convert_constant(
         type.id() == ID_natural ||
         type.id() == ID_rational) {
         dest = id2string(value);
+        size_t pos = dest.find("'b");
+        if (pos != std::string::npos) {
+            dest = dest.substr(pos+2, dest.size());
+            int binaryNumber = stoi(dest);
+            int decimalNumber = 0, i = 0, remainder;
+            while (binaryNumber != 0) {
+                remainder = binaryNumber % 10;
+                binaryNumber /= 10;
+                decimalNumber += remainder * pow(2, i);
+                ++i;
+            }
+            dest = i2string(decimalNumber);
+        }
     } else if (type.id() == ID_c_enum ||
                type.id() == ID_c_enum_tag) {
         typet c_enum_type =
@@ -2343,7 +2358,8 @@ std::string expr2ct::convert_array(
 
     bool all_constant = true;
 
-    forall_operands(it, src)if (!it->is_constant())
+    forall_operands(it, src)
+            if (!it->is_constant())
                 all_constant = false;
 
     if (src.get_bool(ID_C_string_constant) &&
@@ -3309,9 +3325,8 @@ std::string expr2ct::convert_code(
     if (statement == ID_assume)
         return convert_code_assume(src, indent);
 
-    if (statement == ID_assert) //删除被调函数中的assert
-//    return convert_code_assert(src, indent);
-        return "";
+    if (statement == ID_assert)
+        return convert_code_assert(src, indent);
 
     if (statement == ID_break)
         return convert_code_break(src, indent);
@@ -4416,6 +4431,7 @@ std::string expr2ct::convert(
             return src.op0().op0().get_string(ID_identifier) + "." +
                    src.op0().get_string(ID_component_name) + "==0";
     }
+
     // no C language expression for internal representation
     return convert_norep(src, precedence);
 }
