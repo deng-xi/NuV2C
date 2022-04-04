@@ -259,8 +259,10 @@ bool verilog_exprt::convert_module(const symbolt &symbol, std::ostream &out) {
             codet codefinal =
                     convert_module_item(static_cast<const verilog_module_itemt &>(*it));//给模块每个项赋具体值
 
+            //删除被调函数中的assert
             if (codefinal.get_statement() == ID_assert) {
                 myCodeAssert.push_back(codefinal);
+                continue;
             }
             if (codefinal.get_statement() != ID_block)
                 code_verilogblock.operands().push_back(codefinal);
@@ -545,45 +547,46 @@ bool verilog_exprt::do_conversion(code_blockt &code_verilogblock, const symbolt 
         // Insert all modules having a always(poesdge clk) block
         // into a code block
 //        if (modulevb.always == true) {
-            // End of while(1) loop
-            str_print << "    " << verilog_expression2c(code_function_callv, ns) << std::endl;
+        // End of while(1) loop
+        str_print << "    " << verilog_expression2c(code_function_callv, ns) << std::endl;
 
-            //增加assert
-            for (std::list<codet>::const_iterator it_assert = myCodeAssert.begin();
-                 it_assert != myCodeAssert.end(); ++it_assert) {
-                if (it_assert->get_statement() == ID_assert && it_assert->has_operands() &&
-                    it_assert->get_sub().front().id() == ID_overlapped_implication) {
-                    exprt before_implication = it_assert->op0().op0();
-                    exprt after_implication = it_assert->op0().op1();
-                    str_print << "    if(" << verilog_expression2c(before_implication, ns) << ") {\n";
-                    if (after_implication.id() == ID_sva_cycle_delay) {
-                        int delay_time = after_implication.op0().get_int(ID_value);
-                        //二进制转换为十进制
-                        int decimalNumber = 0, i = 0, remainder;
-                        while (delay_time != 0) {
-                            remainder = delay_time % 10;
-                            delay_time /= 10;
-                            decimalNumber += remainder * pow(2, i);
-                            ++i;
-                        }
-                        for (; decimalNumber > 0; --decimalNumber) {
-                            str_print << "      " << verilog_expression2c(code_function_callv, ns) << std::endl;
-                        }
-                        str_print << "      assert(" << verilog_expression2c(after_implication.op2(), ns) << ");\n";
-                        str_print << "    }\n";
+        //增加assert
+        for (std::list<codet>::const_iterator it_assert = myCodeAssert.begin();
+             it_assert != myCodeAssert.end(); ++it_assert) {
+            if (it_assert->get_statement() == ID_assert && it_assert->has_operands() &&
+                it_assert->get_sub().front().id() == ID_overlapped_implication) {
+                exprt before_implication = it_assert->op0().op0();
+                exprt after_implication = it_assert->op0().op1();
+                str_print << "    if(" << verilog_expression2c(before_implication, ns) << ") {\n";
+                if (after_implication.id() == ID_sva_cycle_delay) {
+                    int delay_time = after_implication.op0().get_int(ID_value);
+                    //二进制转换为十进制
+                    int decimalNumber = 0, i = 0, remainder;
+                    while (delay_time != 0) {
+                        remainder = delay_time % 10;
+                        delay_time /= 10;
+                        decimalNumber += remainder * pow(2, i);
+                        ++i;
                     }
-                    else {
-                        str_print << "      assert(" << verilog_expression2c(after_implication, ns) << ");\n";
-                        str_print << "    }\n";
+                    for (; decimalNumber > 0; --decimalNumber) {
+                        str_print << "      " << verilog_expression2c(code_function_callv, ns) << std::endl;
                     }
+                    str_print << "      assert(" << verilog_expression2c(after_implication.op2(), ns) << ");\n";
+                    str_print << "    }\n";
+                } else {
+                    str_print << "      assert(" << verilog_expression2c(after_implication, ns) << ");\n";
+                    str_print << "    }\n";
                 }
+            } else {
+                str_print << "    " << verilog_expression2c(*it_assert, ns);
             }
+        }
 
-            str_print << "  }" << std::endl;
+        str_print << "  }" << std::endl;
 //        } else
 //            str_print << "  " << verilog_expression2c(code_function_callv, ns) << std::endl;
 //        // End of top level function
-//        str_print << "}" << std::endl;
+        str_print << "}" << std::endl;
     }
     out << str_print.str();
 
@@ -887,7 +890,7 @@ exprt verilog_exprt::convert_expr(const exprt &expression, bool *changed) {
                 // find the size of the symbol
                 mp_integer width = pointer_offset_bits(rhs.type(), ns);
                 assert(width > 0);
-                if (width > 1) {
+                if (width > 1 && width != 8 && width != 16 && width != 32 && width != 128) {
                     constant_exprt constant = from_integer(power(2, width) - 1, integer_typet());
                     bitand_exprt andexpr(shlsym, constant);
                     expr_concat.push_back(andexpr);
@@ -1060,7 +1063,8 @@ codet verilog_exprt::convert_continuous_assign(
             }
 
                 // Processing of statements like out[a:b] = tmp[c:d];
-                // out = (out & !(2^(width_of_out - 1) - 2^b)) | ((tmp & (2^(width_of_tmp - 1) - 2^d) >> d) << b);
+                // 错误:out = (out & !(2^(width_of_out - 1) - 2^b)) | ((tmp & (2^(width_of_tmp - 1) - 2^d) >> d) << b);
+                // 正确:out = (out & ((2^(width_of_out) - 1) - (2^a - 2^b + 2^a))) | (((tmp & (2^c - 2^d + 2^c)) >> d) << b);
             else if (lhs.id() == ID_extractbits && rhs.id() == ID_extractbits) { //修改了处理方式
                 if (rhs.operands().size() != 3)
                     throw "extractbits takes three operands";
@@ -1628,8 +1632,8 @@ codet verilog_exprt::convert_assert(const verilog_assertt &module_item) {
         while (condition_tmp->id() == ID_typecast)
             condition_tmp->op0();
         if (condition_tmp->id() == ID_or || condition_tmp->id() == ID_and) {
-            condition_stack.push(&condition.op1());
-            condition_stack.push(&condition.op0());
+            condition_stack.push(&condition_tmp->op1());
+            condition_stack.push(&condition_tmp->op0());
         } else if (condition_tmp->id() == ID_not) {
             condition_stack.push(&condition.op0());
         } else if (condition_tmp->id() == ID_equal) {
@@ -1726,7 +1730,7 @@ void verilog_exprt::convert_function(const verilog_module_itemt &module_item, st
     code_funct.operands().insert(code_funct.operands().begin(), d);
     code_funct.add(code_returnt(sym));
 
-    out << verilog_expression2c(code_funct, ns) << std::endl;
+    out << verilog_expression2c(code_funct, ns).substr(2) << std::endl;
 }
 
 /*******************************************************************\
@@ -2087,7 +2091,7 @@ codet verilog_exprt::translate_block_assign(
     }
 
         // Processing of statements like out[a:b] = tmp[c:d];
-        // out = (out & ((2^(width_of_out) - 1) - (2^a - 2^b + 2^a))) | (((tmp & (2^c - 2^d + 2^c)) >> d) << b);
+        // 正确:out = (out & ((2^(width_of_out) - 1) - (2^a - 2^b + 2^a))) | (((tmp & (2^c - 2^d + 2^c)) >> d) << b);
     else if (lhs.id() == ID_extractbits && rhs.id() == ID_extractbits) {
         if (rhs.operands().size() != 3)
             throw "extractbits takes three operands";
@@ -2243,16 +2247,17 @@ codet verilog_exprt::translate_block_assign(
         exprt cexpr;
         exprt::operandst expressions;
         exprt rhs_op;
-        bool changed = 0;
+        //不改变运算符为conjunction
+        int i = 0;
         bool flag = 0;
         Forall_operands(it, rhsexp) {
+                bool changed = 0;
                 rhs_op = convert_expr(*it, &changed);
-                if (changed == 1) flag = 1;
-                expressions.push_back(rhs_op);
+                if (changed)
+                    rhsexp.operands()[i] = rhs_op;
+                i++;
             }
-        if (!flag) cexpr = rhsexp;
-        else cexpr = conjunction(expressions);
-
+        cexpr = rhsexp;
         exprt *expr_ref = &cexpr; //DFS给过程赋值单个bv类型与位宽不匹配时加&
         std::stack<exprt *> exp_st;
         exp_st.push(expr_ref);
