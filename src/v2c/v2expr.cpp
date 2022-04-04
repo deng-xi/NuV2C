@@ -1722,6 +1722,27 @@ void verilog_exprt::convert_function(const verilog_module_itemt &module_item, st
     std::string output_fn = verilog_expression2c(fn_decl, ns);
     output_fn = output_fn.substr(0, output_fn.size() - 1);
     out << output_fn << std::endl;
+    //增加函数内局部变量定义
+    const exprt &declarations = static_cast<const exprt &>(module_item.find(dstring("declarations")));
+    bool has_local_var = false;
+    forall_operands (it, declarations) {
+            if (it->get(ID_class) == ID_reg) {
+                exprt local_var = *it;
+                std::string local_sym = local_var.op0().get_string(ID_identifier);
+                int big = local_var.find(ID_type).find(ID_range).get_sub()[0].get_int(ID_value);
+                int low = local_var.find(ID_type).find(ID_range).get_sub()[1].get_int(ID_value);
+                int width = big - low + 1;
+                if (!has_local_var) {
+                    out << "{" << std::endl;
+                    has_local_var = true;
+                }
+                if (width < 8) {
+                    out << "  unsigned char " + local_sym << ";\n";
+                } else if (width < 16) {
+                    out << "  int " + local_sym << ";\n";
+                }
+            }
+        }
     std::string name_fn = id2string(fn_symbol.get_identifier());
     name_fn += "." + id2string(fn_name.base_name);
     symbol_exprt sym(name_fn, unsignedbv_typet(8));
@@ -1729,8 +1750,9 @@ void verilog_exprt::convert_function(const verilog_module_itemt &module_item, st
 
     code_funct.operands().insert(code_funct.operands().begin(), d);
     code_funct.add(code_returnt(sym));
-
-    out << verilog_expression2c(code_funct, ns).substr(2) << std::endl;
+    if (has_local_var)
+        out << verilog_expression2c(code_funct, ns).substr(2) << std::endl;
+    else out << verilog_expression2c(code_funct, ns) << std::endl;
 }
 
 /*******************************************************************\
