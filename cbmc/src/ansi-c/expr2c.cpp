@@ -2008,7 +2008,7 @@ std::string expr2ct::convert_constant(
         dest = id2string(value);
         size_t pos = dest.find("'b");
         if (pos != std::string::npos) {
-            dest = dest.substr(pos+2, dest.size());
+            dest = dest.substr(pos + 2, dest.size());
             int binaryNumber = stoi(dest);
             int decimalNumber = 0, i = 0, remainder;
             while (binaryNumber != 0) {
@@ -2358,8 +2358,7 @@ std::string expr2ct::convert_array(
 
     bool all_constant = true;
 
-    forall_operands(it, src)
-            if (!it->is_constant())
+    forall_operands(it, src)if (!it->is_constant())
                 all_constant = false;
 
     if (src.get_bool(ID_C_string_constant) &&
@@ -3982,8 +3981,9 @@ std::string expr2ct::convert(
         unsigned &precedence) {
     precedence = 16;
 
-    if (src.id() == ID_plus)
+    if (src.id() == ID_plus) {
         return convert_binary(src, "+", precedence = 12, false);
+    }
 
     else if (src.id() == ID_minus)
         return convert_binary(src, "-", precedence = 12, true);
@@ -4430,7 +4430,93 @@ std::string expr2ct::convert(
         } else
             return src.op0().op0().get_string(ID_identifier) + "." +
                    src.op0().get_string(ID_component_name) + "==0";
+    } else if (src.id() == ID_function_call) { //增加函数内的直接调用函数
+        std::string function_call;
+        if (src.op0().id() == ID_symbol) {
+            function_call = convert_symbol(src.op0(), precedence);
+        }
+        if (src.op1().id() == dstring(0, 0) && src.op1().has_operands() &&
+            src.op1().op0().id() == ID_concatenation) {
+            exprt expression = src.op1().op0();
+            if (expression.id() == ID_concatenation) {
+                exprt concat_expr = expression;
+                if (concat_expr.operands().size() == 0) {
+                    throw "concatenation expected to have at least one operand";
+                }
+                bitor_exprt final_bitor;
+                unsigned saved_diff = 0;
+                unsigned int diff = 0;
+                exprt::operandst expr_concat;
+
+                // Iterate over inverted direction to get the saved_diff properly !!
+                for (exprt::operandst::const_reverse_iterator
+                             it = concat_expr.operands().rbegin();
+                     it != concat_expr.operands().rend();
+                     it++) {
+                    if (it->id() == ID_extractbits) {
+                        exprt rhs = it->op0();
+                        if (it->operands().size() != 3)
+                            throw "extractbits takes three operands";
+                        symbol_exprt rhs_symbol = to_symbol_expr(rhs);
+                        mp_integer size_op1;
+                        to_integer(it->op1(), size_op1);
+                        mp_integer size_op2;
+                        to_integer(it->op2(), size_op2);
+                        diff = integer2unsigned(size_op1 - size_op2);
+
+                        ashr_exprt shr(rhs_symbol, it->op2());
+//                        constant_exprt constant = from_integer(power(2, diff + 1) - 1, integer_typet());
+                        constant_exprt constant = from_integer(diff + 1, integer_typet());
+                        bitand_exprt andexpr(shr, constant);
+                        shl_exprt shl(andexpr, saved_diff);
+                        saved_diff = saved_diff + (diff + 1);
+                        expr_concat.push_back(shl);
+                    } else if (it->id() == ID_extractbit) {
+                        exprt rhs = it->op0();
+                        if (it->operands().size() != 2)
+                            throw "extractbit takes two operands";
+                        symbol_exprt rhs_symbol = to_symbol_expr(rhs);
+                        mp_integer size_op1;
+                        to_integer(it->op1(), size_op1);
+                        ashr_exprt shr(rhs_symbol, it->op1());
+                        diff = integer2unsigned(size_op1);
+
+//                        constant_exprt constant = from_integer(power(2, 1) - 1, integer_typet());
+                        constant_exprt constant = from_integer(diff + 1, integer_typet());
+                        bitand_exprt andexpr(shr, constant);
+                        shl_exprt shl(andexpr, saved_diff);
+                        saved_diff = saved_diff + (diff + 1);
+                        expr_concat.push_back(shl);
+                    }
+                        // normal register assignment, handle constants
+                    else {
+                        exprt rhs = *it;
+                        shl_exprt shlsym(rhs, saved_diff);
+                        // find the size of the symbol
+                        mp_integer width = pointer_offset_bits(rhs.type(), ns);
+                        assert(width > 0);
+                        if (width > 1 && width != 8 && width != 16 && width != 32 && width != 128) {
+//                            constant_exprt constant = from_integer(power(2, width) - 1, integer_typet());
+                            constant_exprt constant = from_integer(diff + 1, integer_typet());
+                            bitand_exprt andexpr(shlsym, constant);
+                            expr_concat.push_back(andexpr);
+                        } else
+                            expr_concat.push_back(shlsym);
+                        saved_diff = saved_diff + integer2unsigned(width);
+                    }
+                } // end for
+                // do a disjunction over all expressions stored in expr_concat
+                bitor_exprt bitwise_or;
+                std::swap(bitwise_or.operands(), expr_concat);
+                // finally do the assignment
+//                exp = bitwise_or;
+                return function_call + "(" + convert(bitwise_or) + ")";
+            }
+            function_call += "(" + convert_function(src.op1().op0(), "CONCATENATION", precedence = 16) + ")";
+        }
+        return function_call;
     }
+
 
     // no C language expression for internal representation
     return convert_norep(src, precedence);
