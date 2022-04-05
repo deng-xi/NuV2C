@@ -875,13 +875,22 @@ exprt verilog_exprt::convert_expr(const exprt &expression, bool *changed) {
                 mp_integer size_op1;
                 to_integer(it->op1(), size_op1);
                 ashr_exprt shr(rhs_symbol, it->op1());
-                diff = integer2unsigned(size_op1);
+                diff = 0;
 
-                constant_exprt constant = from_integer(power(2, 1) - 1, integer_typet());
-                bitand_exprt andexpr(shr, constant);
-                shl_exprt shl(andexpr, saved_diff);
-                saved_diff = saved_diff + (diff + 1);
-                expr_concat.push_back(shl);
+//                constant_exprt constant = from_integer(power(2, 1) - 1, integer_typet());
+                if (it->op0().get(ID_type) == ID_unsignedbv &&
+                    it->op0().find(ID_type).get_int(ID_width) - integer2unsigned(size_op1) > 1) {
+                    constant_exprt constant = from_integer(1, integer_typet());
+                    bitand_exprt andexpr(shr, constant);
+                    shl_exprt shl(andexpr, saved_diff);
+                    saved_diff = saved_diff + (diff + 1);
+                    expr_concat.push_back(shl);
+                } else {
+                    shl_exprt shl(shr, saved_diff);
+                    saved_diff = saved_diff + (diff + 1);
+                    expr_concat.push_back(shl);
+                }
+
             }
                 // normal register assignment, handle constants
             else {
@@ -1706,7 +1715,7 @@ Purpose:
 
 void verilog_exprt::convert_function(const verilog_module_itemt &module_item, std::ostream &out) {
     const exprt &body = static_cast<const exprt &>(module_item.find(ID_body));
-    code_blockt code_funct = to_code_block(translate_block(to_verilog_block(body)));
+    code_blockt code_funct = to_code_block(translate_block(to_verilog_block(body))); //转换函数
 
     const symbol_exprt &fn_symbol = static_cast<const symbol_exprt &>(module_item.find(ID_symbol));
 
@@ -1736,9 +1745,9 @@ void verilog_exprt::convert_function(const verilog_module_itemt &module_item, st
                     out << "{" << std::endl;
                     has_local_var = true;
                 }
-                if (width < 8) {
+                if (width <= 8) {
                     out << "  unsigned char " + local_sym << ";\n";
-                } else if (width < 16) {
+                } else if (width <= 16) {
                     out << "  int " + local_sym << ";\n";
                 }
             }

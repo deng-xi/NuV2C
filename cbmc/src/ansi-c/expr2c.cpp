@@ -2358,7 +2358,8 @@ std::string expr2ct::convert_array(
 
     bool all_constant = true;
 
-    forall_operands(it, src)if (!it->is_constant())
+    forall_operands(it, src)
+            if (!it->is_constant())
                 all_constant = false;
 
     if (src.get_bool(ID_C_string_constant) &&
@@ -3983,9 +3984,7 @@ std::string expr2ct::convert(
 
     if (src.id() == ID_plus) {
         return convert_binary(src, "+", precedence = 12, false);
-    }
-
-    else if (src.id() == ID_minus)
+    } else if (src.id() == ID_minus)
         return convert_binary(src, "-", precedence = 12, true);
 
     else if (src.id() == ID_unary_minus)
@@ -4465,7 +4464,6 @@ std::string expr2ct::convert(
                         diff = integer2unsigned(size_op1 - size_op2);
 
                         ashr_exprt shr(rhs_symbol, it->op2());
-//                        constant_exprt constant = from_integer(power(2, diff + 1) - 1, integer_typet());
                         constant_exprt constant = from_integer(diff + 1, integer_typet());
                         bitand_exprt andexpr(shr, constant);
                         shl_exprt shl(andexpr, saved_diff);
@@ -4479,14 +4477,20 @@ std::string expr2ct::convert(
                         mp_integer size_op1;
                         to_integer(it->op1(), size_op1);
                         ashr_exprt shr(rhs_symbol, it->op1());
-                        diff = integer2unsigned(size_op1);
+                        diff = 0;
 
-//                        constant_exprt constant = from_integer(power(2, 1) - 1, integer_typet());
-                        constant_exprt constant = from_integer(diff + 1, integer_typet());
-                        bitand_exprt andexpr(shr, constant);
-                        shl_exprt shl(andexpr, saved_diff);
-                        saved_diff = saved_diff + (diff + 1);
-                        expr_concat.push_back(shl);
+                        if (it->op0().get(ID_type) == ID_unsignedbv &&
+                            it->op0().find(ID_type).get_int(ID_width) - integer2unsigned(size_op1) > 1) {
+                            constant_exprt constant = from_integer(1, integer_typet());
+                            bitand_exprt andexpr(shr, constant);
+                            shl_exprt shl(andexpr, saved_diff);
+                            saved_diff = saved_diff + (diff + 1);
+                            expr_concat.push_back(shl);
+                        } else {
+                            shl_exprt shl(shr, saved_diff);
+                            saved_diff = saved_diff + (diff + 1);
+                            expr_concat.push_back(shl);
+                        }
                     }
                         // normal register assignment, handle constants
                     else {
