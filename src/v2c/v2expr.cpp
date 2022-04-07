@@ -1644,7 +1644,9 @@ codet verilog_exprt::convert_assert(const verilog_assertt &module_item) {
         condition_stack.pop();
         while (condition_tmp->id() == ID_typecast)
             condition_tmp->op0();
-        if (condition_tmp->id() == ID_or || condition_tmp->id() == ID_and) {
+        if (condition_tmp->id() == ID_overlapped_implication || condition_tmp->id() == ID_and ||
+            condition_tmp->id() == ID_nand || condition_tmp->id() == ID_or ||
+            condition_tmp->id() == ID_nor || condition_tmp->id() == ID_xor || condition_tmp->id() == ID_xnor) {
             condition_stack.push(&condition_tmp->op1());
             condition_stack.push(&condition_tmp->op0());
         } else if (condition_tmp->id() == ID_not) {
@@ -1658,6 +1660,9 @@ codet verilog_exprt::convert_assert(const verilog_assertt &module_item) {
             if (changed) {
                 condition_tmp->op0() = lhs;
             }
+        } else {
+            bool changed;
+            *condition_tmp = convert_expr(*condition_tmp, &changed);
         }
     }
     code_assertv.copy_to_operands(condition);
