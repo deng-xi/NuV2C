@@ -1952,9 +1952,41 @@ codet verilog_exprt::translate_if(
             }
         }
     }
+//    else if (expr_cond.id() == ID_and || expr_cond.id() == ID_or ) { //增加if条件的and情况
+//        assert(expr_cond.operands().size() == 2);
+//        Forall_operands(it, expr_cond) {
+//            bool changed = false;
+//               exprt converted =  convert_expr(*it, &changed);
+//               if (changed) {
+//                   *it = converted;
+//               }
+//        }
+//        codeif.cond() = expr_cond;
+//    }
         // save the condition
     else {
-        codeif.cond() = statement.condition();
+        //DFS处理if条件中的表达式 todo 还有一些类型没有考虑
+        exprt *expr_ref = &expr_cond;
+        std::stack<exprt *> exp_st;
+        exp_st.push(expr_ref);
+        while (!exp_st.empty()) {
+            exprt *exp_tmp = exp_st.top();
+            exp_st.pop();
+            while (exp_tmp->id() == ID_typecast)
+                exp_tmp = &(exp_tmp->op0());
+            if (exp_tmp->id() == ID_and || exp_tmp->id() == ID_nand || exp_tmp->id() == ID_or ||
+                exp_tmp->id() == ID_nor || exp_tmp->id() == ID_xor || exp_tmp->id() == ID_xnor) {
+                exp_st.push(&(exp_tmp->op0()));
+                exp_st.push(&(exp_tmp->op1()));
+            } else if (exp_tmp->id() == ID_not) {
+                exp_st.push(&(exp_tmp->op0()));
+            } else if (exp_tmp->id() == ID_extractbit || exp_tmp->id() == ID_extractbits) {
+                bool changed;
+                *exp_tmp = convert_expr(*(exp_tmp), &changed);
+            }
+        }
+        codeif.cond() = expr_cond;
+//        codeif.cond() = statement.condition();
     }
     codet save_thenpair = translate_statement(statement.true_case());
     codeif.then_case() = save_thenpair;
