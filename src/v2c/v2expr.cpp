@@ -862,8 +862,7 @@ exprt verilog_exprt::convert_expr(const exprt &expression, bool *changed) {
                 diff = integer2unsigned(size_op1 - size_op2);
 
                 ashr_exprt shr(rhs_symbol, it->op2());
-//                constant_exprt constant = from_integer(power(2, diff + 1) - 1, integer_typet());
-                constant_exprt constant = from_integer(diff + 1, integer_typet());
+                constant_exprt constant = from_integer(power(2, diff + 1) - 1, integer_typet());
                 bitand_exprt andexpr(shr, constant);
                 shl_exprt shl(andexpr, saved_diff);
                 saved_diff = saved_diff + (diff + 1);
@@ -878,10 +877,9 @@ exprt verilog_exprt::convert_expr(const exprt &expression, bool *changed) {
                 ashr_exprt shr(rhs_symbol, it->op1());
                 diff = 0;
 
-//                constant_exprt constant = from_integer(power(2, 1) - 1, integer_typet());
                 if (it->op0().get(ID_type) == ID_unsignedbv &&
-                    it->op0().find(ID_type).get_int(ID_width) - integer2unsigned(size_op1) > 1) {
-                    constant_exprt constant = from_integer(1, integer_typet());
+                    it->op0().find(ID_type).get_int(ID_width) - integer2unsigned(size_op1) > 1) { //8位的x[7]去掉&1
+                    constant_exprt constant = from_integer(power(2, diff + 1) - 1, integer_typet());
                     bitand_exprt andexpr(shr, constant);
                     shl_exprt shl(andexpr, saved_diff);
                     saved_diff = saved_diff + (diff + 1);
@@ -901,15 +899,15 @@ exprt verilog_exprt::convert_expr(const exprt &expression, bool *changed) {
                 mp_integer width = pointer_offset_bits(rhs.type(), ns);
                 assert(width > 0);
                 if (rhs.id() != ID_constant && width > 1 && width != 8 && width != 16 && width != 32 && width != 128) {
-                    constant_exprt constant = from_integer(diff + 1, integer_typet());
+                    constant_exprt constant = from_integer(power(2, diff + 1) - 1, integer_typet());
                     bitand_exprt andexpr(shlsym, constant);
                     expr_concat.push_back(andexpr);
                 } else {
 //                    可能要删除常量0的位移? 其它地方也要改
-//                    if (rhs.id() == ID_constant && rhs.get_int(ID_value) == 0)
-//                        expr_concat.push_back(rhs);
-//                    else
-                    expr_concat.push_back(shlsym);
+                    if (rhs.id() == ID_constant && rhs.get_int(ID_value) == 0)
+                        expr_concat.push_back(rhs);
+                    else
+                        expr_concat.push_back(shlsym);
                 }
                 saved_diff = saved_diff + integer2unsigned(width);
             }
@@ -1851,6 +1849,8 @@ Purpose:
 codet verilog_exprt::translate_block(const verilog_blockt &statement) {
     code_blockt verilog_block1;
     forall_operands(it, statement) {
+//            if (it->id() != ID_skip) //忽略skip语句,或者后面covert忽略也行
+//                continue;
             codet save_block = translate_statement(static_cast<const verilog_statementt &>(*it));
             verilog_block1.operands().push_back(save_block);
         }
@@ -2084,7 +2084,7 @@ codet verilog_exprt::translate_block_assign(
         // of a symbol(x) and constant(1).
         if (rhs.operands().size() != 2)
             throw "extractbit takes two operands";
-        //不知道怎么解析的 concatenation解析到了extractbit里面
+        //不知道怎么解析的函数if块内的concatenation,解析到了extractbit里面
         //因此自己在这里增加一个判断与转换
         if (rhs.op0().id() == ID_concatenation && rhs.op1().id() == ID_constant && rhs.op1().get_int(ID_value) == 0) {
             code_block_assignv.lhs() = lhs;

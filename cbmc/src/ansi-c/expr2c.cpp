@@ -2358,7 +2358,8 @@ std::string expr2ct::convert_array(
 
     bool all_constant = true;
 
-    forall_operands(it, src)if (!it->is_constant())
+    forall_operands(it, src)
+            if (!it->is_constant())
                 all_constant = false;
 
     if (src.get_bool(ID_C_string_constant) &&
@@ -3371,6 +3372,9 @@ std::string expr2ct::convert_code(
 
     if (statement == ID_array_copy)
         return convert_code_array_copy(src, indent);
+
+    if (statement.get_no() == 0) //忽略空的code
+        return "";
 
     unsigned precedence;
     return convert_norep(src, precedence);
@@ -4428,9 +4432,7 @@ std::string expr2ct::convert(
         } else
             return src.op0().op0().get_string(ID_identifier) + "." +
                    src.op0().get_string(ID_component_name) + "==0";
-    }
-
-    else if (src.id() == ID_function_call) { //增加函数内的直接调用函数
+    } else if (src.id() == ID_function_call) { //增加函数内的直接调用函数
         std::string function_call;
         if (src.op0().id() == ID_symbol) {
             function_call = convert_symbol(src.op0(), precedence);
