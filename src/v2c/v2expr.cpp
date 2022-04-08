@@ -846,7 +846,7 @@ exprt verilog_exprt::convert_expr(const exprt &expression, bool *changed) {
         exprt::operandst expr_concat;
 
         // Iterate over inverted direction to get the saved_diff properly !!
-        for (exprt::operandst::const_reverse_iterator
+        for (exprt::operandst::reverse_iterator
                      it = concat_expr.operands().rbegin();
              it != concat_expr.operands().rend();
              it++) {
@@ -889,7 +889,11 @@ exprt verilog_exprt::convert_expr(const exprt &expression, bool *changed) {
                     saved_diff = saved_diff + (diff + 1);
                     expr_concat.push_back(shl);
                 }
-
+            }
+            else if (it->id() == ID_unary_minus) { //处理连接表达式中的负号
+                bool changed1;
+                exprt exprt_minus = convert_expr(it->op0(), &changed1);
+                expr_concat.push_back(unary_minus_exprt(exprt_minus));
             }
                 // normal register assignment, handle constants
             else {
@@ -2206,82 +2210,11 @@ codet verilog_exprt::translate_block_assign(
         code_block_assignv.rhs() = rhs;
     } else if (rhs.id() == ID_concatenation || rhs.id() == ID_xor) {
         // handle ID_concatenation
+        //转换成调用convert_expr
         exprt concat_expr = rhs;
         if (concat_expr.id() == ID_concatenation) {
-            if (concat_expr.operands().size() == 0) {
-                throw "concatenation expected to have at least one operand";
-                throw 0;
-            }
-
-            bitor_exprt final_bitor;
-            unsigned saved_diff = 0;
-            unsigned int diff = 0;
-            exprt::operandst expr_concat;
-
-            // Iterate over inverted direction to get the saved_diff properly !!
-            // Forall_operands(it, concat_expr)
-            for (exprt::operandst::const_reverse_iterator
-                         it = concat_expr.operands().rbegin();
-                 it != concat_expr.operands().rend();
-                 it++) {
-                //bitand_exprt andexpr;
-                //constant_exprt constant_true = from_integer(power(2, 0), integer_typet());
-                //final_bitor(andexpr, constant_true);
-                if (it->id() == ID_extractbits) {
-                    exprt rhs = it->op0();
-                    if (it->operands().size() != 3)
-                        throw "extractbits takes three operands";
-                    symbol_exprt rhs_symbol = to_symbol_expr(rhs);
-                    mp_integer size_op1;
-                    to_integer(it->op1(), size_op1);
-                    mp_integer size_op2;
-                    to_integer(it->op2(), size_op2);
-                    diff = integer2unsigned(size_op1 - size_op2);
-
-                    ashr_exprt shr(rhs_symbol, it->op2());
-                    constant_exprt constant = from_integer(power(2, diff + 1) - 1, integer_typet());
-                    bitand_exprt andexpr(shr, constant);
-                    shl_exprt shl(andexpr, saved_diff);
-                    saved_diff = saved_diff + (diff + 1);
-                    expr_concat.push_back(shl);
-                } else if (it->id() == ID_extractbit) {
-                    exprt rhs = it->op0();
-                    if (it->operands().size() != 2)
-                        throw "extractbit takes two operands";
-                    symbol_exprt rhs_symbol = to_symbol_expr(rhs);
-                    mp_integer size_op1;
-                    to_integer(it->op1(), size_op1);
-                    ashr_exprt shr(rhs_symbol, it->op1());
-                    diff = integer2unsigned(size_op1);
-
-                    constant_exprt constant = from_integer(power(2, 1) - 1, integer_typet());
-                    bitand_exprt andexpr(shr, constant);
-                    shl_exprt shl(andexpr, saved_diff);
-                    saved_diff = saved_diff + (diff + 1);
-                    expr_concat.push_back(shl);
-                }
-                    // normal register assignment, handle constants
-                else {
-                    exprt rhs = *it;
-                    shl_exprt shlsym(rhs, saved_diff);
-                    // find the size of the symbol
-                    mp_integer width = pointer_offset_bits(rhs.type(), ns);
-                    assert(width > 0);
-                    if (width > 1) {
-                        constant_exprt constant = from_integer(power(2, width) - 1, integer_typet());
-                        bitand_exprt andexpr(shlsym, constant);
-                        expr_concat.push_back(andexpr);
-                    } else
-                        expr_concat.push_back(shlsym);
-                    saved_diff = saved_diff + integer2unsigned(width);
-                }
-            } // end for
-            // do a disjunction over all expressions stored in expr_concat
-            bitor_exprt bitwise_or;
-            std::swap(bitwise_or.operands(), expr_concat);
-            // finally do the assignment
-            code_block_assignv.rhs() = bitwise_or;
-
+            bool changed;
+            code_block_assignv.rhs() = convert_expr(rhs, &changed);
         } // end of concatenation handling
 
         // handle ID_bitxor
@@ -2383,7 +2316,9 @@ codet verilog_exprt::translate_block_assign(
             width = lhs.type().get_int(ID_width);
         }
         //修改过程赋值rhs是否增加&判定
-        if (width > 0 && width != 1 && width != 8 && width != 16 && width != 32 && width != 64 && width != 128) {
+//        if (width > 0 && width != 1 && width != 8 && width != 16 && width != 32 && width != 64 && width != 128) {
+        //todo 暂时过程赋值rhs是否增加&判定
+        if (false) {
             bitand_exprt band(cexpr,
                               from_integer(power(2, width) - 1, rhs.type()));
             code_block_assignv.rhs() = band;
