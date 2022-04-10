@@ -161,5 +161,5 @@ protected:
 
     void do_collect_continuous_assign(const class verilog_continuous_assignt &module_item);
 
-    exprt convert_expr(const exprt &expression, bool *changed);
+    exprt convert_expr(const exprt &expression, bool *changed, unsigned char &saved_diff, dstring expr_type);
 };

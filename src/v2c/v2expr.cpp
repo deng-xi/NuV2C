@@ -832,7 +832,7 @@ Purpose: convert expression of any type appearing in prodedural and
          non-procedural statements
 
 \*******************************************************************/
-exprt verilog_exprt::convert_expr(const exprt &expression, bool *changed, unsigned char &saved_diff) {
+exprt verilog_exprt::convert_expr(const exprt &expression, bool *changed, unsigned char &saved_diff, dstring expr_type) {
     exprt exp = expression;
     if (expression.id() == ID_concatenation) {
         exprt concat_expr = expression;
@@ -888,11 +888,13 @@ exprt verilog_exprt::convert_expr(const exprt &expression, bool *changed, unsign
                     saved_diff = saved_diff + (diff + 1);
                     expr_concat.push_back(shl);
                 }
-            }
-            else if (it->id() == ID_unary_minus) { //处理连接表达式中的负号
+            } else if (it->id() == ID_unary_minus) { //处理连接表达式中的负号
                 bool changed1;
-                exprt exprt_minus = convert_expr(it->op0(), &changed1, saved_diff);
-                expr_concat.push_back(unary_minus_exprt(exprt_minus));
+                exprt exprt_minus = convert_expr(it->op0(), &changed1, saved_diff, ID_unary_minus);
+//                if (it->op0().id() == ID_extractbits) {
+//                    exprt_minus.op0() = bitnot_exprt(exprt_minus.op0());
+//                }
+                expr_concat.push_back(exprt_minus);
             }
                 // normal register assignment, handle constants
             else {
@@ -910,7 +912,7 @@ exprt verilog_exprt::convert_expr(const exprt &expression, bool *changed, unsign
 //                    if (rhs.id() == ID_constant && rhs.get_int(ID_value) == 0)
 //                        expr_concat.push_back(rhs);
 //                    else
-                        expr_concat.push_back(shlsym);
+                    expr_concat.push_back(shlsym);
                 }
                 saved_diff = saved_diff + integer2unsigned(width);
             }
@@ -932,7 +934,12 @@ exprt verilog_exprt::convert_expr(const exprt &expression, bool *changed, unsign
         mp_integer size_op2;
         to_integer(rhs.op2(), size_op2);
         unsigned diff = integer2unsigned(size_op1 - size_op2);
-        ashr_exprt shr(rhs_symbol, rhs.op2());
+
+        exprt expr_tmp = rhs_symbol;
+        if (expr_type == ID_unary_minus) {
+            expr_tmp = bitnot_exprt(rhs_symbol);
+        }
+        ashr_exprt shr(expr_tmp, rhs.op2());
         constant_exprt constant = from_integer(power(2, diff + 1) - 1, integer_typet());
         bitand_exprt andexpr(shr, constant);
         exp = andexpr;
@@ -947,7 +954,11 @@ exprt verilog_exprt::convert_expr(const exprt &expression, bool *changed, unsign
         symbol_exprt rhs_symbol = to_symbol_expr(rhs.op0());
         mp_integer size_op1;
         to_integer(rhs.op1(), size_op1);
-        ashr_exprt shr(rhs_symbol, rhs.op1());
+        exprt expr_tmp = rhs_symbol;
+        if (expr_type == ID_unary_minus) {
+            expr_tmp = bitnot_exprt(rhs_symbol);
+        }
+        ashr_exprt shr(expr_tmp, rhs.op1());
         constant_exprt constant1 = from_integer(power(2, 0), integer_typet());
         bitand_exprt andexpr(shr, constant1);
         exp = andexpr;
@@ -1504,7 +1515,7 @@ codet verilog_exprt::convert_continuous_assign(
                 bool flag = 0;
                 Forall_operands(it, rhsexp) {
                         unsigned char saved_diff = 0;
-                        rhs_op = convert_expr(*it, &changed, saved_diff);
+                        rhs_op = convert_expr(*it, &changed, saved_diff,"");
                         if (changed == 1) flag = 1;
                         expressions.push_back(rhs_op);
                     }
@@ -1664,14 +1675,14 @@ codet verilog_exprt::convert_assert(const verilog_assertt &module_item) {
             while (lhs.id() == ID_typecast)
                 lhs = lhs.op0();
             unsigned char saved_diff = 0;
-            lhs = convert_expr(lhs, &changed, saved_diff);
+            lhs = convert_expr(lhs, &changed, saved_diff,"");
             if (changed) {
                 condition_tmp->op0() = lhs;
             }
         } else {
             bool changed;
             unsigned char saved_diff = 0;
-            *condition_tmp = convert_expr(*condition_tmp, &changed, saved_diff);
+            *condition_tmp = convert_expr(*condition_tmp, &changed, saved_diff,"");
         }
     }
     code_assertv.copy_to_operands(condition);
@@ -1766,7 +1777,13 @@ void verilog_exprt::convert_function(const verilog_module_itemt &module_item, st
                 if (width <= 8) {
                     out << "  unsigned char " + local_sym << ";\n";
                 } else if (width <= 16) {
-                    out << "  int " + local_sym << ";\n";
+                    out << "  unsigned short " + local_sym << ";\n";
+                } else if (width <= 32) {
+                    out << "  unsigned int " + local_sym << ";\n";
+                } else if (width <= 64){
+                    out << "  unsigned long long int " + local_sym << ";\n";
+                } else {
+                    out << "  unsigned __int128" + local_sym << ";\n";
                 }
             }
         }
@@ -1997,7 +2014,7 @@ codet verilog_exprt::translate_if(
             } else if (exp_tmp->id() == ID_extractbit || exp_tmp->id() == ID_extractbits) {
                 bool changed;
                 unsigned char saved_diff = 0;
-                *exp_tmp = convert_expr(*(exp_tmp), &changed, saved_diff);
+                *exp_tmp = convert_expr(*(exp_tmp), &changed, saved_diff,"");
             }
         }
         codeif.cond() = expr_cond;
@@ -2137,7 +2154,7 @@ codet verilog_exprt::translate_block_assign(
             code_block_assignv.lhs() = lhs;
             bool changed = false;
             unsigned char saved_diff = 0;
-            rhs = convert_expr(rhs.op0(), &changed, saved_diff);
+            rhs = convert_expr(rhs.op0(), &changed, saved_diff,"");
             code_block_assignv.rhs() = rhs;
         } else {
             symbol_exprt rhs_symbol = to_symbol_expr(rhs.op0());
@@ -2222,7 +2239,7 @@ codet verilog_exprt::translate_block_assign(
         if (concat_expr.id() == ID_concatenation) {
             bool changed;
             unsigned char saved_diff = 0;
-            code_block_assignv.rhs() = convert_expr(rhs, &changed, saved_diff);
+            code_block_assignv.rhs() = convert_expr(rhs, &changed, saved_diff,"");
         } // end of concatenation handling
 
         // handle ID_bitxor
@@ -2268,7 +2285,7 @@ codet verilog_exprt::translate_block_assign(
         bool changed = false;
         code_block_assignv.lhs() = lhs;
         unsigned char saved_diff = 0;
-        arg = convert_expr(arg, &changed, saved_diff);
+        arg = convert_expr(arg, &changed, saved_diff,"");
         rhs.op1().op0() = arg;
         code_block_assignv.rhs() = rhs;
     }
@@ -2288,7 +2305,7 @@ codet verilog_exprt::translate_block_assign(
         Forall_operands(it, rhsexp) {
                 bool changed = 0;
                 unsigned char saved_diff = 0;
-                rhs_op = convert_expr(*it, &changed, saved_diff);
+                rhs_op = convert_expr(*it, &changed, saved_diff,"");
                 if (changed)
                     rhsexp.operands()[i] = rhs_op;
                 i++;
@@ -2615,7 +2632,7 @@ codet verilog_exprt::translate_nb_assign(const verilog_statementt &statement) {
         bool flag = 0;
         Forall_operands(it, rhsexp) {
                 unsigned char saved_diff = 0;
-                rhs_op = convert_expr(*it, &changed, saved_diff);
+                rhs_op = convert_expr(*it, &changed, saved_diff,"");
                 if (changed == 1) flag = 1;
                 expressions.push_back(rhs_op);
             }
