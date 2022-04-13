@@ -219,8 +219,11 @@ void verilog_typecheckt::interface_function_or_task(
 
     typet return_type;
 
-    if(decl_class==ID_function)
-      convert_type(decl.type(), return_type);
+    if(decl_class==ID_function) {
+//        convert_type(decl.type(), return_type);
+        //修改前端的函数返回值类型
+        return_type = verilog_unsignedbv_typet(decl.find(ID_range).get_sub().operator[](0).get_int(ID_value) - decl.find(ID_range).get_sub().operator[](0).get_int(ID_value));
+    }
     else
       return_type=empty_typet();
     
