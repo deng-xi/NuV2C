@@ -866,7 +866,7 @@ void verilog_typecheckt::convert_assign(
 
   convert_expr(lhs);
   convert_expr(rhs);
-  //propagate_type(rhs, lhs.type()); 删除对rhs的类型转换
+  propagate_type(rhs, lhs.type()); //删除对rhs的类型转换
   check_lhs(lhs, blocking?A_BLOCKING:A_NON_BLOCKING);
 }
 

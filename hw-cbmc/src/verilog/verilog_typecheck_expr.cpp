@@ -1227,7 +1227,7 @@ void verilog_typecheck_exprt::typecast(
         const std::string &value=expr.get_string(ID_value);
         // least significant bit is last
         assert(value.size()!=0);
-        expr.make_bool(value[value.size()-1]=='1');
+//        expr.make_bool(value[value.size()-1]=='1'); //底层删除对rhs的类型转换
         return;
       }
 
