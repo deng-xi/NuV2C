@@ -546,46 +546,46 @@ bool verilog_exprt::do_conversion(code_blockt &code_verilogblock, const symbolt 
         }
         // Insert all modules having a always(poesdge clk) block
         // into a code block
-//        if (modulevb.always == true) {
-        // End of while(1) loop
-        str_print << "    " << verilog_expression2c(code_function_callv, ns) << std::endl;
+        if (modulevb.always == true) {
+            // End of while(1) loop
+            str_print << "    " << verilog_expression2c(code_function_callv, ns) << std::endl;
 
-        //增加assert
-        for (std::list<codet>::const_iterator it_assert = myCodeAssert.begin();
-             it_assert != myCodeAssert.end(); ++it_assert) {
-            if (it_assert->get_statement() == ID_assert && it_assert->has_operands() &&
-                it_assert->get_sub().front().id() == ID_overlapped_implication) {
-                exprt before_implication = it_assert->op0().op0();
-                exprt after_implication = it_assert->op0().op1();
-                str_print << "    if(" << verilog_expression2c(before_implication, ns) << ") {\n";
-                if (after_implication.id() == ID_sva_cycle_delay) {
-                    int delay_time = after_implication.op0().get_int(ID_value);
-                    //二进制转换为十进制
-                    int decimalNumber = 0, i = 0, remainder;
-                    while (delay_time != 0) {
-                        remainder = delay_time % 10;
-                        delay_time /= 10;
-                        decimalNumber += remainder * pow(2, i);
-                        ++i;
+            //增加assert
+            for (std::list<codet>::const_iterator it_assert = myCodeAssert.begin();
+                 it_assert != myCodeAssert.end(); ++it_assert) {
+                if (it_assert->get_statement() == ID_assert && it_assert->has_operands() &&
+                    it_assert->get_sub().front().id() == ID_overlapped_implication) {
+                    exprt before_implication = it_assert->op0().op0();
+                    exprt after_implication = it_assert->op0().op1();
+                    str_print << "    if(" << verilog_expression2c(before_implication, ns) << ") {\n";
+                    if (after_implication.id() == ID_sva_cycle_delay) {
+                        int delay_time = after_implication.op0().get_int(ID_value);
+                        //二进制转换为十进制
+                        int decimalNumber = 0, i = 0, remainder;
+                        while (delay_time != 0) {
+                            remainder = delay_time % 10;
+                            delay_time /= 10;
+                            decimalNumber += remainder * pow(2, i);
+                            ++i;
+                        }
+                        for (; decimalNumber > 0; --decimalNumber) {
+                            str_print << "      " << verilog_expression2c(code_function_callv, ns) << std::endl;
+                        }
+                        str_print << "      assert(" << verilog_expression2c(after_implication.op2(), ns) << ");\n";
+                        str_print << "    }\n";
+                    } else {
+                        str_print << "      assert(" << verilog_expression2c(after_implication, ns) << ");\n";
+                        str_print << "    }\n";
                     }
-                    for (; decimalNumber > 0; --decimalNumber) {
-                        str_print << "      " << verilog_expression2c(code_function_callv, ns) << std::endl;
-                    }
-                    str_print << "      assert(" << verilog_expression2c(after_implication.op2(), ns) << ");\n";
-                    str_print << "    }\n";
                 } else {
-                    str_print << "      assert(" << verilog_expression2c(after_implication, ns) << ");\n";
-                    str_print << "    }\n";
+                    str_print << "    " << verilog_expression2c(*it_assert, ns);
                 }
-            } else {
-                str_print << "    " << verilog_expression2c(*it_assert, ns);
             }
-        }
 
-        str_print << "  }" << std::endl;
-//        } else
-//            str_print << "  " << verilog_expression2c(code_function_callv, ns) << std::endl;
-//        // End of top level function
+            str_print << "  }" << std::endl;
+        } else
+            str_print << "  " << verilog_expression2c(code_function_callv, ns) << std::endl;
+        // End of top level function
         str_print << "}" << std::endl;
     }
     out << str_print.str();
@@ -832,7 +832,8 @@ Purpose: convert expression of any type appearing in prodedural and
          non-procedural statements
 
 \*******************************************************************/
-exprt verilog_exprt::convert_expr(const exprt &expression, bool *changed, unsigned char &saved_diff, dstring expr_type) {
+exprt
+verilog_exprt::convert_expr(const exprt &expression, bool *changed, unsigned char &saved_diff, dstring expr_type) {
     exprt exp = expression;
     if (expression.id() == ID_concatenation) {
         exprt concat_expr = expression;
@@ -1515,7 +1516,7 @@ codet verilog_exprt::convert_continuous_assign(
                 bool flag = 0;
                 Forall_operands(it, rhsexp) {
                         unsigned char saved_diff = 0;
-                        rhs_op = convert_expr(*it, &changed, saved_diff,"");
+                        rhs_op = convert_expr(*it, &changed, saved_diff, "");
                         if (changed == 1) flag = 1;
                         expressions.push_back(rhs_op);
                     }
@@ -1675,14 +1676,14 @@ codet verilog_exprt::convert_assert(const verilog_assertt &module_item) {
             while (lhs.id() == ID_typecast)
                 lhs = lhs.op0();
             unsigned char saved_diff = 0;
-            lhs = convert_expr(lhs, &changed, saved_diff,"");
+            lhs = convert_expr(lhs, &changed, saved_diff, "");
             if (changed) {
                 condition_tmp->op0() = lhs;
             }
         } else {
             bool changed;
             unsigned char saved_diff = 0;
-            *condition_tmp = convert_expr(*condition_tmp, &changed, saved_diff,"");
+            *condition_tmp = convert_expr(*condition_tmp, &changed, saved_diff, "");
         }
     }
     code_assertv.copy_to_operands(condition);
@@ -1781,7 +1782,7 @@ void verilog_exprt::convert_function(const verilog_module_itemt &module_item, st
                     out << "  unsigned short " + local_sym << ";\n";
                 } else if (width <= 32) {
                     out << "  unsigned int " + local_sym << ";\n";
-                } else if (width <= 64){
+                } else if (width <= 64) {
                     out << "  unsigned long long int " + local_sym << ";\n";
                 } else {
                     out << "  unsigned __int128" + local_sym << ";\n";
@@ -2006,16 +2007,25 @@ codet verilog_exprt::translate_if(
             exp_st.pop();
             while (exp_tmp->id() == ID_typecast)
                 exp_tmp = &(exp_tmp->op0());
-            if (exp_tmp->id() == ID_and || exp_tmp->id() == ID_nand || exp_tmp->id() == ID_or ||
-                exp_tmp->id() == ID_nor || exp_tmp->id() == ID_xor || exp_tmp->id() == ID_xnor) {
-                exp_st.push(&(exp_tmp->op0()));
-                exp_st.push(&(exp_tmp->op1()));
+//            if (exp_tmp->id() == ID_and || exp_tmp->id() == ID_nand || exp_tmp->id() == ID_or ||
+//                exp_tmp->id() == ID_nor || exp_tmp->id() == ID_xor || exp_tmp->id() == ID_xnor ||
+//                exp_tmp->id() == ID_equal || exp_tmp->id() == dstring(358, 0) || exp_tmp->id() == dstring(359, 0) ||
+//                exp_tmp->id() == dstring(360, 0)) {
+//                exp_st.push(&(exp_tmp->op0()));
+//                exp_st.push(&(exp_tmp->op1()));
+            //处理= and nand or nor xor xnor not bitand bitor bitnot bitxor bitnand bitnor notequal >= <= > < + - * /
+            if ((exp_tmp->id().get_no() == 37) || (exp_tmp->id().get_no() >= 40 && exp_tmp->id().get_no() <= 54) ||
+                (exp_tmp->id().get_no() >= 356 && exp_tmp->id().get_no() <= 361) ||
+                (exp_tmp->id().get_no() >= 364 && exp_tmp->id().get_no() <= 365)) {
+                Forall_operands(it, *exp_tmp) {
+                        exp_st.push(&(*it));
+                    }
             } else if (exp_tmp->id() == ID_not) {
                 exp_st.push(&(exp_tmp->op0()));
             } else if (exp_tmp->id() == ID_extractbit || exp_tmp->id() == ID_extractbits) {
                 bool changed;
                 unsigned char saved_diff = 0;
-                *exp_tmp = convert_expr(*(exp_tmp), &changed, saved_diff,"");
+                *exp_tmp = convert_expr(*(exp_tmp), &changed, saved_diff, "");
             }
         }
         codeif.cond() = expr_cond;
@@ -2155,7 +2165,7 @@ codet verilog_exprt::translate_block_assign(
             code_block_assignv.lhs() = lhs;
             bool changed = false;
             unsigned char saved_diff = 0;
-            rhs = convert_expr(rhs.op0(), &changed, saved_diff,"");
+            rhs = convert_expr(rhs.op0(), &changed, saved_diff, "");
             code_block_assignv.rhs() = rhs;
         } else {
             symbol_exprt rhs_symbol = to_symbol_expr(rhs.op0());
@@ -2240,7 +2250,7 @@ codet verilog_exprt::translate_block_assign(
         if (concat_expr.id() == ID_concatenation) {
             bool changed;
             unsigned char saved_diff = 0;
-            code_block_assignv.rhs() = convert_expr(rhs, &changed, saved_diff,"");
+            code_block_assignv.rhs() = convert_expr(rhs, &changed, saved_diff, "");
         } // end of concatenation handling
 
         // handle ID_bitxor
@@ -2286,7 +2296,7 @@ codet verilog_exprt::translate_block_assign(
         bool changed = false;
         code_block_assignv.lhs() = lhs;
         unsigned char saved_diff = 0;
-        arg = convert_expr(arg, &changed, saved_diff,"");
+        arg = convert_expr(arg, &changed, saved_diff, "");
         rhs.op1().op0() = arg;
         code_block_assignv.rhs() = rhs;
     }
@@ -2306,7 +2316,7 @@ codet verilog_exprt::translate_block_assign(
         Forall_operands(it, rhsexp) {
                 bool changed = 0;
                 unsigned char saved_diff = 0;
-                rhs_op = convert_expr(*it, &changed, saved_diff,"");
+                rhs_op = convert_expr(*it, &changed, saved_diff, "");
                 if (changed)
                     rhsexp.operands()[i] = rhs_op;
                 i++;
@@ -2633,7 +2643,7 @@ codet verilog_exprt::translate_nb_assign(const verilog_statementt &statement) {
         bool flag = 0;
         Forall_operands(it, rhsexp) {
                 unsigned char saved_diff = 0;
-                rhs_op = convert_expr(*it, &changed, saved_diff,"");
+                rhs_op = convert_expr(*it, &changed, saved_diff, "");
                 if (changed == 1) flag = 1;
                 expressions.push_back(rhs_op);
             }
