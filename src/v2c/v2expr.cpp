@@ -1752,7 +1752,8 @@ void verilog_exprt::convert_function(const verilog_module_itemt &module_item, st
 
     code_typet typev;
     typev = to_code_type(fn_name.type);
-    typev.return_type() = unsignedbv_typet(8);
+    //我已经在前端赋值好了返回值变量,没必要强制变成8bit位向量
+//    typev.return_type() = unsignedbv_typet(8);
 
     code_declt fn_decl(fn_symbol);
     fn_decl.symbol().type() = typev;
@@ -1789,7 +1790,7 @@ void verilog_exprt::convert_function(const verilog_module_itemt &module_item, st
         }
     std::string name_fn = id2string(fn_symbol.get_identifier());
     name_fn += "." + id2string(fn_name.base_name);
-    symbol_exprt sym(name_fn, unsignedbv_typet(8));
+    symbol_exprt sym(name_fn, typev.return_type());
     code_declt d(sym);
 
     code_funct.operands().insert(code_funct.operands().begin(), d);
