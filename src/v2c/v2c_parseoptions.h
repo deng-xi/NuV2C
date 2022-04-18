@@ -11,7 +11,7 @@ Module: Command Line Parsing
 #include <langapi/language_ui.h>
 
 #define TRANSLATOR_OPTIONS \
-  "(show-parse-tree)(module):(translate-c):"
+  "(string)(symbol)(show-parse-tree)(module):(translate-c):"
 
 class v2c_parseoptionst:public parse_options_baset,
                         public language_uit
