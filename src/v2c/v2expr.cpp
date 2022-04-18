@@ -974,6 +974,52 @@ verilog_exprt::convert_expr(exprt &expression, unsigned char &saved_diff, dstrin
     return expression;
 }
 
+/*******************************************************************\
+
+Function: verilog_exprt::add_bitand
+
+Inputs:
+
+Outputs:
+
+Purpose: add bitand to expression of any type appearing in prodedural and
+         non-procedural statements
+
+\*******************************************************************/
+
+void verilog_exprt::add_bitand(exprt &expression) {
+    while (expression.id() == ID_typecast)
+        expression = expression.op0();
+    if ((expression.id().get_no() == 37) || (expression.id().get_no() >= 40 && expression.id().get_no() <= 54) ||
+        (expression.id().get_no() >= 356 && expression.id().get_no() <= 361) ||
+        (expression.id().get_no() >= 364 && expression.id().get_no() <= 365)) {
+        Forall_operands(it, expression) {
+                add_bitand(*it);
+            }
+    } else if (expression.id() == ID_symbol) {
+        if (expression.type().id() == ID_unsignedbv) { //数组索引也符合条件,数组名不符合
+            int width = expression.type().get_int(ID_width);
+            if (width > 0 && width != 1 && width != 8 && width != 16 && width != 32 && width != 64 &&
+                width != 128) {
+                bitand_exprt band(expression,
+                                  from_integer(power(2, width) - 1, integer_typet()));
+                expression = band;
+            }
+        }
+    } else if (expression.id() == ID_index && expression.op0().id() == ID_symbol && expression.op1().id() == ID_symbol) {//增加数组索引位与
+        exprt expr_array = expression.op0();
+        exprt expr_index = expression.op1();
+        if (expr_index.type().id() == ID_unsignedbv) {
+            int width = expr_index.type().get_int(ID_width);
+            if (width > 0 && width != 1 && width != 8 && width != 16 && width != 32 && width != 64 &&
+                width != 128) {
+                bitand_exprt band(expr_index, from_integer(power(2, width) - 1, integer_typet()));
+                expr_index = band;
+                expression.op1() = expr_index;
+            }
+        }
+    }
+}
 
 /*******************************************************************\
 
@@ -1654,6 +1700,7 @@ codet verilog_exprt::convert_assert(const verilog_assertt &module_item) {
 
     // translate all register elements in the assertion with struct elements
     exprt condition = symbol.value.op0();
+    add_bitand(condition);
     modulevb.registers(condition);
 
     //将assert中表达式转换为对应位操作
