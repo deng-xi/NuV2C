@@ -962,7 +962,7 @@ verilog_exprt::convert_expr(exprt &expression, unsigned char &saved_diff, dstrin
         expression = andexpr;
         saved_diff = saved_diff = saved_diff + 1;
     } //处理= and nand or nor xor xnor not bitand bitor bitnot bitxor bitnand bitnor notequal >= <= > < + - * /
-    //todo 还有一些类型没有考虑
+        //todo 还有一些类型没有考虑
     else if ((expression.id().get_no() == 37) || (expression.id().get_no() >= 40 && expression.id().get_no() <= 54) ||
              (expression.id().get_no() >= 356 && expression.id().get_no() <= 361) ||
              (expression.id().get_no() >= 364 && expression.id().get_no() <= 365)) {
@@ -1657,31 +1657,42 @@ codet verilog_exprt::convert_assert(const verilog_assertt &module_item) {
     modulevb.registers(condition);
 
     //将assert中表达式转换为对应位操作
-    std::stack<exprt *> condition_stack;
-    condition_stack.push(&condition);
-    while (!condition_stack.empty()) {
-        exprt *condition_tmp = condition_stack.top();
-        condition_stack.pop();
-        while (condition_tmp->id() == ID_typecast)
-            condition_tmp->op0();
-        if (condition_tmp->id() == ID_overlapped_implication || condition_tmp->id() == ID_and ||
-            condition_tmp->id() == ID_nand || condition_tmp->id() == ID_or ||
-            condition_tmp->id() == ID_nor || condition_tmp->id() == ID_xor || condition_tmp->id() == ID_xnor) {
-            condition_stack.push(&condition_tmp->op1());
-            condition_stack.push(&condition_tmp->op0());
-        } else if (condition_tmp->id() == ID_not) {
-            condition_stack.push(&condition.op0());
-        } else if (condition_tmp->id() == ID_equal) {
-            exprt lhs = condition_tmp->op0();
-            while (lhs.id() == ID_typecast)
-                lhs = lhs.op0();
-            unsigned char saved_diff = 0;
-            lhs = convert_expr(lhs, saved_diff, "");
-            condition_tmp->op0() = lhs;
-        } else {
-            unsigned char saved_diff = 0;
-            *condition_tmp = convert_expr(*condition_tmp, saved_diff, "");
-        }
+//    std::stack<exprt *> condition_stack;
+//    condition_stack.push(&condition);
+//    while (!condition_stack.empty()) {
+//        exprt *condition_tmp = condition_stack.top();
+//        condition_stack.pop();
+//        while (condition_tmp->id() == ID_typecast)
+//            condition_tmp->op0();
+//        if (condition_tmp->id() == ID_overlapped_implication || condition_tmp->id() == ID_and ||
+//            condition_tmp->id() == ID_nand || condition_tmp->id() == ID_or ||
+//            condition_tmp->id() == ID_nor || condition_tmp->id() == ID_xor || condition_tmp->id() == ID_xnor) {
+//            condition_stack.push(&condition_tmp->op1());
+//            condition_stack.push(&condition_tmp->op0());
+//        } else if (condition_tmp->id() == ID_not) {
+//            condition_stack.push(&condition.op0());
+//        } else if (condition_tmp->id() == ID_equal) {
+//            exprt lhs = condition_tmp->op0();
+//            while (lhs.id() == ID_typecast)
+//                lhs = lhs.op0();
+//            unsigned char saved_diff = 0;
+//            lhs = convert_expr(lhs, saved_diff, "");
+//            condition_tmp->op0() = lhs;
+//            saved_diff = 0;
+//            condition_tmp->op1() = convert_expr(condition.op1(), saved_diff, "");
+//        } else {
+//            unsigned char saved_diff = 0;
+//            *condition_tmp = convert_expr(*condition_tmp, saved_diff, "");
+//        }
+//    }
+    if (condition.id() == ID_overlapped_implication) {
+        unsigned char saved_diff = 0;
+        convert_expr(condition.op0(), saved_diff, "");
+        saved_diff = 0;
+        convert_expr(condition.op1(), saved_diff, "");
+    } else {
+        unsigned char saved_diff = 0;
+        convert_expr(condition, saved_diff, "");
     }
     code_assertv.copy_to_operands(condition);
 //    code_assertv.copy_to_operands(symbol.value.op0());
