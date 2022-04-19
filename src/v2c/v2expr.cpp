@@ -1872,16 +1872,16 @@ Purpose:
 \*******************************************************************/
 
 codet verilog_exprt::translate_statement(
-        const verilog_statementt &statement) {
+        const verilog_statementt &statement, bool need_cassign) {
     if (statement.id() == ID_block)
-        return translate_block(to_verilog_block(statement));
+        return translate_block(to_verilog_block(statement), need_cassign);
 
     else if (statement.id() == ID_case ||
              statement.id() == ID_casex ||
              statement.id() == ID_casez)
-        return translate_case(statement);
+        return translate_case(statement, need_cassign);
     else if (statement.id() == ID_blocking_assign)
-        return translate_block_assign(statement);
+        return translate_block_assign(statement, need_cassign);
 
     else if (statement.id() == ID_continuous_assign)
         throw "synthesis of procedural continuous assignment not supported";
@@ -1893,10 +1893,10 @@ codet verilog_exprt::translate_statement(
         return translate_assume(to_verilog_assume(statement));
 
     else if (statement.id() == ID_non_blocking_assign)
-        return translate_nb_assign(statement);
+        return translate_nb_assign(statement, need_cassign);
 
     else if (statement.id() == ID_if)
-        return translate_if(to_verilog_if(statement));
+        return translate_if(to_verilog_if(statement), need_cassign);
 
     else if (statement.id() == ID_event_guard)
         return translate_event_guard(to_verilog_event_guard(statement));
@@ -1937,12 +1937,12 @@ Purpose:
 
 \*******************************************************************/
 
-codet verilog_exprt::translate_block(const verilog_blockt &statement) {
+codet verilog_exprt::translate_block(const verilog_blockt &statement, bool need_cassign) {
     code_blockt verilog_block1;
     forall_operands(it, statement) {
 //            if (it->id() != ID_skip) //忽略skip语句,或者后面covert忽略也行
 //                continue;
-            codet save_block = translate_statement(static_cast<const verilog_statementt &>(*it));
+            codet save_block = translate_statement(static_cast<const verilog_statementt &>(*it), need_cassign);
             verilog_block1.operands().push_back(save_block);
         }
     return verilog_block1;
@@ -1961,7 +1961,7 @@ Purpose:
 \*******************************************************************/
 
 codet verilog_exprt::translate_if(
-        const verilog_ift &statement) {
+        const verilog_ift &statement, bool need_cassign) {
 
     module_infot &modulevb = module_info[current_module];
     code_ifthenelset codeif;
@@ -2089,7 +2089,7 @@ codet verilog_exprt::translate_if(
         codeif.cond() = convert_expr(expr_cond, saved_diff, "");
 //        codeif.cond() = statement.condition();
     }
-    codet save_thenpair = translate_statement(statement.true_case());
+    codet save_thenpair = translate_statement(statement.true_case(), need_cassign);
     codeif.then_case() = save_thenpair;
 
     modulevb.oldvar(codeif.cond());
@@ -2098,7 +2098,7 @@ codet verilog_exprt::translate_if(
     //codet final_assignment;
 
     if (statement.operands().size() == 3) {
-        save_elsepair = translate_statement(statement.false_case());
+        save_elsepair = translate_statement(statement.false_case(), need_cassign);
         codeif.else_case() = save_elsepair;
     }
 
@@ -2118,7 +2118,7 @@ Purpose: Normal execution like C
 \*******************************************************************/
 
 codet verilog_exprt::translate_block_assign(
-        const verilog_statementt &statement) {
+        const verilog_statementt &statement, bool need_cassign) {
     module_infot &modulevb = module_info[current_module];
     code_blockt code_blockv;
 
@@ -2151,6 +2151,8 @@ codet verilog_exprt::translate_block_assign(
     // drop all type casts
     while (rhs.id() == ID_typecast)
         rhs = rhs.op0();
+    while (lhs.id() == ID_typecast)
+        lhs = lhs.op0();
 
     // Processing of statement like out[i] = tmp[k];
     // out = (out & ((2^(width_of_out)-1) - 2^i)) | (((tmp & 2^k) >> k) << i)
@@ -2436,6 +2438,30 @@ codet verilog_exprt::translate_block_assign(
     // output variable need to be assigned to
     modulevb.output_var(code_reg.lhs());
 
+    //在阻塞赋值中判断是否增加连续赋值
+    if (need_cassign) {
+        code_blockt my_code_block;
+        std::string lhs_symbol;
+        if (code_block_assignv.lhs().id() == ID_member)
+            lhs_symbol = code_block_assignv.lhs().get_string(ID_component_name);
+        assert(lhs_symbol != "");
+        for (std::list<code_assignt>::const_iterator it3 = modulevb.cassignReg.begin();
+             it3 != modulevb.cassignReg.end(); ++it3) {
+            auto cassign_rh_symbols = exprSymbols((*it3).op1()); //获取连续赋值右边表达式所有变量名
+            bool rhsUpdated = false;
+            for (auto cassign_rh_symbol: cassign_rh_symbols) {
+                if (cassign_rh_symbol == lhs_symbol) {
+                    rhsUpdated = true;
+                }
+            }
+            if (rhsUpdated) {
+                my_code_block.add(*it3);
+            }
+        }
+        my_code_block.operands().insert(my_code_block.operands().begin(), code_block_assignv);
+        return my_code_block;
+    }
+
     return code_block_assignv;
 }
 
@@ -2495,7 +2521,7 @@ Purpose: Introduce a shadow variable here and pass it to code_assignt
          ID_concatenation: reg [14:0] Y; Y={A, B, (2{C}}, 3'b110};
 \*******************************************************************/
 
-codet verilog_exprt::translate_nb_assign(const verilog_statementt &statement) {
+codet verilog_exprt::translate_nb_assign(const verilog_statementt &statement, bool need_cassign) {
     module_infot &modulevb = module_info[current_module];
 
     code_assignt code_blockv;
@@ -2778,7 +2804,7 @@ codet verilog_exprt::translate_event_guard(
                 guards.push_back(*it);
             }
         }
-    return translate_statement(statement.body());
+    return translate_statement(statement.body(), true);
 }
 
 /*******************************************************************\
@@ -2819,7 +2845,7 @@ Purpose: Model this as switch-case or if-then-else as Verilog synthesis case
 
 \*******************************************************************/
 
-codet verilog_exprt::translate_case(const verilog_statementt &statement) {
+codet verilog_exprt::translate_case(const verilog_statementt &statement, bool need_cassign) {
     code_blockt code_blockv;
     if (statement.operands().size() < 1) {
         throw "case statement expected to have at least one operand";
@@ -2846,7 +2872,7 @@ codet verilog_exprt::translate_case(const verilog_statementt &statement) {
     }
 
     if (!start.operands().empty()) {
-        codet sw_case = translate_statement(static_cast<verilog_statementt &>(start.op0()));
+        codet sw_case = translate_statement(static_cast<verilog_statementt &>(start.op0()), need_cassign);
         code_blockv.operands().push_back(sw_case);
     }
     return code_blockv;

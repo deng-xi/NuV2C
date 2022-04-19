@@ -104,7 +104,7 @@ protected:
     // **************** convert module items ***************
     codet convert_module_item(const class verilog_module_itemt &module_item);
 
-    codet translate_block(const verilog_blockt &statement);
+    codet translate_block(const verilog_blockt &statement, bool need_cassign = false);
 
     codet convert_decl(const class verilog_declt &statement);
 
@@ -127,23 +127,23 @@ protected:
     void iterate_module(exprt &module1, const module_infot &modulevb);
 
     // ****************** Translate statements *****************
-    codet translate_block_assign(const class verilog_statementt &statement);
+    codet translate_block_assign(const class verilog_statementt &statement, bool need_cassign = false);
 
-    codet translate_statement(const class verilog_statementt &statement);
+    codet translate_statement(const class verilog_statementt &statement, bool need_cassign = false);
 
-    codet translate_if(const class verilog_ift &statement);
+    codet translate_if(const class verilog_ift &statement, bool need_cassign = false);
 
     codet translate_assert(const class verilog_assertt &statement);
 
     codet translate_assume(const class verilog_assumet &statement);
 
-    codet translate_nb_assign(const class verilog_statementt &statement);
+    codet translate_nb_assign(const class verilog_statementt &statement, bool need_cassign = false);
 
     codet translate_event_guard(const class verilog_event_guardt &statement);
 
     codet translate_delay(const class verilog_delayt &statement);
 
-    codet translate_case(const class verilog_statementt &statement);
+    codet translate_case(const class verilog_statementt &statement, bool need_cassign = false);
 
     codet translate_for(const class verilog_fort &statement);
 
@@ -161,7 +161,7 @@ protected:
 
     void do_collect_continuous_assign(const class verilog_continuous_assignt &module_item);
 
-    exprt convert_expr(exprt &expression, unsigned char &saved_diff, dstring expr_type);
+    exprt convert_expr(exprt &expression, unsigned char &saved_diff, dstring expr_type = nullptr);
 
     void add_bitand(exprt &expression);
 };
