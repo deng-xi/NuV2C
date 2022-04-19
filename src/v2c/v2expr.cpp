@@ -164,11 +164,13 @@ bool verilog_exprt::convert_module(const symbolt &symbol, std::ostream &out) {
     forall_symbol_module_map(it, symbol_table.symbol_module_map, symbol.name) {
         const symbolt &symbol1 = ns.lookup(it->second);
         if (symbol1.type.id() != ID_module && symbol1.type.id() != ID_module_instance)
-            identifierv[symbol1.base_name] = symbol1.name;
+            //模块寄存器类型比函数变量先出现,always中变量与寄存器变量相对应
+            if (identifierv.find(symbol1.base_name) == identifierv.end())
+                identifierv[symbol1.base_name] = symbol1.name;
     }
 
     // Store the name of the structure
-    module_infot &modulevb = module_info[current_module];//modulevb
+    module_infot &modulevb = module_info[current_module];//modulevb为空, module_info也只有key
     modulevb.struct_name = std::string("s") + id2string(symbol.base_name);
     modulevb.st.set_tag(current_module);
     code_blockt code_verilogb;
@@ -1006,7 +1008,8 @@ void verilog_exprt::add_bitand(exprt &expression) {
                 expression = band;
             }
         }
-    } else if (expression.id() == ID_index && expression.op0().id() == ID_symbol && expression.op1().id() == ID_symbol) {//增加数组索引位与
+    } else if (expression.id() == ID_index && expression.op0().id() == ID_symbol &&
+               expression.op1().id() == ID_symbol) {//增加数组索引位与
         exprt expr_array = expression.op0();
         exprt expr_index = expression.op1();
         if (expr_index.type().id() == ID_unsignedbv) {
