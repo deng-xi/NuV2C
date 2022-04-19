@@ -164,8 +164,8 @@ bool verilog_exprt::convert_module(const symbolt &symbol, std::ostream &out) {
     forall_symbol_module_map(it, symbol_table.symbol_module_map, symbol.name) {
         const symbolt &symbol1 = ns.lookup(it->second);
         if (symbol1.type.id() != ID_module && symbol1.type.id() != ID_module_instance)
-            //模块寄存器类型比函数变量先出现,always中变量与寄存器变量相对应
-            if (identifierv.find(symbol1.base_name) == identifierv.end())
+            //只有一个"."即代表属于top模块变量
+            if (as_string(symbol1.name).find_first_of(".") == as_string(symbol1.name).find_last_of("."))
                 identifierv[symbol1.base_name] = symbol1.name;
     }
 
