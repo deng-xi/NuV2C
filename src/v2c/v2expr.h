@@ -161,5 +161,7 @@ protected:
 
     void do_collect_continuous_assign(const class verilog_continuous_assignt &module_item);
 
-    exprt convert_expr(const exprt &expression, bool *changed, unsigned char &saved_diff, dstring expr_type);
+    exprt convert_expr(exprt &expression, unsigned char &saved_diff, dstring expr_type);
+
+    void add_bitand(exprt &expression);
 };
