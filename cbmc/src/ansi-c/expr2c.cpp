@@ -1009,10 +1009,10 @@ std::string expr2ct::convert_binary(
             if (use_parentheses) dest += ')';
         }
 
-    dest = replace(dest, " >> 0", ""); //删除>>0和修改0&1,1&1
-    dest = replace(dest, " << 0", "");
-    dest = replace(dest, "0 & 1", "0");
-    dest = replace(dest, "1 & 1", "1");
+//    dest = replace(dest, " >> 0", ""); //删除>>0和修改0&1,1&1
+//    dest = replace(dest, " << 0", "");
+//    dest = replace(dest, "0 & 1", "0");
+//    dest = replace(dest, "1 & 1", "1");
 //    dest = replace(dest, "| 0", "");
 
     return dest;

@@ -289,64 +289,64 @@ bool verilog_exprt::convert_module(const symbolt &symbol, std::ostream &out) {
     }
 
     // Handle the case of continuous assignment
-    std::tr1::unordered_set<std::string> lhSymbols;
+//    std::tr1::unordered_set<std::string> lhSymbols;
     Forall_operands(it, code_temp) {
             if (*it != codet()) { //是指不为空?
                 code_verilogblock.operands().push_back(*it);
-                //增加依赖分析，便于实现连续赋值的 Read-After-Write 顺序
-                if (it->get(ID_statement) == ID_assert) //去除assert对依赖分析的影响
-                    continue;
-                std::string lhs = (*it).op0().get_string(ID_component_name);
-                if ((*it).get(ID_statement) == ID_ifthenelse) {
-                    if (it->op1().id() == ID_code &&
-                        it->op1().get(ID_statement) == ID_assign) { //todo then是一个block则把左值放到一个集合中
-                        if (it->op1().op0().id() == ID_index) {
-                            lhs = it->op1().op0().op0().get_string(ID_component_name);
-                        } else
-                            lhs = it->op1().op0().get_string(ID_component_name);
-                        assert(lhs != "");
-                    }
-                }
-                lhSymbols.insert(lhs);
-                for (std::list<code_assignt>::const_iterator it3 = modulevb.cassignReg.begin();
-                     it3 != modulevb.cassignReg.end(); ++it3) {
-                    bool allUpdated = true;
-                    auto rhSymbols = exprSymbols((*it3).op1()); //获取连续赋值右边表达式所有变量名
-                    bool rhsUpdated = false;
-                    for (auto rhSymbol: rhSymbols) {
-                        if (rhSymbol == lhs) {
-                            rhsUpdated = true;
-                        }
-                    }
-                    if (!rhsUpdated)
-                        continue;
-                    for (auto rhSymbol: rhSymbols) {
-                        if (!lhSymbols.count(rhSymbol)) {
-                            allUpdated = false;
-                        }
-                    }
-                    if (allUpdated) { //右边的寄存器变量更新了
-                        if ((*it).get(ID_statement) == ID_ifthenelse) {//暂时只考虑then块
-                            if ((*it).op1().get(ID_statement) != ID_block) {
-                                code_blockt mycode;
-                                mycode.copy_to_operands(code_verilogblock.operands().back().operands()[1]);
-                                mycode.add(to_code(*it3));
-                                code_verilogblock.operands().back().operands()[1] = mycode;
-                            } else {
-                                code_verilogblock.operands().back().operands()[1].operands().push_back(
-                                        to_code(*it3));
-                            }
-                        } else code_verilogblock.operands().push_back(*it3);
-
-                        std::string cassignReg_lhs = (*it3).op0().get_string(ID_identifier);
-                        for (std::list<code_assignt>::const_iterator it4 = modulevb.cassign.begin();
-                             it4 != modulevb.cassign.end(); ++it4) {
-                            std::string cassign_rhs = (*it4).op1().get_string(ID_identifier);
-                            if (cassign_rhs == cassignReg_lhs) //右边的线网变量更新了
-                                code_verilogblock.operands().push_back(*it4);
-                        }
-                    }
-                }
+//                //增加依赖分析，便于实现连续赋值的 Read-After-Write 顺序
+//                if (it->get(ID_statement) == ID_assert) //去除assert对依赖分析的影响
+//                    continue;
+//                std::string lhs = (*it).op0().get_string(ID_component_name);
+//                if ((*it).get(ID_statement) == ID_ifthenelse) {
+//                    if (it->op1().id() == ID_code &&
+//                        it->op1().get(ID_statement) == ID_assign) { //todo then是一个block则把左值放到一个集合中
+//                        if (it->op1().op0().id() == ID_index) {
+//                            lhs = it->op1().op0().op0().get_string(ID_component_name);
+//                        } else
+//                            lhs = it->op1().op0().get_string(ID_component_name);
+//                        assert(lhs != "");
+//                    }
+//                }
+//                lhSymbols.insert(lhs);
+//                for (std::list<code_assignt>::const_iterator it3 = modulevb.cassignReg.begin();
+//                     it3 != modulevb.cassignReg.end(); ++it3) {
+//                    bool allUpdated = true;
+//                    auto rhSymbols = exprSymbols((*it3).op1()); //获取连续赋值右边表达式所有变量名
+//                    bool rhsUpdated = false;
+//                    for (auto rhSymbol: rhSymbols) {
+//                        if (rhSymbol == lhs) {
+//                            rhsUpdated = true;
+//                        }
+//                    }
+//                    if (!rhsUpdated)
+//                        continue;
+//                    for (auto rhSymbol: rhSymbols) {
+//                        if (!lhSymbols.count(rhSymbol)) {
+//                            allUpdated = false;
+//                        }
+//                    }
+//                    if (allUpdated) { //右边的寄存器变量更新了
+//                        if ((*it).get(ID_statement) == ID_ifthenelse) {//暂时只考虑then块
+//                            if ((*it).op1().get(ID_statement) != ID_block) {
+//                                code_blockt mycode;
+//                                mycode.copy_to_operands(code_verilogblock.operands().back().operands()[1]);
+//                                mycode.add(to_code(*it3));
+//                                code_verilogblock.operands().back().operands()[1] = mycode;
+//                            } else {
+//                                code_verilogblock.operands().back().operands()[1].operands().push_back(
+//                                        to_code(*it3));
+//                            }
+//                        } else code_verilogblock.operands().push_back(*it3);
+//
+//                        std::string cassignReg_lhs = (*it3).op0().get_string(ID_identifier);
+//                        for (std::list<code_assignt>::const_iterator it4 = modulevb.cassign.begin();
+//                             it4 != modulevb.cassign.end(); ++it4) {
+//                            std::string cassign_rhs = (*it4).op1().get_string(ID_identifier);
+//                            if (cassign_rhs == cassignReg_lhs) //右边的线网变量更新了
+//                                code_verilogblock.operands().push_back(*it4);
+//                        }
+//                    }
+//                }
             }
         }
     // **************** Dependency Analysis *********************
@@ -1118,13 +1118,15 @@ codet verilog_exprt::convert_continuous_assign(
                 if (rhs.id() == ID_extractbit && lhs.id() != ID_extractbit) {
                     if (rhs.operands().size() != 2)
                         throw "extractbit takes two operands";
-                    symbol_exprt rhs_symbol = to_symbol_expr(rhs.op0());
-                    mp_integer size_op1;
-                    to_integer(rhs.op1(), size_op1);
-                    ashr_exprt shr(rhs_symbol, rhs.op1());
-                    constant_exprt constant1 = from_integer(power(2, 0), integer_typet());
-                    bitand_exprt andexpr(shr, constant1);
-                    rhs = andexpr;
+//                    symbol_exprt rhs_symbol = to_symbol_expr(rhs.op0());
+//                    mp_integer size_op1;
+//                    to_integer(rhs.op1(), size_op1);
+//                    ashr_exprt shr(rhs_symbol, rhs.op1());
+//                    constant_exprt constant1 = from_integer(power(2, 0), integer_typet());
+//                    bitand_exprt andexpr(shr, constant1);
+//                    rhs = andexpr;
+                    unsigned char saved_diff = 0;
+                    convert_expr(rhs, saved_diff);
                 }
                 // Processing of statements like assign out[5] = tmp;我认为是out=out&(2^width_of_out-1-2^5)|tmp<<5
                 if (lhs.id() == ID_extractbit && rhs.id() != ID_extractbit) {//好像不太对 in1 = in1 | smain.x << 5;
