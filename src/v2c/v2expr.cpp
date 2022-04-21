@@ -95,17 +95,17 @@ Outputs:
 Purpose:
 
 \*******************************************************************/
-std::vector<std::string> exprSymbols(irept ireptTmp) {
-    std::vector<std::string> res;
+std::set<std::string> exprSymbols(irept ireptTmp) {
+    std::set<std::string> res;
     if (ireptTmp.id() == ID_member) {
-        res.emplace_back(ireptTmp.get_string(ID_component_name));
+        res.emplace(ireptTmp.get_string(ID_component_name));
         return res;
     }
     irept::subt myOperands = ireptTmp.get_sub();
     forall_irep(it, myOperands) {
         auto subRes = exprSymbols(*it);
         if (!subRes.empty()) {
-            res.insert(res.end(), subRes.begin(), subRes.end());
+            res.insert(subRes.begin(), subRes.end());
         }
     }
     return res;
@@ -486,7 +486,7 @@ bool verilog_exprt::do_conversion(code_blockt &code_verilogblock, const symbolt 
 //                               + id2string(symbol.base_name) + "  " + id2string(modulevb.struct_name) + ";\n  ";
 //        code_str.insert(4, struct_d);
 //    }
-    out << code_str + "\n";
+    out << code_str + "\n\n";
 
 
     // Print the void main function
@@ -501,8 +501,9 @@ bool verilog_exprt::do_conversion(code_blockt &code_verilogblock, const symbolt 
             const symbol_exprt sym(var.get_identifier(), var.type());
             str_print << "  " << verilog_expression2c(code_declt(sym), ns) << std::endl;
         }
+        str_print << std::endl;
         if (modulevb.initial == true)
-            str_print << "  initial_" + id2string(symbol.base_name) + "();\n";
+            str_print << "  initial_" + id2string(symbol.base_name) + "();\n\n";
 
         // print the while loop only for top level module call from the main function
         // and if the design is sequential circuit
@@ -530,7 +531,7 @@ bool verilog_exprt::do_conversion(code_blockt &code_verilogblock, const symbolt 
                 else str_print << "  " << nondet;
             }
         }
-
+        str_print << std::endl;
         // Just call the top level verilog module given as command line argument
         code_function_callt code_function_callv;
         const irep_idt &identifier = symbol.name;
@@ -550,7 +551,7 @@ bool verilog_exprt::do_conversion(code_blockt &code_verilogblock, const symbolt 
         // into a code block
         if (modulevb.always == true) {
             // End of while(1) loop
-            str_print << "    " << verilog_expression2c(code_function_callv, ns) << std::endl;
+            str_print << "    " << verilog_expression2c(code_function_callv, ns) << std::endl << std::endl;
 
             //增加assert
             for (std::list<codet>::const_iterator it_assert = myCodeAssert.begin();
@@ -574,17 +575,17 @@ bool verilog_exprt::do_conversion(code_blockt &code_verilogblock, const symbolt 
                             str_print << "      " << verilog_expression2c(code_function_callv, ns) << std::endl;
                         }
                         str_print << "      assert(" << verilog_expression2c(after_implication.op2(), ns) << ");\n";
-                        str_print << "    }\n";
+                        str_print << "    }\n\n";
                     } else {
                         str_print << "      assert(" << verilog_expression2c(after_implication, ns) << ");\n";
-                        str_print << "    }\n";
+                        str_print << "    }\n\n";
                     }
                 } else {
-                    str_print << "    " << verilog_expression2c(*it_assert, ns);
+                    str_print << "    " << verilog_expression2c(*it_assert, ns) << "\n\n";
                 }
             }
 
-            str_print << "  }" << std::endl;
+            str_print << "  }" << std::endl << std::endl;
         } else
             str_print << "  " << verilog_expression2c(code_function_callv, ns) << std::endl;
         // End of top level function
@@ -2454,13 +2455,7 @@ codet verilog_exprt::translate_block_assign(
         for (std::list<code_assignt>::const_iterator it3 = modulevb.cassignReg.begin();
              it3 != modulevb.cassignReg.end(); ++it3) {
             auto cassign_rh_symbols = exprSymbols((*it3).op1()); //获取连续赋值右边表达式所有变量名
-            bool rhsUpdated = false;
-            for (auto cassign_rh_symbol: cassign_rh_symbols) {
-                if (cassign_rh_symbol == lhs_symbol) {
-                    rhsUpdated = true;
-                }
-            }
-            if (rhsUpdated) {
+            if (cassign_rh_symbols.count(lhs_symbol)) {
                 my_code_block.add(*it3);
             }
         }
