@@ -95,11 +95,13 @@ Outputs:
 Purpose:
 
 \*******************************************************************/
-std::set<std::string> exprSymbols(irept ireptTmp) {
+std::set<std::string> verilog_exprt::exprSymbols(irept ireptTmp) {
     std::set<std::string> res;
     if (ireptTmp.id() == ID_member) {
         res.emplace(ireptTmp.get_string(ID_component_name));
         return res;
+    } else if (ireptTmp.id() == ID_symbol) {
+        res.emplace(ns.lookup(ireptTmp.get_string(ID_identifier)).base_name.c_str());
     }
     irept::subt myOperands = ireptTmp.get_sub();
     forall_irep(it, myOperands) {
@@ -1020,6 +1022,39 @@ void verilog_exprt::add_bitand(exprt &expression) {
                 bitand_exprt band(expr_index, from_integer(power(2, width) - 1, integer_typet()));
                 expr_index = band;
                 expression.op1() = expr_index;
+            }
+        }
+    }
+}
+
+//std::string get_symbol(exprt expr) {
+//    if (expr.id() == ID_symbol) {
+//        return expr.get_string(ID_identifier);
+//    }
+//}
+
+void verilog_exprt::add_cassign(code_blockt &my_code_block, std::set<std::string> &updated_sybmols) {
+    module_infot &modulevb = module_info[current_module];
+    for (std::list<code_assignt>::const_iterator it3 = modulevb.cassignReg.begin();
+         it3 != modulevb.cassignReg.end(); ++it3) {
+        auto cassign_rh_symbols = exprSymbols((*it3).op1()); //获取连续赋值右边表达式所有变量名
+        bool updated_flag = false;
+        for (auto updated_symbol: updated_sybmols) {
+            if (cassign_rh_symbols.count(updated_symbol))
+                updated_flag = true;
+        }
+        if (updated_flag) {
+            std::string cassign_ls_symbol;
+            if (it3->op0().id() == ID_symbol) {
+                cassign_ls_symbol = ns.lookup(it3->op0().get(ID_identifier)).base_name.c_str();
+            }
+            if (it3->op0().id() == ID_dereference) {
+                cassign_ls_symbol = ns.lookup(it3->op0().op0().get(ID_identifier)).base_name.c_str();
+            }
+            if (!updated_sybmols.count(cassign_ls_symbol)) {
+                updated_sybmols.emplace(cassign_ls_symbol);
+                my_code_block.add(*it3);
+                add_cassign(my_code_block, updated_sybmols);
             }
         }
     }
@@ -2452,13 +2487,16 @@ codet verilog_exprt::translate_block_assign(
         if (code_block_assignv.lhs().id() == ID_member)
             lhs_symbol = code_block_assignv.lhs().get_string(ID_component_name);
         assert(lhs_symbol != "");
-        for (std::list<code_assignt>::const_iterator it3 = modulevb.cassignReg.begin();
-             it3 != modulevb.cassignReg.end(); ++it3) {
-            auto cassign_rh_symbols = exprSymbols((*it3).op1()); //获取连续赋值右边表达式所有变量名
-            if (cassign_rh_symbols.count(lhs_symbol)) {
-                my_code_block.add(*it3);
-            }
-        }
+//        for (std::list<code_assignt>::const_iterator it3 = modulevb.cassignReg.begin();
+//             it3 != modulevb.cassignReg.end(); ++it3) {
+//            auto cassign_rh_symbols = exprSymbols((*it3).op1()); //获取连续赋值右边表达式所有变量名
+//            if (cassign_rh_symbols.count(lhs_symbol)) {
+//                my_code_block.add(*it3);
+//            }
+//        }
+        std::set<std::string> updated_symbols;
+        updated_symbols.emplace(lhs_symbol);
+        add_cassign(my_code_block, updated_symbols);
         my_code_block.operands().insert(my_code_block.operands().begin(), code_block_assignv);
         return my_code_block;
     }

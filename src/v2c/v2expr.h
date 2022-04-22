@@ -164,4 +164,8 @@ protected:
     exprt convert_expr(exprt &expression, unsigned char &saved_diff, dstring expr_type = ID_nil);
 
     void add_bitand(exprt &expression);
+
+    void add_cassign(code_blockt &my_code_block, std::set<std::string> &updated_sybmols);
+
+    std::set<std::string> exprSymbols(irept ireptTmp);
 };
