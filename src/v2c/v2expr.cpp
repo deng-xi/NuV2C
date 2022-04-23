@@ -59,7 +59,7 @@ bool vtoexpr(symbol_tablet &symbol_table, const irep_idt &module, std::ostream &
     out << "#include <stdio.h>" << std::endl;
     out << "#include <assert.h>" << std::endl;
     out << "#define TRUE 1" << std::endl;
-    out << "#define FALSE 0" << std::endl;
+    out << "#define FALSE 0" << std::endl << std::endl;
     // save the top module
     verilog_expr.top_name = symbol.name; //"Verilog::main"
     return verilog_expr.convert_module(symbol, out); //这个函数很重要
@@ -1035,6 +1035,9 @@ void verilog_exprt::add_bitand(exprt &expression) {
 
 void verilog_exprt::add_cassign(code_blockt &my_code_block, std::set<std::string> &updated_sybmols) {
     module_infot &modulevb = module_info[current_module];
+//    std::list<code_assignt> all_cassign;
+//    all_cassign.assign(modulevb.cassignReg.begin(), modulevb.cassignReg.end());
+//    all_cassign.
     for (std::list<code_assignt>::const_iterator it3 = modulevb.cassignReg.begin();
          it3 != modulevb.cassignReg.end(); ++it3) {
         auto cassign_rh_symbols = exprSymbols((*it3).op1()); //获取连续赋值右边表达式所有变量名
@@ -1643,10 +1646,12 @@ codet verilog_exprt::convert_continuous_assign(
     // output variable need to be assigned to
     modulevb.output_var(code_reg.lhs());
 
-    if (noreg)
-        modulevb.cassign.push_back(code_assignv);
-    else
-        modulevb.cassignReg.push_back(code_assignv);
+//    if (noreg)
+//        modulevb.cassign.push_back(code_assignv);
+//    else
+//        modulevb.cassignReg.push_back(code_assignv);
+
+    modulevb.cassignReg.push_back(code_assignv); //好像右边是不是寄存器没什么区别,先全部放在Reg中
 
     return codet();
 }
@@ -1897,8 +1902,8 @@ void verilog_exprt::convert_function(const verilog_module_itemt &module_item, st
     code_funct.operands().insert(code_funct.operands().begin(), d);
     code_funct.add(code_returnt(sym));
     if (has_local_var)
-        out << verilog_expression2c(code_funct, ns).substr(2) << std::endl;
-    else out << verilog_expression2c(code_funct, ns) << std::endl;
+        out << verilog_expression2c(code_funct, ns).substr(2) << std::endl << std::endl;
+    else out << verilog_expression2c(code_funct, ns) << std::endl << std::endl;
 }
 
 /*******************************************************************\
