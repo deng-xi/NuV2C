@@ -39,6 +39,7 @@
 #include "expression_datatype.h"
 
 
+
 /*******************************************************************\
 
 Function: vtoexpr
@@ -2023,119 +2024,123 @@ codet verilog_exprt::translate_if(
     // ***************
     exprt expr_cond_typecast = statement.condition();
     exprt expr_cond = statement.condition();
-    // handling extractbits
-    if (expr_cond_typecast.id() == ID_typecast)
-        expr_cond = expr_cond_typecast.op0();
-    if (expr_cond.id() == ID_extractbits) {
-        if (expr_cond.operands().size() != 3)
-            throw "extractbits takes three operands";
-        symbol_exprt rhs_symbol = to_symbol_expr(expr_cond.op0());
-        mp_integer size_op1;
-        to_integer(expr_cond.op1(), size_op1);
-        mp_integer size_op2;
-        to_integer(expr_cond.op2(), size_op2);
-        unsigned diff = integer2unsigned(size_op1 - size_op2);
-        ashr_exprt shr(rhs_symbol, expr_cond.op2());
-        constant_exprt constant1 = from_integer(power(2, diff + 1) - 1, integer_typet());
-        bitand_exprt andexpr(shr, constant1);
-        expr_cond = andexpr;
-        codeif.cond() = expr_cond;
-    }
-    if (expr_cond.id() == ID_extractbit) {
-        if (expr_cond.operands().size() != 2)
-            throw "extractbit takes two operands";
-        symbol_exprt expr_symbol = to_symbol_expr(expr_cond.op0());
-        mp_integer size_op1;
-        to_integer(expr_cond.op1(), size_op1);
-        ashr_exprt shr(expr_symbol, expr_cond.op1());
-        constant_exprt constant1 = from_integer(power(2, 0), integer_typet());
-        bitand_exprt andexpr(shr, constant1);
-        expr_cond = andexpr;
-        codeif.cond() = expr_cond;
-    }
-        // handling reduction operator
-    else if (expr_cond.id() == ID_reduction_or || expr_cond.id() == ID_reduction_and ||
-             expr_cond.id() == ID_reduction_nor || expr_cond.id() == ID_reduction_nand ||
-             expr_cond.id() == ID_reduction_xor || expr_cond.id() == ID_reduction_xnor) {
-        exprt new_expr = expr_cond.op0();
-        if (expr_cond.id() == ID_reduction_or) {
-            if (new_expr.id() == ID_extractbit) {
-                if (new_expr.operands().size() != 2)
-                    throw "extractbit takes two operands";
-                symbol_exprt expr_symbol = to_symbol_expr(new_expr.op0());
-                mp_integer size_op1;
-                to_integer(new_expr.op1(), size_op1);
-                ashr_exprt shr(expr_symbol, new_expr.op1());
-                constant_exprt constant1 = from_integer(power(2, 0), integer_typet());
-                bitand_exprt andexpr(shr, constant1);
-                new_expr = andexpr;
-                codeif.cond() = new_expr;
-            } else if (new_expr.id() == ID_extractbits) {
-                if (new_expr.operands().size() != 3)
-                    throw "extractbit takes two operands";
-                symbol_exprt expr_symbol = to_symbol_expr(new_expr.op0());
-                mp_integer size_op1;
-                to_integer(new_expr.op1(), size_op1);
-                ashr_exprt shr1(expr_symbol, new_expr.op1());
-                constant_exprt constant1 = from_integer(power(2, 0), integer_typet());
-                bitand_exprt and1(shr1, constant1);
-                mp_integer size_op2;
-                to_integer(new_expr.op2(), size_op2);
-                ashr_exprt shr2(expr_symbol, new_expr.op2());
-                constant_exprt constant2 = from_integer(power(2, 0), integer_typet());
-                bitand_exprt and2(shr2, constant2);
-                bitor_exprt orexpr(and1, and2);
-                new_expr = orexpr;
-                codeif.cond() = new_expr;
-            }
-        }
-    }
-//    else if (expr_cond.id() == ID_and || expr_cond.id() == ID_or ) { //增加if条件的and情况
-//        assert(expr_cond.operands().size() == 2);
-//        Forall_operands(it, expr_cond) {
-//            bool changed = false;
-//               exprt converted =  convert_expr(*it, &changed);
-//               if (changed) {
-//                   *it = converted;
-//               }
-//        }
+//    // handling extractbits
+//    if (expr_cond_typecast.id() == ID_typecast)
+//        expr_cond = expr_cond_typecast.op0();
+//    if (expr_cond.id() == ID_extractbits) {
+//        if (expr_cond.operands().size() != 3)
+//            throw "extractbits takes three operands";
+//        symbol_exprt rhs_symbol = to_symbol_expr(expr_cond.op0());
+//        mp_integer size_op1;
+//        to_integer(expr_cond.op1(), size_op1);
+//        mp_integer size_op2;
+//        to_integer(expr_cond.op2(), size_op2);
+//        unsigned diff = integer2unsigned(size_op1 - size_op2);
+//        ashr_exprt shr(rhs_symbol, expr_cond.op2());
+//        constant_exprt constant1 = from_integer(power(2, diff + 1) - 1, integer_typet());
+//        bitand_exprt andexpr(shr, constant1);
+//        expr_cond = andexpr;
 //        codeif.cond() = expr_cond;
 //    }
-        // save the condition
-    else {
-        //DFS处理if条件中的表达式
-//        exprt *expr_ref = &expr_cond;
-//        std::stack<exprt *> exp_st;
-//        exp_st.push(expr_ref);
-//        while (!exp_st.empty()) {
-//            exprt *exp_tmp = exp_st.top();
-//            exp_st.pop();
-//            while (exp_tmp->id() == ID_typecast)
-//                exp_tmp = &(exp_tmp->op0());
-
-//            if (exp_tmp->id() == ID_and || exp_tmp->id() == ID_nand || exp_tmp->id() == ID_or ||
-//                exp_tmp->id() == ID_nor || exp_tmp->id() == ID_xor || exp_tmp->id() == ID_xnor ||
-//                exp_tmp->id() == ID_equal || exp_tmp->id() == dstring(358, 0) || exp_tmp->id() == dstring(359, 0) ||
-//                exp_tmp->id() == dstring(360, 0)) {
-//                exp_st.push(&(exp_tmp->op0()));
-//                exp_st.push(&(exp_tmp->op1()));
-        //处理= and nand or nor xor xnor not bitand bitor bitnot bitxor bitnand bitnor notequal >= <= > < + - * /
-//            if ((exp_tmp->id().get_no() == 37) || (exp_tmp->id().get_no() >= 40 && exp_tmp->id().get_no() <= 54) ||
-//                (exp_tmp->id().get_no() >= 356 && exp_tmp->id().get_no() <= 361) ||
-//                (exp_tmp->id().get_no() >= 364 && exp_tmp->id().get_no() <= 365)) {
-//                Forall_operands(it, *exp_tmp) {
-//                        exp_st.push(&(*it));
-//                    }
-//            } else if (exp_tmp->id() == ID_extractbit || exp_tmp->id() == ID_extractbits) {
-//                unsigned char saved_diff = 0;
-//                *exp_tmp = convert_expr(*(exp_tmp), saved_diff);
+//    if (expr_cond.id() == ID_extractbit) {
+//        if (expr_cond.operands().size() != 2)
+//            throw "extractbit takes two operands";
+//        symbol_exprt expr_symbol = to_symbol_expr(expr_cond.op0());
+//        mp_integer size_op1;
+//        to_integer(expr_cond.op1(), size_op1);
+//        ashr_exprt shr(expr_symbol, expr_cond.op1());
+//        constant_exprt constant1 = from_integer(power(2, 0), integer_typet());
+//        bitand_exprt andexpr(shr, constant1);
+//        expr_cond = andexpr;
+//        codeif.cond() = expr_cond;
+//    }
+//        // handling reduction operator
+//    else if (expr_cond.id() == ID_reduction_or || expr_cond.id() == ID_reduction_and ||
+//             expr_cond.id() == ID_reduction_nor || expr_cond.id() == ID_reduction_nand ||
+//             expr_cond.id() == ID_reduction_xor || expr_cond.id() == ID_reduction_xnor) {
+//        exprt new_expr = expr_cond.op0();
+//        if (expr_cond.id() == ID_reduction_or) {
+//            if (new_expr.id() == ID_extractbit) {
+//                if (new_expr.operands().size() != 2)
+//                    throw "extractbit takes two operands";
+//                symbol_exprt expr_symbol = to_symbol_expr(new_expr.op0());
+//                mp_integer size_op1;
+//                to_integer(new_expr.op1(), size_op1);
+//                ashr_exprt shr(expr_symbol, new_expr.op1());
+//                constant_exprt constant1 = from_integer(power(2, 0), integer_typet());
+//                bitand_exprt andexpr(shr, constant1);
+//                new_expr = andexpr;
+//                codeif.cond() = new_expr;
+//            } else if (new_expr.id() == ID_extractbits) {
+//                if (new_expr.operands().size() != 3)
+//                    throw "extractbit takes two operands";
+//                symbol_exprt expr_symbol = to_symbol_expr(new_expr.op0());
+//                mp_integer size_op1;
+//                to_integer(new_expr.op1(), size_op1);
+//                ashr_exprt shr1(expr_symbol, new_expr.op1());
+//                constant_exprt constant1 = from_integer(power(2, 0), integer_typet());
+//                bitand_exprt and1(shr1, constant1);
+//                mp_integer size_op2;
+//                to_integer(new_expr.op2(), size_op2);
+//                ashr_exprt shr2(expr_symbol, new_expr.op2());
+//                constant_exprt constant2 = from_integer(power(2, 0), integer_typet());
+//                bitand_exprt and2(shr2, constant2);
+//                bitor_exprt orexpr(and1, and2);
+//                new_expr = orexpr;
+//                codeif.cond() = new_expr;
 //            }
 //        }
-//        codeif.cond() = expr_cond;
-        unsigned char saved_diff = 0;
-        codeif.cond() = convert_expr(expr_cond, saved_diff);
-//        codeif.cond() = statement.condition();
-    }
+//    }
+////    else if (expr_cond.id() == ID_and || expr_cond.id() == ID_or ) { //增加if条件的and情况
+////        assert(expr_cond.operands().size() == 2);
+////        Forall_operands(it, expr_cond) {
+////            bool changed = false;
+////               exprt converted =  convert_expr(*it, &changed);
+////               if (changed) {
+////                   *it = converted;
+////               }
+////        }
+////        codeif.cond() = expr_cond;
+////    }
+//        // save the condition
+//    else {
+//        //DFS处理if条件中的表达式
+////        exprt *expr_ref = &expr_cond;
+////        std::stack<exprt *> exp_st;
+////        exp_st.push(expr_ref);
+////        while (!exp_st.empty()) {
+////            exprt *exp_tmp = exp_st.top();
+////            exp_st.pop();
+////            while (exp_tmp->id() == ID_typecast)
+////                exp_tmp = &(exp_tmp->op0());
+//
+////            if (exp_tmp->id() == ID_and || exp_tmp->id() == ID_nand || exp_tmp->id() == ID_or ||
+////                exp_tmp->id() == ID_nor || exp_tmp->id() == ID_xor || exp_tmp->id() == ID_xnor ||
+////                exp_tmp->id() == ID_equal || exp_tmp->id() == dstring(358, 0) || exp_tmp->id() == dstring(359, 0) ||
+////                exp_tmp->id() == dstring(360, 0)) {
+////                exp_st.push(&(exp_tmp->op0()));
+////                exp_st.push(&(exp_tmp->op1()));
+//        //处理= and nand or nor xor xnor not bitand bitor bitnot bitxor bitnand bitnor notequal >= <= > < + - * /
+////            if ((exp_tmp->id().get_no() == 37) || (exp_tmp->id().get_no() >= 40 && exp_tmp->id().get_no() <= 54) ||
+////                (exp_tmp->id().get_no() >= 356 && exp_tmp->id().get_no() <= 361) ||
+////                (exp_tmp->id().get_no() >= 364 && exp_tmp->id().get_no() <= 365)) {
+////                Forall_operands(it, *exp_tmp) {
+////                        exp_st.push(&(*it));
+////                    }
+////            } else if (exp_tmp->id() == ID_extractbit || exp_tmp->id() == ID_extractbits) {
+////                unsigned char saved_diff = 0;
+////                *exp_tmp = convert_expr(*(exp_tmp), saved_diff);
+////            }
+////        }
+////        codeif.cond() = expr_cond;
+//        unsigned char saved_diff = 0;
+//        codeif.cond() = convert_expr(expr_cond, saved_diff);
+////        codeif.cond() = statement.condition();
+//    }
+    //if条件转换改为直接调用函数
+    unsigned char saved_diff = 0;
+    codeif.cond() = convert_expr(expr_cond, saved_diff);
+
     codet save_thenpair = translate_statement(statement.true_case(), need_cassign);
     codeif.then_case() = save_thenpair;
 
