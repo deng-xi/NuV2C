@@ -1034,13 +1034,13 @@ void verilog_exprt::add_bitand(exprt &expression) {
 //    }
 //}
 
-void verilog_exprt::add_cassign(code_blockt &my_code_block, std::set<std::string> &updated_sybmols) {
+void verilog_exprt::add_cassignAll(code_blockt &my_code_block, std::set<std::string> &updated_sybmols) {
     module_infot &modulevb = module_info[current_module];
 //    std::list<code_assignt> all_cassign;
 //    all_cassign.assign(modulevb.cassignReg.begin(), modulevb.cassignReg.end());
 //    all_cassign.
-    for (std::list<code_assignt>::const_iterator it3 = modulevb.cassignReg.begin();
-         it3 != modulevb.cassignReg.end(); ++it3) {
+    for (std::list<code_assignt>::const_iterator it3 = modulevb.cassignAll.begin();
+         it3 != modulevb.cassignAll.end(); ++it3) {
         auto cassign_rh_symbols = exprSymbols((*it3).op1()); //获取连续赋值右边表达式所有变量名
         bool updated_flag = false;
         for (auto updated_symbol: updated_sybmols) {
@@ -1058,7 +1058,7 @@ void verilog_exprt::add_cassign(code_blockt &my_code_block, std::set<std::string
             if (!updated_sybmols.count(cassign_ls_symbol)) {
                 updated_sybmols.emplace(cassign_ls_symbol);
                 my_code_block.add(*it3);
-                add_cassign(my_code_block, updated_sybmols);
+                add_cassignAll(my_code_block, updated_sybmols);
             }
         }
     }
@@ -1647,12 +1647,13 @@ codet verilog_exprt::convert_continuous_assign(
     // output variable need to be assigned to
     modulevb.output_var(code_reg.lhs());
 
-//    if (noreg)
-//        modulevb.cassign.push_back(code_assignv);
-//    else
-//        modulevb.cassignReg.push_back(code_assignv);
+    if (noreg)
+        modulevb.cassign.push_back(code_assignv);
+    else
+        modulevb.cassignReg.push_back(code_assignv);
 
-    modulevb.cassignReg.push_back(code_assignv); //好像右边是不是寄存器没什么区别,先全部放在Reg中
+    modulevb.cassignAll.push_back(code_assignv);
+//    modulevb.cassignReg.push_back(code_assignv); //好像右边是不是寄存器没什么区别,先全部放在Reg中
 
     return codet();
 }
@@ -2135,7 +2136,7 @@ codet verilog_exprt::translate_if(
 ////        codeif.cond() = expr_cond;
 //        unsigned char saved_diff = 0;
 //        codeif.cond() = convert_expr(expr_cond, saved_diff);
-////        codeif.cond() = statement.condition();
+//        codeif.cond() = statement.condition();
 //    }
     //if条件转换改为直接调用函数
     unsigned char saved_diff = 0;
