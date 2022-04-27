@@ -39,7 +39,6 @@
 #include "expression_datatype.h"
 
 
-
 /*******************************************************************\
 
 Function: vtoexpr
@@ -1991,10 +1990,22 @@ codet verilog_exprt::translate_block(const verilog_blockt &statement, bool need_
     forall_operands(it, statement) {
 //            if (it->id() != ID_skip) //忽略skip语句,或者后面covert忽略也行
 //                continue;
+            bool is_blocking_assign = false;
+            if (static_cast<const verilog_statementt &>(*it).id() == ID_blocking_assign && need_cassign)
+                is_blocking_assign = true;
             codet save_block = translate_statement(static_cast<const verilog_statementt &>(*it), need_cassign);
-            verilog_block1.operands().push_back(save_block);
+            //去除连续赋值引入的大括号
+            if (is_blocking_assign) {
+                forall_operands(it, save_block) {
+                        verilog_block1.operands().push_back(*it);
+                    }
+            } else {
+                verilog_block1.operands().push_back(save_block);
+            }
         }
-    return verilog_block1;
+
+    return
+            verilog_block1;
 }
 
 /*******************************************************************\
@@ -2507,7 +2518,7 @@ codet verilog_exprt::translate_block_assign(
 //        }
         std::set<std::string> updated_symbols;
         updated_symbols.emplace(lhs_symbol);
-        add_cassign(my_code_block, updated_symbols);
+        add_cassignAll(my_code_block, updated_symbols);
         my_code_block.operands().insert(my_code_block.operands().begin(), code_block_assignv);
         return my_code_block;
     }
