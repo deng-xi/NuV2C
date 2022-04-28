@@ -76,8 +76,10 @@ Function: conjunction
 
 exprt conjunction(const exprt::operandst &op)
 {
-  if(op.empty())
+  if(op.empty()) {
+//    throw "op is empty in conjunction -dx\n";
     return true_exprt();
+  }
   else if(op.size()==1)
     return op.front();
   else

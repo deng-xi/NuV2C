@@ -6,7 +6,7 @@
 #include <cassert>
 #include <map>
 #include <set>
-#include<string>
+#include <string>
 #include <util/hash_cont.h>
 #include <util/mp_arith.h>
 #include <util/string_hash.h>
@@ -89,6 +89,7 @@ protected:
         std::list<code_declt> new_var;
         std::list<code_assignt> cassign;
         std::list<code_assignt> cassignReg;
+        std::list<code_assignt> cassignAll;
         std::list<codet> shadowassign;
         std::list<codet> blockingassign;
         std::list<codet> functioncall;
@@ -165,7 +166,7 @@ protected:
 
     void add_bitand(exprt &expression);
 
-    void add_cassign(code_blockt &my_code_block, std::set<std::string> &updated_sybmols);
+    void add_cassignAll(code_blockt &my_code_block, std::set<std::string> &updated_sybmols);
 
     std::set<std::string> exprSymbols(irept ireptTmp);
 };

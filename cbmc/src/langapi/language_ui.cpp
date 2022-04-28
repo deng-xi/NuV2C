@@ -153,7 +153,7 @@ bool language_uit::parse(const std::string &filename)
     return true;
   }
 
-  lf.get_modules();
+  lf.get_modules(); //获取top module name
    
   return false;
 }

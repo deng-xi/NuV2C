@@ -169,7 +169,7 @@ bool language_filest::typecheck(symbol_tablet &symbol_table)
     {
       // these may collide, and then get renamed
       std::string module_name=*mo_it;
-      
+
       while(modulemap.find(module_name)!=modulemap.end())
       {
         module_name=*mo_it+"#"+i2string(collision_counter);

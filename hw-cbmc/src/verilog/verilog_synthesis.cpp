@@ -2921,7 +2921,7 @@ void verilog_synthesist::typecheck()
 {
   symbolt &symbol=symbol_table_lookup(module);//typecheck //std::cout<<"symbolid: " << symbol.value.id() << "\n";
   if(symbol.value.id()==ID_trans) return; // done already
-  //convert_module_items(symbol); //修改了这里 注释
+//  convert_module_items(symbol); //修改了这里 注释
 }
 
 /*******************************************************************\

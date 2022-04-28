@@ -34,10 +34,10 @@ Module: Main Module
 
 int v2c_parseoptionst::doit() {
     std::cout << "|----------------------------------------------------------------------|\n";
-    std::cout << "|*********                    v2c 0.1                             *****|\n";
+    std::cout << "|*********                       v2c                              *****|\n";
     std::cout << "|*********            Verilog to C Translator                     *****|\n";
-    std::cout << "|********* Authors: Rajdeep Mukherjee and Michael Tautschnig      *****|\n";
-    std::cout << "|*********           Developed at University of Oxford            *****|\n";
+//    std::cout << "|********* Authors: Rajdeep Mukherjee and Michael Tautschnig      *****|\n";
+//    std::cout << "|*********           Developed at University of Oxford            *****|\n";
     std::cout << "|********* Usage: v2c main.v --module <name of top module> main.c *****|\n";
     std::cout << "|----------------------------------------------------------------------|\n";
 
@@ -53,18 +53,24 @@ int v2c_parseoptionst::doit() {
     }
 
     if (!translator() && !translate_module()) {
-        if (cmdline.isset("debug")) {
-            char fullname[30]; //输出string容器到解析目录下
-            gethostname(fullname, 30);
-            std::string realname = fullname;
-            size_t pos = realname.find("-VirtualBox");
-            if (pos != std::string::npos)
-                realname = realname.substr(0, pos);
-            std::string path = "/home/" + realname + "/myv2c/bin/string.h";
-            std::ofstream string_out(path);
+        if (cmdline.isset("string")) {
+//            char fullname[30]; //输出string容器到解析目录下
+//            gethostname(fullname, 30);
+//            std::string realname = fullname;
+//            size_t pos = realname.find("-VirtualBox");
+//            if (pos != std::string::npos)
+//                realname = realname.substr(0, pos);
+//            std::string path = "/home/" + realname + "/myv2c/bin/string.h";
+//            std::ofstream string_out(path);
+            std::ofstream string_out("./string");
             if (string_out)
                 string_container.my_showall(string_out);
 //        symbol_table.show(string_out);
+        }
+        if (cmdline.isset("symbol")) {
+            std::ofstream string_out("./symbol");
+            if (string_out)
+                symbol_table.show(string_out);
         }
         return 0;
     } else
@@ -234,6 +240,8 @@ void v2c_parseoptionst::help() {
               "v2c accepts the following options:\n"
               " --show-parse-tree            shows the parse tree\n"
               " --module name                top module for unwinding\n"
+              " --string                     print string_container\n"
+              " --symbol_table               print symbol_table\n"
               "\n";
 }
 
