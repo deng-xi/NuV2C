@@ -354,8 +354,8 @@ bool verilog_exprt::convert_module(const symbolt &symbol, std::ostream &out) {
     // **************** Dependency Analysis *********************
     // Handle the case of continuous assignment with Registers on the RHS
     // Place these assignment statements after all the next states have been updated
-    for (std::list<code_assignt>::const_iterator it3 = modulevb.cassignReg.begin();
-         it3 != modulevb.cassignReg.end(); ++it3) { //将最后一个连续赋值移动到assert前
+    for (std::list<code_assignt>::const_iterator it3 = modulevb.cassignAll.begin(); //增加连续赋值cassignReg改为cassignAll
+         it3 != modulevb.cassignAll.end(); ++it3) { //将最后一个连续赋值移动到assert前
 //        if (code_verilogblock.operands().rbegin()->get(ID_statement) == ID_assert) {
 //            code_verilogblock.operands().insert(code_verilogblock.operands().end() - 1, *it3);
 //        } else
@@ -1652,7 +1652,6 @@ codet verilog_exprt::convert_continuous_assign(
         modulevb.cassignReg.push_back(code_assignv);
 
     modulevb.cassignAll.push_back(code_assignv);
-//    modulevb.cassignReg.push_back(code_assignv); //好像右边是不是寄存器没什么区别,先全部放在Reg中
 
     return codet();
 }
