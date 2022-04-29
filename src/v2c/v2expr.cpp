@@ -2219,59 +2219,82 @@ codet verilog_exprt::translate_block_assign(
 
     // Processing of statement like out[i] = tmp[k];
     // out = (out & ((2^(width_of_out)-1) - 2^i)) | (((tmp & 2^k) >> k) << i)
-    if (lhs.id() == ID_extractbit && rhs.id() == ID_extractbit) {
+//    if (lhs.id() == ID_extractbit && rhs.id() == ID_extractbit) {
+//        if (lhs.operands().size() != 2)
+//            throw "extractbit takes two operands";
+//        symbol_exprt lhs_symbol = to_symbol_expr(lhs.op0());
+//        symbol_exprt rhs_symbol = to_symbol_expr(rhs.op0());
+//
+//        // create the first operand of rhs
+//        mp_integer size_opl1;
+//        to_integer(lhs.op1(), size_opl1);
+//        constant_exprt constant0 = from_integer(power(2, size_opl1), integer_typet());
+//        mp_integer width = pointer_offset_bits(lhs.type(), ns);
+//        assert(width > 0);
+//        if (width > 1) {
+//            constant_exprt cwidth = from_integer(power(2, width) - 1, integer_typet());
+//        }
+//
+//        // create the second operand of rhs
+//        mp_integer size_opr1;
+//        to_integer(rhs.op1(), size_opr1);
+//        constant_exprt constant1 = from_integer(power(2, size_opr1), integer_typet());
+//        bitand_exprt andexpr(rhs_symbol, constant1);
+//        ashr_exprt ashr(andexpr, rhs.op1());
+//        shl_exprt shl(ashr, lhs.op1());
+//
+//        //bitor_exprt bitor_expr(andexp,shl);
+//        bitor_exprt bitor_expr(lhs_symbol, shl);
+//        rhs = bitor_expr;
+//        lhs = lhs_symbol;
+//        code_block_assignv.rhs() = rhs;
+//        code_block_assignv.lhs() = lhs;
+//    }
+    // Processing of statement like out[i] = tmp[k];
+    //       out = (out & ((2^(width_of_out)-1) - 2^i)) | (((tmp & 2^k) >> k) << i)
+    // 代码为:out = (out & ((2^(width_of_out)-1) - 2^i)) | ((tmp >> k) & 1) << i)
+    if (lhs.id() == ID_extractbit) {
         if (lhs.operands().size() != 2)
             throw "extractbit takes two operands";
         symbol_exprt lhs_symbol = to_symbol_expr(lhs.op0());
-        symbol_exprt rhs_symbol = to_symbol_expr(rhs.op0());
-
-        // create the first operand of rhs
-        mp_integer size_opl1;
-        to_integer(lhs.op1(), size_opl1);
-        constant_exprt constant0 = from_integer(power(2, size_opl1), integer_typet());
-        mp_integer width = pointer_offset_bits(lhs.type(), ns);
-        assert(width > 0);
-        if (width > 1) {
-            constant_exprt cwidth = from_integer(power(2, width) - 1, integer_typet());
-        }
-
-        // create the second operand of rhs
-        mp_integer size_opr1;
-        to_integer(rhs.op1(), size_opr1);
-        constant_exprt constant1 = from_integer(power(2, size_opr1), integer_typet());
-        bitand_exprt andexpr(rhs_symbol, constant1);
-        ashr_exprt ashr(andexpr, rhs.op1());
-        shl_exprt shl(ashr, lhs.op1());
-
-        //bitor_exprt bitor_expr(andexp,shl);
-        bitor_exprt bitor_expr(lhs_symbol, shl);
-        rhs = bitor_expr;
-        lhs = lhs_symbol;
-        code_block_assignv.rhs() = rhs;
-        code_block_assignv.lhs() = lhs;
-    }
-
-        // Processing of statement like out[i] = tmp;
-        // out = (out & ((2^(width_of_out)-1) - 2^i)) | ((tmp & 1)) << i)
-    else if (lhs.id() == ID_extractbit && rhs.id() != ID_extractbit) {
-        if (lhs.operands().size() != 2)
-            throw "extractbit takes two operands";
-        symbol_exprt lhs_symbol = to_symbol_expr(lhs.op0());
-        mp_integer size_opl1;
-        to_integer(lhs.op1(), size_opl1);
+        unsigned char saved_diff = 0;
+        convert_expr(rhs, saved_diff);
         shl_exprt shl(rhs, lhs.op1());
 
-
-        // create the first operand of rhs (mask with the width of lhs)
-        constant_exprt constantl1 = from_integer(power(2, size_opl1), integer_typet());
-
-
-        bitor_exprt bitor_expr(lhs_symbol, shl);
-        rhs = bitor_expr;
-        lhs = lhs_symbol;
-        code_block_assignv.rhs() = rhs;
-        code_block_assignv.lhs() = lhs;
+        mp_integer size_opl1;
+        to_integer(lhs.op1(), size_opl1);
+        constant_exprt constant0 = from_integer(power(2, size_opl1), integer_typet()); //2^i
+        mp_integer width = pointer_offset_bits(lhs_symbol.type(), ns);
+        assert(width > 0);
+        constant_exprt cwidth;
+        cwidth = from_integer(power(2, width) - 1, integer_typet()); //2^(width_of_out)-1
+        minus_exprt minus_expr(cwidth, constant0);
+        bitand_exprt bitand_expr(lhs_symbol, minus_expr);
+        bitor_exprt bitor_expr(bitand_expr, shl);
+        code_block_assignv.rhs() = bitor_expr;
+        code_block_assignv.lhs() = lhs_symbol;
     }
+        // Processing of statement like out[i] = tmp;
+        // out = (out & ((2^(width_of_out)-1) - 2^i)) | ((tmp & 1)) << i)
+//    else if (lhs.id() == ID_extractbit && rhs.id() != ID_extractbit) {
+//        if (lhs.operands().size() != 2)
+//            throw "extractbit takes two operands";
+//        symbol_exprt lhs_symbol = to_symbol_expr(lhs.op0());
+//        mp_integer size_opl1;
+//        to_integer(lhs.op1(), size_opl1);
+//        shl_exprt shl(rhs, lhs.op1());
+//
+//
+//        // create the first operand of rhs (mask with the width of lhs)
+//        constant_exprt constantl1 = from_integer(power(2, size_opl1), integer_typet());
+//
+//
+//        bitor_exprt bitor_expr(lhs_symbol, shl);
+//        rhs = bitor_expr;
+//        lhs = lhs_symbol;
+//        code_block_assignv.rhs() = rhs;
+//        code_block_assignv.lhs() = lhs;
+//    }
 
         // Processing of statements like out = tmp[5];
         // out = (tmp >> 5)&1;

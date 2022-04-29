@@ -5,7 +5,7 @@ all: v2c
 .PHONY: clean
 
 $(SUBDIRS):
-	$(MAKE) -C $@; cp $@/v2c ../bin/
+	#$(MAKE) -C $@; cp $@/v2c ../bin/
 	$(MAKE) -C ../cbmc/src; $(MAKE) -C ../hw-cbmc/src; $(MAKE) -C $@; cp $@/v2c ../bin/
 # Dependencies
 
