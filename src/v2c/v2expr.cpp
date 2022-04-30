@@ -2445,65 +2445,69 @@ codet verilog_exprt::translate_block_assign(
     }
         // handle the case of ID_constant and normal assignments
     else {
-        exprt rhsexp = rhs;
-        if (rhs.id() == ID_typecast && rhs.type().id() == ID_integer) {
-            exprt rhsexp = rhs.op0();
-        }
-
-        exprt cexpr;
-        exprt::operandst expressions;
-        exprt rhs_op;
-        //不改变运算符为conjunction
-        int i = 0;
-        bool flag = 0;
-        Forall_operands(it, rhsexp) {
-                unsigned char saved_diff = 0;
-                rhs_op = convert_expr(*it, saved_diff);
-                rhsexp.operands()[i] = rhs_op;
-                i++;
-            }
-        cexpr = rhsexp;
-        exprt *expr_ref = &cexpr; //DFS给过程赋值单个bv类型与位宽不匹配时加&
-        std::stack<exprt *> exp_st;
-        exp_st.push(expr_ref);
-        while (!exp_st.empty()) {
-            exprt *exp_tmp = exp_st.top();
-            exp_st.pop();
-            while (exp_tmp->id() == ID_typecast)
-                exp_tmp = &(exp_tmp->operands().back());
-            if (exp_tmp->operands().size() == 2) { //二元运算符连接的表达式或数组名+索引
-                exprt *firstexp = &(exp_tmp->operands()[0]), *secondexp = &(exp_tmp->operands()[1]);
-                exp_st.push(firstexp);
-                exp_st.push(secondexp);
-            } else if (exp_tmp->operands().size() == 0) {
-                if (exp_tmp->id() == ID_symbol) {
-                    if (exp_tmp->type().id() == ID_unsignedbv) { //数组索引也符合条件,数组名不符合
-                        int width = exp_tmp->type().get_int(ID_width);
-                        if (width > 0 && width != 1 && width != 8 && width != 16 && width != 32 && width != 64 &&
-                            width != 128) {
-                            bitand_exprt band(*exp_tmp,
-                                              from_integer(power(2, width) - 1, integer_typet()));
-                            *exp_tmp = band;
-                        }
-                    }
-                }
-            }
-        }
-
-        unsigned width = lhs.type().id() == ID_integer ? 32 : 1;
-        if (lhs.type().id() == ID_unsignedbv && rhs.operands().size() > 1) { //过程赋值左值bv类型与位宽不匹配时右边增加&
-            width = lhs.type().get_int(ID_width);
-        }
+//        exprt rhsexp = rhs;
+//        if (rhs.id() == ID_typecast && rhs.type().id() == ID_integer) {
+//            exprt rhsexp = rhs.op0();
+//        }
+//
+//        exprt cexpr;
+//        exprt::operandst expressions;
+//        exprt rhs_op;
+//        //不改变运算符为conjunction
+//        int i = 0;
+//        bool flag = 0;
+//        Forall_operands(it, rhsexp) {
+//                unsigned char saved_diff = 0;
+//                rhs_op = convert_expr(*it, saved_diff);
+//                rhsexp.operands()[i] = rhs_op;
+//                i++;
+//            }
+//        cexpr = rhsexp;
+//        exprt *expr_ref = &cexpr; //DFS给过程赋值单个bv类型与位宽不匹配时加&
+//        std::stack<exprt *> exp_st;
+//        exp_st.push(expr_ref);
+//        while (!exp_st.empty()) {
+//            exprt *exp_tmp = exp_st.top();
+//            exp_st.pop();
+//            while (exp_tmp->id() == ID_typecast)
+//                exp_tmp = &(exp_tmp->operands().back());
+//            if (exp_tmp->operands().size() == 2) { //二元运算符连接的表达式或数组名+索引
+//                exprt *firstexp = &(exp_tmp->operands()[0]), *secondexp = &(exp_tmp->operands()[1]);
+//                exp_st.push(firstexp);
+//                exp_st.push(secondexp);
+//            } else if (exp_tmp->operands().size() == 0) {
+//                if (exp_tmp->id() == ID_symbol) {
+//                    if (exp_tmp->type().id() == ID_unsignedbv) { //数组索引也符合条件,数组名不符合
+//                        int width = exp_tmp->type().get_int(ID_width);
+//                        if (width > 0 && width != 1 && width != 8 && width != 16 && width != 32 && width != 64 &&
+//                            width != 128) {
+//                            bitand_exprt band(*exp_tmp,
+//                                              from_integer(power(2, width) - 1, integer_typet()));
+//                            *exp_tmp = band;
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//
+//        unsigned width = lhs.type().id() == ID_integer ? 32 : 1;
+//        if (lhs.type().id() == ID_unsignedbv && rhs.operands().size() > 1) { //过程赋值左值bv类型与位宽不匹配时右边增加&
+//            width = lhs.type().get_int(ID_width);
+//        }
         //修改过程赋值rhs是否增加&判定
 //        if (width > 0 && width != 1 && width != 8 && width != 16 && width != 32 && width != 64 && width != 128) {
         //todo 暂时过程赋值rhs是否增加&判定
-        if (false) {
-            bitand_exprt band(cexpr,
-                              from_integer(power(2, width) - 1, rhs.type()));
-            code_block_assignv.rhs() = band;
-        } else {
-            code_block_assignv.rhs() = cexpr;
-        }
+//        if (false) {
+//            bitand_exprt band(cexpr,
+//                              from_integer(power(2, width) - 1, rhs.type()));
+//            code_block_assignv.rhs() = band;
+//        } else {
+//            code_block_assignv.rhs() = cexpr;
+//        }
+
+        unsigned char saved_diff = 0;
+        convert_expr(rhs, saved_diff);
+        code_block_assignv.rhs() = rhs;
     }// end of normal case
 
     // replace all register-type variables by member accesses (RHS only)
