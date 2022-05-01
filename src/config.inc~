@@ -1,0 +1,7 @@
+CBMC = ../../cbmc/trunk
+HW_CBMC= ../../hw-cbmc/trunk
+
+include $(CBMC)/src/config.inc
+include $(CBMC)/src/common
+
+CXXFLAGS+=-g

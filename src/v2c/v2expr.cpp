@@ -975,6 +975,18 @@ verilog_exprt::convert_expr(exprt &expression, unsigned char &saved_diff, dstrin
                 unsigned char saved_diff = 0;
                 *it = convert_expr(*it, saved_diff);
             }
+    } else {
+        if (expression.id() == ID_symbol) {
+            if (expression.type().id() == ID_unsignedbv) {
+                int width = expression.type().get_int(ID_width);
+                if (width > 0 && width != 1 && width != 8 && width != 16 && width != 32 && width != 64 &&
+                    width != 128) {
+                    bitand_exprt band(expression,
+                                      from_integer(power(2, width) - 1, integer_typet()));
+                    expression = band;
+                }
+            }
+        }
     }
     return expression;
 }
