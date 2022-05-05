@@ -1762,8 +1762,9 @@ codet verilog_exprt::convert_assert(const verilog_assertt &module_item) {
 
     // translate all register elements in the assertion with struct elements
     exprt condition = symbol.value.op0();
-    add_bitand(condition);
-    modulevb.registers(condition);
+//    增加按位与和转换为寄存器变量放在后面
+//    add_bitand(condition);
+//    modulevb.registers(condition);
 
     //将assert中表达式转换为对应位操作
 //    std::stack<exprt *> condition_stack;
@@ -1803,6 +1804,7 @@ codet verilog_exprt::convert_assert(const verilog_assertt &module_item) {
         unsigned char saved_diff = 0;
         convert_expr(condition, saved_diff);
     }
+    modulevb.registers(condition);
     code_assertv.copy_to_operands(condition);
 //    code_assertv.copy_to_operands(symbol.value.op0());
     return code_assertv;
