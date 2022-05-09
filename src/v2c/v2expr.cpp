@@ -2327,30 +2327,34 @@ codet verilog_exprt::translate_block_assign(
             rhs = convert_expr(rhs.op0(), saved_diff);
             code_block_assignv.rhs() = rhs;
         } else {
-            symbol_exprt rhs_symbol = to_symbol_expr(rhs.op0());
-            mp_integer size_op1;
-            to_integer(rhs.op1(), size_op1);
-            ashr_exprt shr(rhs_symbol, rhs.op1());
-            constant_exprt constant1 = from_integer(power(2, 0), integer_typet());
-            bitand_exprt andexpr(shr, constant1);
-            rhs = andexpr;
+            code_block_assignv.lhs() = lhs;
+            unsigned char saved_diff = 0;
+            convert_expr(rhs, saved_diff);
             code_block_assignv.rhs() = rhs;
+//            symbol_exprt rhs_symbol = to_symbol_expr(rhs.op0());
+//            mp_integer size_op1;
+//            to_integer(rhs.op1(), size_op1);
+//            ashr_exprt shr(rhs_symbol, rhs.op1());
+//            constant_exprt constant1 = from_integer(power(2, 0), integer_typet());
+//            bitand_exprt andexpr(shr, constant1);
+//            rhs = andexpr;
+//            code_block_assignv.rhs() = rhs;
             //增加阻塞赋值语句lhs数组索引位与
-            if (lhs.id() == ID_index && lhs.op0().id() == ID_symbol && lhs.op1().id() == ID_symbol) {
-                exprt expr_array = lhs.op0();
-                exprt expr_index = lhs.op1();
-                if (expr_index.type().id() == ID_unsignedbv) {
-                    int width = expr_index.type().get_int(ID_width);
-                    if (width > 0 && width != 1 && width != 8 && width != 16 && width != 32 && width != 64 &&
-                        width != 128) {
-                        bitand_exprt band(expr_index, from_integer(power(2, width) - 1, integer_typet()));
-                        expr_index = band;
-                        lhs.operands().pop_back();
-                        lhs.operands().push_back(expr_index);
-                        code_block_assignv.lhs() = lhs;
-                    }
-                }
-            }
+//            if (lhs.id() == ID_index && lhs.op0().id() == ID_symbol && lhs.op1().id() == ID_symbol) {
+//                exprt expr_array = lhs.op0();
+//                exprt expr_index = lhs.op1();
+//                if (expr_index.type().id() == ID_unsignedbv) {
+//                    int width = expr_index.type().get_int(ID_width);
+//                    if (width > 0 && width != 1 && width != 8 && width != 16 && width != 32 && width != 64 &&
+//                        width != 128) {
+//                        bitand_exprt band(expr_index, from_integer(power(2, width) - 1, integer_typet()));
+//                        expr_index = band;
+//                        lhs.operands().pop_back();
+//                        lhs.operands().push_back(expr_index);
+//                        code_block_assignv.lhs() = lhs;
+//                    }
+//                }
+//            }
         }
     }
 
