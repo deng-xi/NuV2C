@@ -2359,21 +2359,21 @@ codet verilog_exprt::translate_block_assign(
     }
 
         // Processing of statements like out = tmp[5:3];
-    else if (lhs.id() != ID_extractbits && rhs.id() == ID_extractbits) {
-        if (rhs.operands().size() != 3)
-            throw "extractbits takes three operands";
-        symbol_exprt rhs_symbol = to_symbol_expr(rhs.op0());
-        mp_integer size_op1;
-        to_integer(rhs.op1(), size_op1);
-        mp_integer size_op2;
-        to_integer(rhs.op2(), size_op2);
-        unsigned diff = integer2unsigned(size_op1 - size_op2);
-        ashr_exprt shr(rhs_symbol, rhs.op2());
-        constant_exprt constant1 = from_integer(power(2, diff + 1) - 1, integer_typet());
-        bitand_exprt andexpr(shr, constant1);
-        rhs = andexpr;
-        code_block_assignv.rhs() = rhs;
-    }
+//    else if (lhs.id() != ID_extractbits && rhs.id() == ID_extractbits) {
+//        if (rhs.operands().size() != 3)
+//            throw "extractbits takes three operands";
+//        symbol_exprt rhs_symbol = to_symbol_expr(rhs.op0());
+//        mp_integer size_op1;
+//        to_integer(rhs.op1(), size_op1);
+//        mp_integer size_op2;
+//        to_integer(rhs.op2(), size_op2);
+//        unsigned diff = integer2unsigned(size_op1 - size_op2);
+//        ashr_exprt shr(rhs_symbol, rhs.op2());
+//        constant_exprt constant1 = from_integer(power(2, diff + 1) - 1, integer_typet());
+//        bitand_exprt andexpr(shr, constant1);
+//        rhs = andexpr;
+//        code_block_assignv.rhs() = rhs;
+//    }
 
         // Processing of statements like out[a:b] = tmp[c:d];
         // 正确:out = (out & ((2^(width_of_out) - 1) - (2^a - 2^b + 2^a))) | (((tmp & (2^c - 2^d + 2^c)) >> d) << b);
