@@ -2406,51 +2406,52 @@ codet verilog_exprt::translate_block_assign(
 //        rhs = andexpr;
         rhs = orexpr;
         code_block_assignv.rhs() = rhs;
-    } else if (rhs.id() == ID_concatenation || rhs.id() == ID_xor) {
-        // handle ID_concatenation
-        //转换成调用convert_expr
-        exprt concat_expr = rhs;
-        if (concat_expr.id() == ID_concatenation) {
-            unsigned char saved_diff = 0;
-            code_block_assignv.rhs() = convert_expr(rhs, saved_diff);
-        } // end of concatenation handling
-
-        // handle ID_bitxor
-        exprt::operandst xor_expr;
-        exprt bitxor_expr = rhs;
-        if (bitxor_expr.id() == ID_xor) {
-            if (bitxor_expr.operands().size() == 0) {
-                throw "bit-wise xor expected to have at least one operand";
-                throw 0;
-            }
-            Forall_operands(it, bitxor_expr) {
-                    if (it->id() == ID_xor) {
-                    }
-
-                    if (it->id() == ID_symbol) { //赋值给异或表达式
-                        xor_expr.push_back(*it);
-                    }
-
-                    if (it->id() == ID_extractbit) {
-                        exprt rhs = it->op0();
-                        if (it->operands().size() != 2)
-                            throw "extractbit takes two operands";
-                        symbol_exprt rhs_symbol = to_symbol_expr(rhs);
-                        mp_integer size_op1;
-                        to_integer(it->op1(), size_op1);
-                        ashr_exprt shr(rhs_symbol, it->op1());
-                        constant_exprt constant1 = from_integer(power(2, 0), integer_typet());
-                        bitand_exprt andexpr(shr, constant1);
-                        //rhs = andexpr;
-                        //code_block_assignv.rhs() = andexpr;
-                        xor_expr.push_back(andexpr);
-                    }
-                }
-//            exprt conjunction_expr = conjunction(xor_expr);
-//            code_block_assignv.rhs() = conjunction_expr;
-            code_block_assignv.rhs() = bitxor_expr; //这里先直接将异或赋值
-        }
-    } // end of ID_concatenation or ID_bitor
+    }
+//    else if (rhs.id() == ID_concatenation || rhs.id() == ID_xor) {
+//        // handle ID_concatenation
+//        //转换成调用convert_expr
+//        exprt concat_expr = rhs;
+//        if (concat_expr.id() == ID_concatenation) {
+//            unsigned char saved_diff = 0;
+//            code_block_assignv.rhs() = convert_expr(rhs, saved_diff);
+//        } // end of concatenation handling
+//
+//        // handle ID_bitxor
+//        exprt::operandst xor_expr;
+//        exprt bitxor_expr = rhs;
+//        if (bitxor_expr.id() == ID_xor) {
+//            if (bitxor_expr.operands().size() == 0) {
+//                throw "bit-wise xor expected to have at least one operand";
+//                throw 0;
+//            }
+//            Forall_operands(it, bitxor_expr) {
+//                    if (it->id() == ID_xor) {
+//                    }
+//
+//                    if (it->id() == ID_symbol) { //赋值给异或表达式
+//                        xor_expr.push_back(*it);
+//                    }
+//
+//                    if (it->id() == ID_extractbit) {
+//                        exprt rhs = it->op0();
+//                        if (it->operands().size() != 2)
+//                            throw "extractbit takes two operands";
+//                        symbol_exprt rhs_symbol = to_symbol_expr(rhs);
+//                        mp_integer size_op1;
+//                        to_integer(it->op1(), size_op1);
+//                        ashr_exprt shr(rhs_symbol, it->op1());
+//                        constant_exprt constant1 = from_integer(power(2, 0), integer_typet());
+//                        bitand_exprt andexpr(shr, constant1);
+//                        //rhs = andexpr;
+//                        //code_block_assignv.rhs() = andexpr;
+//                        xor_expr.push_back(andexpr);
+//                    }
+//                }
+////            exprt conjunction_expr = conjunction(xor_expr);
+////            code_block_assignv.rhs() = conjunction_expr;
+//            code_block_assignv.rhs() = bitxor_expr; //这里先直接将异或赋值
+//        }
+//    } // end of ID_concatenation or ID_bitxor
         //增加函数内直接调用函数
     else if (rhs.id() == ID_function_call && rhs.op1().id() == dstring(0, 0) && rhs.op1().has_operands() &&
              rhs.op1().op0().id() == ID_concatenation) { //rhs.op1().op0()是函数的参数
