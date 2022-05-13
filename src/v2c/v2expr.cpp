@@ -2377,27 +2377,33 @@ codet verilog_exprt::translate_block_assign(
 
         // Processing of statements like out[a:b] = tmp[c:d];
         // 正确:out = (out & ((2^(width_of_out) - 1) - (2^a - 2^b + 2^a))) | (((tmp & (2^c - 2^d + 2^c)) >> d) << b);
-    else if (lhs.id() == ID_extractbits && rhs.id() == ID_extractbits) {
-        if (rhs.operands().size() != 3)
-            throw "extractbits takes three operands";
+        //上面论文中的做法复杂了,代码实现改为:
+        // out = (out & ((2^(width_of_out) - 1) - (2^a - 2^b + 2^a))) | ((tmp >> d) & 2^(c-d+1) << b);
+//    else if (lhs.id() == ID_extractbits && rhs.id() == ID_extractbits) {
+//        if (rhs.operands().size() != 3)
+//            throw "extractbits takes three operands";
+    else if (lhs.id() == ID_extractbits) {
         code_block_assignv.lhs() = lhs.op0();
         symbol_exprt lhs_symbol = to_symbol_expr(lhs.op0());
-        symbol_exprt rhs_symbol = to_symbol_expr(rhs.op0());
+//        symbol_exprt rhs_symbol = to_symbol_expr(rhs.op0());
         mp_integer size_a, size_b, size_c, size_d;
         to_integer(lhs.op1(), size_a);
         to_integer(lhs.op2(), size_b);
-        to_integer(rhs.op1(), size_c);
-        to_integer(rhs.op2(), size_d);
+//        to_integer(rhs.op1(), size_c);
+//        to_integer(rhs.op2(), size_d);
         int width = lhs.op0().find(ID_type).get_int(ID_width);
         constant_exprt lhs_constant = from_integer(
                 (power(2, width) - 1) - (power(2, size_a) - power(2, size_b) + power(2, size_a)),
                 integer_typet());
         bitand_exprt lhs_andexpr(lhs_symbol, lhs_constant);
-        constant_exprt rhs_constant = from_integer(power(2, size_c) - power(2, size_d) + power(2, size_c),
-                                                   integer_typet());
-        bitand_exprt rhs_andexpr(rhs_symbol, rhs_constant);
-        ashr_exprt shr(rhs_andexpr, rhs.op2());
-        shl_exprt shl(shr, lhs.op2());
+//        constant_exprt rhs_constant = from_integer(power(2, size_c) - power(2, size_d) + power(2, size_c),
+//                                                   integer_typet());
+//        bitand_exprt rhs_andexpr(rhs_symbol, rhs_constant);
+//        ashr_exprt shr(rhs_andexpr, rhs.op2());
+//        shl_exprt shl(shr, lhs.op2());
+        unsigned char saved_diff = 0;
+        rhs = convert_expr(rhs, saved_diff);
+        shl_exprt shl(rhs, lhs.op2());
         bitor_exprt orexpr(lhs_andexpr, shl);
 //        unsigned diff = integer2unsigned(size_op1 - size_op2);
 //        ashr_exprt shr(rhs_symbol, rhs.op2());
