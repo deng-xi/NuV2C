@@ -1162,482 +1162,756 @@ codet verilog_exprt::convert_continuous_assign(
             }
             exprt lhs = it->op0();
             exprt rhs = it->op1();
-
-            // handle extractbit
-            if (lhs.id() == ID_extractbit || rhs.id() == ID_extractbit) {
-                // Processing of statements like assign out = tmp[5];
-                if (rhs.id() == ID_extractbit && lhs.id() != ID_extractbit) {
-                    if (rhs.operands().size() != 2)
-                        throw "extractbit takes two operands";
-//                    symbol_exprt rhs_symbol = to_symbol_expr(rhs.op0());
-//                    mp_integer size_op1;
-//                    to_integer(rhs.op1(), size_op1);
-//                    ashr_exprt shr(rhs_symbol, rhs.op1());
-//                    constant_exprt constant1 = from_integer(power(2, 0), integer_typet());
-//                    bitand_exprt andexpr(shr, constant1);
-//                    rhs = andexpr;
-                    unsigned char saved_diff = 0;
-                    convert_expr(rhs, saved_diff);
-                }
-                // Processing of statements like assign out[5] = tmp;我认为是out=out&(2^width_of_out-1-2^5)|tmp<<5
-                if (lhs.id() == ID_extractbit && rhs.id() != ID_extractbit) {//好像不太对 in1 = in1 | smain.x << 5;
-                    if (lhs.operands().size() != 2)
-                        throw "extractbits takes two operands";
-                    symbol_exprt lhs_symbol = to_symbol_expr(lhs.op0());
-                    mp_integer size_opl1;
-                    to_integer(lhs.op1(), size_opl1);
-                    shl_exprt shl(rhs, lhs.op1());
-                    //增加4line,删除1line
-                    int width = lhs_symbol.find(ID_type).get_int(ID_width);
-                    constant_exprt zero = from_integer(power(2, width) - 1 - power(2, size_opl1), integer_typet());
-                    bitand_exprt bitand_expr(lhs_symbol, zero);
-                    bitor_exprt bitor_expr(bitand_expr, shl);
-//                    bitor_exprt bitor_expr(lhs_symbol, shl);
-                    rhs = bitor_expr;
-                    lhs = lhs_symbol;
-                }
-                code_assignv.rhs() = rhs;
-                code_assignv.lhs() = lhs;
-            }
-
-                // Processing of statements like out[a:b] = tmp[c:d];
-                // 错误:out = (out & !(2^(width_of_out - 1) - 2^b)) | ((tmp & (2^(width_of_tmp - 1) - 2^d) >> d) << b);
-                // 正确:out = (out & ((2^(width_of_out) - 1) - (2^a - 2^b + 2^a))) | (((tmp & (2^c - 2^d + 2^c)) >> d) << b);
-            else if (lhs.id() == ID_extractbits && rhs.id() == ID_extractbits) { //修改了处理方式
-                if (rhs.operands().size() != 3)
-                    throw "extractbits takes three operands";
+            // drop all type casts
+            while (rhs.id() == ID_typecast)
+                rhs = rhs.op0();
+            while (lhs.id() == ID_typecast)
+                lhs = lhs.op0();
+            code_assignv.lhs() = lhs;
+            code_assignv.rhs() = rhs;
+//            // handle extractbit
+//            if (lhs.id() == ID_extractbit || rhs.id() == ID_extractbit) {
+//                // Processing of statements like assign out = tmp[5];
+//                if (rhs.id() == ID_extractbit && lhs.id() != ID_extractbit) {
+//                    if (rhs.operands().size() != 2)
+//                        throw "extractbit takes two operands";
+////                    symbol_exprt rhs_symbol = to_symbol_expr(rhs.op0());
+////                    mp_integer size_op1;
+////                    to_integer(rhs.op1(), size_op1);
+////                    ashr_exprt shr(rhs_symbol, rhs.op1());
+////                    constant_exprt constant1 = from_integer(power(2, 0), integer_typet());
+////                    bitand_exprt andexpr(shr, constant1);
+////                    rhs = andexpr;
+//                    unsigned char saved_diff = 0;
+//                    convert_expr(rhs, saved_diff);
+//                }
+//                // Processing of statements like assign out[5] = tmp;我认为是out=out&(2^width_of_out-1-2^5)|tmp<<5
+//                if (lhs.id() == ID_extractbit && rhs.id() != ID_extractbit) {//好像不太对 in1 = in1 | smain.x << 5;
+//                    if (lhs.operands().size() != 2)
+//                        throw "extractbits takes two operands";
+//                    symbol_exprt lhs_symbol = to_symbol_expr(lhs.op0());
+//                    mp_integer size_opl1;
+//                    to_integer(lhs.op1(), size_opl1);
+//                    shl_exprt shl(rhs, lhs.op1());
+//                    //增加4line,删除1line
+//                    int width = lhs_symbol.find(ID_type).get_int(ID_width);
+//                    constant_exprt zero = from_integer(power(2, width) - 1 - power(2, size_opl1), integer_typet());
+//                    bitand_exprt bitand_expr(lhs_symbol, zero);
+//                    bitor_exprt bitor_expr(bitand_expr, shl);
+////                    bitor_exprt bitor_expr(lhs_symbol, shl);
+//                    rhs = bitor_expr;
+//                    lhs = lhs_symbol;
+//                }
+//                code_assignv.rhs() = rhs;
+//                code_assignv.lhs() = lhs;
+//            }
+//
+//                // Processing of statements like out[a:b] = tmp[c:d];
+//                // 错误:out = (out & !(2^(width_of_out - 1) - 2^b)) | ((tmp & (2^(width_of_tmp - 1) - 2^d) >> d) << b);
+//                // 正确:out = (out & ((2^(width_of_out) - 1) - (2^a - 2^b + 2^a))) | (((tmp & (2^c - 2^d + 2^c)) >> d) << b);
+//            else if (lhs.id() == ID_extractbits && rhs.id() == ID_extractbits) { //修改了处理方式
+//                if (rhs.operands().size() != 3)
+//                    throw "extractbits takes three operands";
+////                symbol_exprt lhs_symbol = to_symbol_expr(lhs.op0());
+////                symbol_exprt rhs_symbol = to_symbol_expr(rhs.op0());
+////
+////                // create the first operand of rhs
+////                mp_integer size_opl1;
+////                to_integer(lhs.op2(), size_opl1);
+////                constant_exprt constant0 = from_integer(power(2, size_opl1), integer_typet());
+////                mp_integer width = pointer_offset_bits(lhs.type(), ns);
+////                assert(width > 0);
+////
+////                constant_exprt cwidth = from_integer(power(2, width - 1) - power(2, size_opl1), integer_typet());
+////                bitnot_exprt notexp(cwidth);
+////                bitand_exprt andexp(lhs_symbol, notexp);
+////
+////
+////                // create the second operand of rhs
+////                mp_integer size_op1;
+////                to_integer(rhs.op1(), size_op1);
+////                mp_integer size_op2;
+////                to_integer(rhs.op2(), size_op2);
+////                constant_exprt constant1 = from_integer(power(2, size_op2), integer_typet());
+////                mp_integer widthr = pointer_offset_bits(rhs.type(), ns);
+////                assert(widthr > 0);
+////
+////                constant_exprt cwidthr = from_integer(power(2, widthr - 1) - power(2, size_op2), integer_typet());
+////                bitand_exprt andexpr(rhs_symbol, cwidthr);
+////                ashr_exprt shrr(andexpr, rhs.op2());size_opl1
+////                shl_exprt shlr(shrr, lhs.op2());
+////
+////
+////                bitor_exprt bitor_expr(andexp, shlr);
+////                rhs = bitor_expr;
+////                lhs = lhs_symbol;
+////                code_assignv.rhs() = rhs;
+////                code_assignv.lhs() = lhs;
+//                code_assignv.lhs() = lhs.op0();
+//                symbol_exprt lhs_symbol = to_symbol_expr(lhs.op0());
+//                symbol_exprt rhs_symbol = to_symbol_expr(rhs.op0());
+//                mp_integer size_a, size_b, size_c, size_d;
+//                to_integer(lhs.op1(), size_a);
+//                to_integer(lhs.op2(), size_b);
+//                to_integer(rhs.op1(), size_c);
+//                to_integer(rhs.op2(), size_d);
+//                int width = lhs.op0().find(ID_type).get_int(ID_width);
+//                constant_exprt lhs_constant = from_integer(
+//                        (power(2, width) - 1) - (power(2, size_a) - power(2, size_b) + power(2, size_a)),
+//                        integer_typet());
+//                bitand_exprt lhs_andexpr(lhs_symbol, lhs_constant);
+//                constant_exprt rhs_constant = from_integer(power(2, size_c) - power(2, size_d) + power(2, size_c),
+//                                                           integer_typet());
+//                bitand_exprt rhs_andexpr(rhs_symbol, rhs_constant);
+//                ashr_exprt shr(rhs_andexpr, rhs.op2());
+//                shl_exprt shl(shr, lhs.op2());
+//                bitor_exprt orexpr(lhs_andexpr, shl);
+//                rhs = orexpr;
+//                code_assignv.rhs() = rhs;
+//            }
+//
+//                // Processing of statement like out[i] = tmp[k];
+//                // out = (out & ((2^(width_of_out)-1) - 2^i)) | (((tmp & 2^k) >> k) << i)
+//            else if (lhs.id() == ID_extractbit && rhs.id() == ID_extractbit) { //增加else
+//                if (lhs.operands().size() != 2)
+//                    throw "extractbit takes two operands";
 //                symbol_exprt lhs_symbol = to_symbol_expr(lhs.op0());
 //                symbol_exprt rhs_symbol = to_symbol_expr(rhs.op0());
 //
 //                // create the first operand of rhs
 //                mp_integer size_opl1;
-//                to_integer(lhs.op2(), size_opl1);
+//                to_integer(lhs.op1(), size_opl1);
 //                constant_exprt constant0 = from_integer(power(2, size_opl1), integer_typet());
 //                mp_integer width = pointer_offset_bits(lhs.type(), ns);
 //                assert(width > 0);
 //
-//                constant_exprt cwidth = from_integer(power(2, width - 1) - power(2, size_opl1), integer_typet());
-//                bitnot_exprt notexp(cwidth);
-//                bitand_exprt andexp(lhs_symbol, notexp);
+//                constant_exprt cwidth = from_integer((power(2, width) - 1), integer_typet());
+//                mp_integer size;
+//                to_integer(cwidth, size);
+//                constant_exprt cwidthl = from_integer(size - power(2, size_opl1), integer_typet());
+//                bitand_exprt andexp(lhs_symbol, cwidthl);
 //
 //
 //                // create the second operand of rhs
-//                mp_integer size_op1;
-//                to_integer(rhs.op1(), size_op1);
-//                mp_integer size_op2;
-//                to_integer(rhs.op2(), size_op2);
-//                constant_exprt constant1 = from_integer(power(2, size_op2), integer_typet());
-//                mp_integer widthr = pointer_offset_bits(rhs.type(), ns);
-//                assert(widthr > 0);
+//                mp_integer size_opr1;
+//                to_integer(rhs.op1(), size_opr1);
+//                constant_exprt constant1 = from_integer(power(2, size_opr1), integer_typet());
+//                bitand_exprt andexpr(rhs_symbol, constant1);
+//                ashr_exprt ashr(andexpr, rhs.op1());
+//                shl_exprt shl(ashr, lhs.op1());
 //
-//                constant_exprt cwidthr = from_integer(power(2, widthr - 1) - power(2, size_op2), integer_typet());
-//                bitand_exprt andexpr(rhs_symbol, cwidthr);
-//                ashr_exprt shrr(andexpr, rhs.op2());size_opl1
-//                shl_exprt shlr(shrr, lhs.op2());
-//
-//
-//                bitor_exprt bitor_expr(andexp, shlr);
+//                bitor_exprt bitor_expr(andexp, shl);
 //                rhs = bitor_expr;
 //                lhs = lhs_symbol;
 //                code_assignv.rhs() = rhs;
 //                code_assignv.lhs() = lhs;
+//            }
+//
+//                // ******** handle extractbits on one side *******
+//                // assign tr[4:2] = x;
+//                // assign x = out[7:5];
+//            else if (lhs.id() == ID_extractbits || rhs.id() == ID_extractbits) {
+//                if (rhs.id() == ID_extractbits && lhs.id() != ID_extractbits) {
+//                    if (rhs.operands().size() != 3)
+//                        throw "extractbits takes three operands";
+////                    symbol_exprt rhs_symbol = to_symbol_expr(rhs.op0());
+////                    mp_integer size_op1;
+////                    to_integer(rhs.op1(), size_op1);
+////                    mp_integer size_op2;
+////                    to_integer(rhs.op2(), size_op2);
+////                    unsigned diff = integer2unsigned(size_op1 - size_op2);
+////                    ashr_exprt shr(rhs_symbol, rhs.op2());
+////                    constant_exprt constant1 = from_integer(power(2, diff + 1) - 1, integer_typet());
+////                    bitand_exprt andexpr(shr, constant1);
+////                    rhs = andexpr;
+//                    unsigned char saved_diff = 0;
+//                    convert_expr(rhs, saved_diff);
+//                }
+//                if (lhs.id() == ID_extractbits && rhs.id() != ID_extractbits) {
+//                    if (lhs.operands().size() != 3)
+//                        throw "extractbits takes three operands";
+//                    symbol_exprt lhs_symbol = to_symbol_expr(lhs.op0());
+//
+//                    // create the first operand of rhs
+//                    mp_integer size_opl1;
+//                    to_integer(lhs.op2(), size_opl1);
+//                    constant_exprt constant0 = from_integer(power(2, size_opl1), integer_typet());
+//                    mp_integer width = pointer_offset_bits(lhs.type(), ns);
+//                    assert(width > 0);
+//
+//                    constant_exprt cwidth = from_integer(power(2, width - 1) - power(2, size_opl1), integer_typet());
+//                    bitnot_exprt notexp(cwidth);
+//                    bitand_exprt andexp(lhs_symbol, notexp);
+//
+//                    // create the second operand of rhs
+//                    mp_integer size_opl0;
+//                    to_integer(lhs.op1(), size_opl0);
+//                    unsigned diff = integer2unsigned(size_opl1 - size_opl0);//修改正负号出错
+//                    constant_exprt constant1 = from_integer(power(2, diff + 1) - 1, integer_typet());
+//                    bitand_exprt andexpr(rhs.op0(), constant1);
+//                    shl_exprt shl1(andexpr, lhs.op2());
+//
+//                    bitor_exprt bitor_expr(andexp, shl1);
+//                    rhs = bitor_expr;
+//                    lhs = lhs_symbol;
+//                }
+//                code_assignv.lhs() = lhs;
+//                code_assignv.rhs() = rhs;
+//            }
+//                // continuous assignment of type: "assign test = (reg1[11:8]==out[7:4]) && (reg1[12:9]==out[8:5]);"
+////            else if (rhs.id() == ID_and || rhs.id() == ID_or) {
+////                if (rhs.op0().id() == ID_equal) {
+////                    // it can be extractbits
+////                    if (rhs.op0().op1().id() == ID_extractbits) {
+////                        symbol_exprt rhs_symbol = to_symbol_expr(rhs.op0().op1().op0());
+////                        mp_integer size_op1;
+////                        to_integer(rhs.op0().op1().op1(), size_op1);
+////                        mp_integer size_op2;
+////                        to_integer(rhs.op0().op1().op2(), size_op2);
+////                        unsigned diff = integer2unsigned(size_op1 - size_op2);
+////                        ashr_exprt shr(rhs_symbol, rhs.op0().op1().op2());
+////                        constant_exprt constant1 = from_integer(power(2, diff + 1) - 1, integer_typet());
+////                        bitand_exprt andexpr(shr, constant1);
+////                        rhs.op0().op1() = andexpr;
+////                    }
+////                    if (rhs.op0().op0().id() == ID_extractbits) {
+////                        symbol_exprt rhs_symbol = to_symbol_expr(rhs.op0().op0().op0());
+////                        mp_integer size_op1;
+////                        to_integer(rhs.op0().op0().op1(), size_op1);
+////                        mp_integer size_op2;
+////                        to_integer(rhs.op0().op0().op2(), size_op2);
+////                        unsigned diff = integer2unsigned(size_op1 - size_op2);
+////                        ashr_exprt shr(rhs_symbol, rhs.op0().op0().op2());
+////                        constant_exprt constant1 = from_integer(power(2, diff + 1) - 1, integer_typet());
+////                        bitand_exprt andexpr(shr, constant1);
+////                        rhs.op0().op0() = andexpr;
+////                    }
+////                    // continuous assignment of type: "assign test = (reg1[11:8]==out[7:4]) && (reg1[12]==out[8]);"
+////                    // it can be extractbit
+////                    if (rhs.op0().op1().id() == ID_extractbit) {
+////                        symbol_exprt rhs_symbol = to_symbol_expr(rhs.op0().op1().op0());
+////                        mp_integer size_op1;
+////                        to_integer(rhs.op0().op1().op1(), size_op1);
+////                        ashr_exprt shr(rhs_symbol, rhs.op0().op1().op1());
+////                        constant_exprt constant1 = from_integer(power(2, 0), integer_typet());
+////                        bitand_exprt andexpr(shr, constant1);
+////                        rhs.op0().op1() = andexpr;
+////                    }
+////                    if (rhs.op0().op0().id() == ID_extractbit) {
+////                        symbol_exprt rhs_symbol = to_symbol_expr(rhs.op0().op0().op0());
+////                        mp_integer size_op1;
+////                        to_integer(rhs.op0().op0().op1(), size_op1);
+////                        ashr_exprt shr(rhs_symbol, rhs.op0().op0().op1());
+////                        constant_exprt constant1 = from_integer(power(2, 0), integer_typet());
+////                        bitand_exprt andexpr(shr, constant1);
+////                        rhs.op0().op0() = andexpr;
+////                    }
+////                }
+////                if (rhs.op1().id() == ID_equal) {
+////                    if (rhs.op1().op0().id() == ID_extractbits) {
+////                        symbol_exprt lhs_symbol = to_symbol_expr(rhs.op1().op0().op0());
+////                        mp_integer size_opl1;
+////                        to_integer(rhs.op1().op0().op1(), size_opl1);
+////                        mp_integer size_opl2;
+////                        to_integer(rhs.op1().op0().op2(), size_opl2);
+////                        unsigned diff = integer2unsigned(size_opl1 - size_opl2);
+////                        ashr_exprt shr(lhs_symbol, rhs.op1().op0().op2());
+////                        constant_exprt constant1 = from_integer(power(2, diff + 1) - 1, integer_typet());
+////                        bitand_exprt andexpr(shr, constant1);
+////                        rhs.op1().op0() = andexpr;
+////                    }
+////                    if (rhs.op1().op1().id() == ID_extractbits) {
+////                        symbol_exprt lhs_symbol = to_symbol_expr(rhs.op1().op1().op0());
+////                        mp_integer size_opl1;
+////                        to_integer(rhs.op1().op1().op1(), size_opl1);
+////                        mp_integer size_opl2;
+////                        to_integer(rhs.op1().op1().op2(), size_opl2);
+////                        unsigned diff = integer2unsigned(size_opl1 - size_opl2);
+////                        ashr_exprt shr(lhs_symbol, rhs.op1().op1().op2());
+////                        constant_exprt constant1 = from_integer(power(2, diff + 1) - 1, integer_typet());
+////                        bitand_exprt andexpr(shr, constant1);
+////                        rhs.op1().op1() = andexpr;
+////                    }
+////                    // it can be extractbit
+////                    // continuous assignment of type: "assign test = (reg1[11:8]==out[7:4]) && (reg1[9]==out[5]);"
+////                    if (rhs.op1().op1().id() == ID_extractbit) {
+////                        symbol_exprt rhs_symbol = to_symbol_expr(rhs.op1().op1().op0());
+////                        mp_integer size_op1;
+////                        to_integer(rhs.op1().op1().op1(), size_op1);
+////                        ashr_exprt shr(rhs_symbol, rhs.op1().op1().op1());
+////                        constant_exprt constant1 = from_integer(power(2, 0), integer_typet());
+////                        bitand_exprt andexpr(shr, constant1);
+////                        rhs.op1().op1() = andexpr;
+////                    }
+////                    if (rhs.op1().op0().id() == ID_extractbit) {
+////                        symbol_exprt rhs_symbol = to_symbol_expr(rhs.op1().op0().op0());
+////                        mp_integer size_op1;
+////                        to_integer(rhs.op1().op0().op1(), size_op1);
+////                        ashr_exprt shr(rhs_symbol, rhs.op1().op0().op1());
+////                        constant_exprt constant1 = from_integer(power(2, 0), integer_typet());
+////                        bitand_exprt andexpr(shr, constant1);
+////                        rhs.op1().op0() = andexpr;
+////                    }
+////                }
+////                code_assignv.lhs() = lhs;
+////                code_assignv.rhs() = rhs;
+////            }
+////                // continuous assignment of type: "assign test = (reg1[11:8]==out[7:4]);"
+////            else if (rhs.id() == ID_equal) {
+////                if (rhs.op1().id() == ID_extractbits) {
+////                    symbol_exprt rhs_symbol = to_symbol_expr(rhs.op1().op0());
+////                    mp_integer size_op1;
+////                    to_integer(rhs.op1().op1(), size_op1);
+////                    mp_integer size_op2;
+////                    to_integer(rhs.op1().op2(), size_op2);
+////                    unsigned diff = integer2unsigned(size_op1 - size_op2);
+////                    ashr_exprt shr(rhs_symbol, rhs.op1().op2());
+////                    constant_exprt constant1 = from_integer(power(2, diff + 1) - 1, integer_typet());
+////                    bitand_exprt andexpr(shr, constant1);
+////                    rhs.op1() = andexpr;
+////                }
+////                if (rhs.op0().id() == ID_extractbits) {
+////                    symbol_exprt lhs_symbol = to_symbol_expr(rhs.op0().op0());
+////                    mp_integer size_opl1;
+////                    to_integer(rhs.op0().op1(), size_opl1);
+////                    mp_integer size_opl2;
+////                    to_integer(rhs.op0().op2(), size_opl2);
+////                    unsigned diff = integer2unsigned(size_opl1 - size_opl2);
+////                    ashr_exprt shr(lhs_symbol, rhs.op0().op2());
+////                    constant_exprt constant1 = from_integer(power(2, diff + 1) - 1, integer_typet());
+////                    bitand_exprt andexpr(shr, constant1);
+////                    rhs.op0() = andexpr;
+////                }
+////                // continuous assignment of type: "assign test = (reg1[9]==out[5]);"
+////                if (rhs.op1().id() == ID_extractbit) {
+////                    symbol_exprt rhs_symbol = to_symbol_expr(rhs.op1().op0());
+////                    mp_integer size_op1;
+////                    to_integer(rhs.op1().op1(), size_op1);
+////                    ashr_exprt shr(rhs_symbol, rhs.op1().op1());
+////                    constant_exprt constant1 = from_integer(power(2, 0), integer_typet());
+////                    bitand_exprt andexpr(shr, constant1);
+////                    rhs.op1() = andexpr;
+////                }
+////                if (rhs.op0().id() == ID_extractbit) {
+////                    symbol_exprt rhs_symbol = to_symbol_expr(rhs.op0().op0());
+////                    mp_integer size_op1;
+////                    to_integer(rhs.op0().op1(), size_op1);
+////                    ashr_exprt shr(rhs_symbol, rhs.op0().op1());
+////                    constant_exprt constant1 = from_integer(power(2, 0), integer_typet());
+////                    bitand_exprt andexpr(shr, constant1);
+////                    rhs.op0() = andexpr;
+////                }
+////                code_assignv.lhs() = lhs;
+////                code_assignv.rhs() = rhs;
+////            }
+////                // Handle statement assign "data_out = fifo[out[3:0]];"
+////            else if (rhs.id() == ID_index) {
+////                symbol_exprt main_symbol = to_symbol_expr(rhs.op0());
+////                if (rhs.op1().id() == ID_extractbits) {
+////                    symbol_exprt rhs_symbol = to_symbol_expr(rhs.op1().op0());
+////                    mp_integer size_opl1;
+////                    to_integer(rhs.op1().op1(), size_opl1);
+////                    mp_integer size_opl2;
+////                    to_integer(rhs.op1().op2(), size_opl2);
+////                    unsigned diff = integer2unsigned(size_opl1 - size_opl2);
+////                    ashr_exprt shr(rhs_symbol, rhs.op1().op2());
+////                    constant_exprt constant1 = from_integer(power(2, diff + 1) - 1, integer_typet());
+////                    bitand_exprt andexpr(shr, constant1);
+////                    rhs.op1() = andexpr;
+////                }
+////                code_assignv.rhs() = rhs;
+////                code_assignv.lhs() = lhs;
+////            }
+////                // Handle statement assign "fifo[out[3:0]] = data_out;"
+////            else if (lhs.id() == ID_index) {
+////                symbol_exprt main_symbol = to_symbol_expr(lhs.op0());
+////                if (lhs.op1().id() == ID_extractbits) {
+////                    symbol_exprt rhs_symbol = to_symbol_expr(lhs.op1().op0());
+////                    mp_integer size_opl1;
+////                    to_integer(lhs.op1().op1(), size_opl1);
+////                    mp_integer size_opl2;
+////                    to_integer(lhs.op1().op2(), size_opl2);
+////                    unsigned diff = integer2unsigned(size_opl1 - size_opl2);
+////                    ashr_exprt shr(rhs_symbol, lhs.op1().op2());
+////                    constant_exprt constant1 = from_integer(power(2, diff + 1) - 1, integer_typet());
+////                    bitand_exprt andexpr(shr, constant1);
+////                    lhs.op1() = andexpr;
+////                }
+////                code_assignv.rhs() = rhs;
+////                code_assignv.lhs() = lhs;
+////            }
+////                // concatenation assignment: assign x = {y[2:3], z, w[0] };
+////            else if (rhs.id() == ID_concatenation) {
+////                exprt concat_expr = rhs;
+////                if (concat_expr.id() == ID_concatenation) {
+////                    if (concat_expr.operands().size() == 0) {
+////                        throw "concatenation expected to have at least one operand";
+////                        throw 0;
+////                    }
+////                    bitor_exprt final_bitor;
+////                    unsigned saved_diff = 0;
+////                    unsigned int diff = 0;
+////                    exprt::operandst expr_concat;
+////
+////                    // Iterate over inverted direction to get the saved_diff properly !!
+////                    // Forall_operands(it, concat_expr)
+////                    for (exprt::operandst::const_reverse_iterator
+////                                 it = concat_expr.operands().rbegin();
+////                         it != concat_expr.operands().rend();
+////                         it++) {
+////                        if (it->id() == ID_extractbits) {
+////                            exprt rhs = it->op0();
+////                            if (it->operands().size() != 3)
+////                                throw "extractbits takes three operands";
+////                            symbol_exprt rhs_symbol = to_symbol_expr(rhs);
+////                            mp_integer size_op1;
+////                            to_integer(it->op1(), size_op1);
+////                            mp_integer size_op2;
+////                            to_integer(it->op2(), size_op2);
+////                            diff = integer2unsigned(size_op1 - size_op2);
+////                            ashr_exprt shr(rhs_symbol, it->op2());
+////                            constant_exprt constant = from_integer(power(2, diff + 1) - 1, integer_typet());
+////                            bitand_exprt andexpr(shr, constant);
+////                            shl_exprt shl(andexpr, saved_diff);
+////                            saved_diff = saved_diff + (diff + 1);
+////                            expr_concat.push_back(shl);
+////                        } else if (it->id() == ID_extractbit) {
+////                            exprt rhs = it->op0();
+////                            if (it->operands().size() != 2)
+////                                throw "extractbit takes two operands";
+////                            symbol_exprt rhs_symbol = to_symbol_expr(rhs);
+////                            mp_integer size_op1;
+////                            to_integer(it->op1(), size_op1);
+////                            ashr_exprt shr(rhs_symbol, it->op1());
+////                            diff = integer2unsigned(size_op1);
+////
+////                            constant_exprt constant = from_integer(power(2, 1) - 1, integer_typet());
+////                            bitand_exprt andexpr(shr, constant);
+////                            shl_exprt shl(andexpr, saved_diff);
+////                            saved_diff = saved_diff + (diff + 1);
+////                            expr_concat.push_back(shl);
+////                        }
+////                            // normal register assignment, handle constants
+////                        else { //if (it->id() == ID_symbol || it->id() == ID_constant) {
+////                            exprt rhs = *it;
+////                            shl_exprt shlsym(rhs, saved_diff);
+////                            // find the size of the symbol
+////                            mp_integer width = pointer_offset_bits(rhs.type(), ns);
+////                            assert(width > 0);
+////                            if (width > 1) {
+////                                constant_exprt constant = from_integer(power(2, width) - 1, integer_typet());
+////                                bitand_exprt andexpr(shlsym, constant);
+////                                expr_concat.push_back(andexpr);
+////                            } else
+////                                expr_concat.push_back(shlsym);
+////                            saved_diff = saved_diff + integer2unsigned(width);
+////                        }
+////                    } // end for
+////                    // do a disjunction over all expressions stored in expr_concat
+////                    bitor_exprt bitwise_or;
+////                    std::swap(bitwise_or.operands(), expr_concat);
+////                    // finally do the assignment
+////                    code_assignv.rhs() = bitwise_or;
+////                    code_assignv.lhs() = lhs;
+////                } // end of concatenation handling
+////            }
+//                // normal continuous assignments
+//                // need to handle special case like assign "x = {y,z} + t;"
+//                // handle the normal case of ID_constant and ID_symbol
+//            else {
+//                exprt rhsexp = rhs;
+//                if (rhs.id() == ID_typecast && rhs.type().id() == ID_integer) {
+//                    exprt rhsexp = rhs.op0();
+//                }
+//
+//                exprt cexpr;
+//                exprt::operandst expressions;
+//                exprt rhs_op;
+////                Forall_operands(it, rhsexp) {
+////                        unsigned char saved_diff = 0;
+////                        rhs_op = convert_expr(*it, saved_diff);
+////                        expressions.push_back(rhs_op);
+////                    }
+////                cexpr = rhsexp; //todo 这里还没有转换
+////                unsigned width = lhs.type().id() == ID_integer ? 32 : 1;
+////                if (width > 1) {
+////                    bitand_exprt band(cexpr,
+////                                      from_integer(power(2, width) - 1, rhs.type()));
+////                    code_assignv.rhs() = band;
+////                } else {
+////                    code_assignv.rhs() = cexpr;
+////                }
+//                unsigned char saved_diff = 0;
+//                code_assignv.rhs() = convert_expr(rhsexp, saved_diff);
+//                code_assignv.lhs() = lhs;
+//            }// end of normal case
+            if (lhs.id() == ID_extractbit) {
+                if (lhs.operands().size() != 2)
+                    throw "extractbit takes two operands";
+                symbol_exprt lhs_symbol = to_symbol_expr(lhs.op0());
+                unsigned char saved_diff = 0;
+                convert_expr(rhs, saved_diff);
+                shl_exprt shl(rhs, lhs.op1());
+
+                mp_integer size_opl1;
+                to_integer(lhs.op1(), size_opl1);
+                constant_exprt constant0 = from_integer(power(2, size_opl1), integer_typet()); //2^i
+                mp_integer width = pointer_offset_bits(lhs_symbol.type(), ns);
+                assert(width > 0);
+                constant_exprt cwidth;
+                cwidth = from_integer(power(2, width) - 1, integer_typet()); //2^(width_of_out)-1
+                minus_exprt minus_expr(cwidth, constant0);
+                bitand_exprt bitand_expr(lhs_symbol, minus_expr);
+                bitor_exprt bitor_expr(bitand_expr, shl);
+                code_assignv.rhs() = bitor_expr;
+                code_assignv.lhs() = lhs_symbol;
+            }
+                // Processing of statement like out[i] = tmp;
+                // out = (out & ((2^(width_of_out)-1) - 2^i)) | ((tmp & 1)) << i)
+//    else if (lhs.id() == ID_extractbit && rhs.id() != ID_extractbit) {
+//        if (lhs.operands().size() != 2)
+//            throw "extractbit takes two operands";
+//        symbol_exprt lhs_symbol = to_symbol_expr(lhs.op0());
+//        mp_integer size_opl1;
+//        to_integer(lhs.op1(), size_opl1);
+//        shl_exprt shl(rhs, lhs.op1());
+//
+//
+//        // create the first operand of rhs (mask with the width of lhs)
+//        constant_exprt constantl1 = from_integer(power(2, size_opl1), integer_typet());
+//
+//
+//        bitor_exprt bitor_expr(lhs_symbol, shl);
+//        rhs = bitor_expr;
+//        lhs = lhs_symbol;
+//        code_assignv.rhs() = rhs;
+//        code_assignv.lhs() = lhs;
+//    }
+
+                // Processing of statements like out = tmp[5];
+                // out = (tmp >> 5)&1;
+            else if (lhs.id() != ID_extractbit && rhs.id() == ID_extractbit) {
+                // For assignments like x=1, where x is a single bit register
+                // the rhs.id() of the statement x=1 is of type ID_extractbit
+                // For assignments like x=1'b1, the assignment is normal and consists
+                // of a symbol(x) and constant(1).
+                if (rhs.operands().size() != 2)
+                    throw "extractbit takes two operands";
+                //不知道怎么解析的函数if块内的concatenation,解析到了extractbit里面
+                //因此自己在这里增加一个判断与转换
+                if (rhs.op0().id() == ID_concatenation && rhs.op1().id() == ID_constant &&
+                    rhs.op1().get_int(ID_value) == 0) {
+                    code_assignv.lhs() = lhs;
+                    unsigned char saved_diff = 0;
+                    rhs = convert_expr(rhs.op0(), saved_diff);
+                    code_assignv.rhs() = rhs;
+                } else {
+                    code_assignv.lhs() = lhs;
+                    unsigned char saved_diff = 0;
+                    convert_expr(rhs, saved_diff);
+                    code_assignv.rhs() = rhs;
+//            symbol_exprt rhs_symbol = to_symbol_expr(rhs.op0());
+//            mp_integer size_op1;
+//            to_integer(rhs.op1(), size_op1);
+//            ashr_exprt shr(rhs_symbol, rhs.op1());
+//            constant_exprt constant1 = from_integer(power(2, 0), integer_typet());
+//            bitand_exprt andexpr(shr, constant1);
+//            rhs = andexpr;
+//            code_assignv.rhs() = rhs;
+                    //增加阻塞赋值语句lhs数组索引位与
+//            if (lhs.id() == ID_index && lhs.op0().id() == ID_symbol && lhs.op1().id() == ID_symbol) {
+//                exprt expr_array = lhs.op0();
+//                exprt expr_index = lhs.op1();
+//                if (expr_index.type().id() == ID_unsignedbv) {
+//                    int width = expr_index.type().get_int(ID_width);
+//                    if (width > 0 && width != 1 && width != 8 && width != 16 && width != 32 && width != 64 &&
+//                        width != 128) {
+//                        bitand_exprt band(expr_index, from_integer(power(2, width) - 1, integer_typet()));
+//                        expr_index = band;
+//                        lhs.operands().pop_back();
+//                        lhs.operands().push_back(expr_index);
+//                        code_assignv.lhs() = lhs;
+//                    }
+//                }
+//            }
+                }
+            }
+
+                // Processing of statements like out = tmp[5:3];
+//    else if (lhs.id() != ID_extractbits && rhs.id() == ID_extractbits) {
+//        if (rhs.operands().size() != 3)
+//            throw "extractbits takes three operands";
+//        symbol_exprt rhs_symbol = to_symbol_expr(rhs.op0());
+//        mp_integer size_op1;
+//        to_integer(rhs.op1(), size_op1);
+//        mp_integer size_op2;
+//        to_integer(rhs.op2(), size_op2);
+//        unsigned diff = integer2unsigned(size_op1 - size_op2);
+//        ashr_exprt shr(rhs_symbol, rhs.op2());
+//        constant_exprt constant1 = from_integer(power(2, diff + 1) - 1, integer_typet());
+//        bitand_exprt andexpr(shr, constant1);
+//        rhs = andexpr;
+//        code_assignv.rhs() = rhs;
+//    }
+
+                // Processing of statements like out[a:b] = tmp[c:d];
+                // 正确:out = (out & ((2^(width_of_out) - 1) - (2^a - 2^b + 2^a))) | (((tmp & (2^c - 2^d + 2^c)) >> d) << b);
+                //上面论文中的做法复杂了,代码实现改为:
+                // out = (out & ((2^(width_of_out) - 1) - (2^a - 2^b + 2^a))) | ((tmp >> d) & 2^(c-d+1) << b);
+//    else if (lhs.id() == ID_extractbits && rhs.id() == ID_extractbits) {
+//        if (rhs.operands().size() != 3)
+//            throw "extractbits takes three operands";
+            else if (lhs.id() == ID_extractbits) {
                 code_assignv.lhs() = lhs.op0();
                 symbol_exprt lhs_symbol = to_symbol_expr(lhs.op0());
-                symbol_exprt rhs_symbol = to_symbol_expr(rhs.op0());
+//        symbol_exprt rhs_symbol = to_symbol_expr(rhs.op0());
                 mp_integer size_a, size_b, size_c, size_d;
                 to_integer(lhs.op1(), size_a);
                 to_integer(lhs.op2(), size_b);
-                to_integer(rhs.op1(), size_c);
-                to_integer(rhs.op2(), size_d);
+//        to_integer(rhs.op1(), size_c);
+//        to_integer(rhs.op2(), size_d);
                 int width = lhs.op0().find(ID_type).get_int(ID_width);
                 constant_exprt lhs_constant = from_integer(
                         (power(2, width) - 1) - (power(2, size_a) - power(2, size_b) + power(2, size_a)),
                         integer_typet());
                 bitand_exprt lhs_andexpr(lhs_symbol, lhs_constant);
-                constant_exprt rhs_constant = from_integer(power(2, size_c) - power(2, size_d) + power(2, size_c),
-                                                           integer_typet());
-                bitand_exprt rhs_andexpr(rhs_symbol, rhs_constant);
-                ashr_exprt shr(rhs_andexpr, rhs.op2());
-                shl_exprt shl(shr, lhs.op2());
+//        constant_exprt rhs_constant = from_integer(power(2, size_c) - power(2, size_d) + power(2, size_c),
+//                                                   integer_typet());
+//        bitand_exprt rhs_andexpr(rhs_symbol, rhs_constant);
+//        ashr_exprt shr(rhs_andexpr, rhs.op2());
+//        shl_exprt shl(shr, lhs.op2());
+                unsigned char saved_diff = 0;
+                rhs = convert_expr(rhs, saved_diff);
+                shl_exprt shl(rhs, lhs.op2());
                 bitor_exprt orexpr(lhs_andexpr, shl);
+//        unsigned diff = integer2unsigned(size_op1 - size_op2);
+//        ashr_exprt shr(rhs_symbol, rhs.op2());
+//        constant_exprt constant1 = from_integer(power(2, diff + 1) - 1, integer_typet());
+//        bitand_exprt andexpr(shr, constant1);
+//        rhs = andexpr;
                 rhs = orexpr;
                 code_assignv.rhs() = rhs;
             }
-
-                // Processing of statement like out[i] = tmp[k];
-                // out = (out & ((2^(width_of_out)-1) - 2^i)) | (((tmp & 2^k) >> k) << i)
-            else if (lhs.id() == ID_extractbit && rhs.id() == ID_extractbit) { //增加else
-                if (lhs.operands().size() != 2)
-                    throw "extractbit takes two operands";
-                symbol_exprt lhs_symbol = to_symbol_expr(lhs.op0());
-                symbol_exprt rhs_symbol = to_symbol_expr(rhs.op0());
-
-                // create the first operand of rhs
-                mp_integer size_opl1;
-                to_integer(lhs.op1(), size_opl1);
-                constant_exprt constant0 = from_integer(power(2, size_opl1), integer_typet());
-                mp_integer width = pointer_offset_bits(lhs.type(), ns);
-                assert(width > 0);
-
-                constant_exprt cwidth = from_integer((power(2, width) - 1), integer_typet());
-                mp_integer size;
-                to_integer(cwidth, size);
-                constant_exprt cwidthl = from_integer(size - power(2, size_opl1), integer_typet());
-                bitand_exprt andexp(lhs_symbol, cwidthl);
-
-
-                // create the second operand of rhs
-                mp_integer size_opr1;
-                to_integer(rhs.op1(), size_opr1);
-                constant_exprt constant1 = from_integer(power(2, size_opr1), integer_typet());
-                bitand_exprt andexpr(rhs_symbol, constant1);
-                ashr_exprt ashr(andexpr, rhs.op1());
-                shl_exprt shl(ashr, lhs.op1());
-
-                bitor_exprt bitor_expr(andexp, shl);
-                rhs = bitor_expr;
-                lhs = lhs_symbol;
-                code_assignv.rhs() = rhs;
-                code_assignv.lhs() = lhs;
-            }
-
-                // ******** handle extractbits on one side *******
-                // assign tr[4:2] = x;
-                // assign x = out[7:5];
-            else if (lhs.id() == ID_extractbits || rhs.id() == ID_extractbits) {
-                if (rhs.id() == ID_extractbits && lhs.id() != ID_extractbits) {
-                    if (rhs.operands().size() != 3)
-                        throw "extractbits takes three operands";
-//                    symbol_exprt rhs_symbol = to_symbol_expr(rhs.op0());
-//                    mp_integer size_op1;
-//                    to_integer(rhs.op1(), size_op1);
-//                    mp_integer size_op2;
-//                    to_integer(rhs.op2(), size_op2);
-//                    unsigned diff = integer2unsigned(size_op1 - size_op2);
-//                    ashr_exprt shr(rhs_symbol, rhs.op2());
-//                    constant_exprt constant1 = from_integer(power(2, diff + 1) - 1, integer_typet());
-//                    bitand_exprt andexpr(shr, constant1);
-//                    rhs = andexpr;
-                    unsigned char saved_diff = 0;
-                    convert_expr(rhs, saved_diff);
-                }
-                if (lhs.id() == ID_extractbits && rhs.id() != ID_extractbits) {
-                    if (lhs.operands().size() != 3)
-                        throw "extractbits takes three operands";
-                    symbol_exprt lhs_symbol = to_symbol_expr(lhs.op0());
-
-                    // create the first operand of rhs
-                    mp_integer size_opl1;
-                    to_integer(lhs.op2(), size_opl1);
-                    constant_exprt constant0 = from_integer(power(2, size_opl1), integer_typet());
-                    mp_integer width = pointer_offset_bits(lhs.type(), ns);
-                    assert(width > 0);
-
-                    constant_exprt cwidth = from_integer(power(2, width - 1) - power(2, size_opl1), integer_typet());
-                    bitnot_exprt notexp(cwidth);
-                    bitand_exprt andexp(lhs_symbol, notexp);
-
-                    // create the second operand of rhs
-                    mp_integer size_opl0;
-                    to_integer(lhs.op1(), size_opl0);
-                    unsigned diff = integer2unsigned(size_opl1 - size_opl0);//修改正负号出错
-                    constant_exprt constant1 = from_integer(power(2, diff + 1) - 1, integer_typet());
-                    bitand_exprt andexpr(rhs.op0(), constant1);
-                    shl_exprt shl1(andexpr, lhs.op2());
-
-                    bitor_exprt bitor_expr(andexp, shl1);
-                    rhs = bitor_expr;
-                    lhs = lhs_symbol;
-                }
-                code_assignv.lhs() = lhs;
-                code_assignv.rhs() = rhs;
-            }
-                // continuous assignment of type: "assign test = (reg1[11:8]==out[7:4]) && (reg1[12:9]==out[8:5]);"
-//            else if (rhs.id() == ID_and || rhs.id() == ID_or) {
-//                if (rhs.op0().id() == ID_equal) {
-//                    // it can be extractbits
-//                    if (rhs.op0().op1().id() == ID_extractbits) {
-//                        symbol_exprt rhs_symbol = to_symbol_expr(rhs.op0().op1().op0());
-//                        mp_integer size_op1;
-//                        to_integer(rhs.op0().op1().op1(), size_op1);
-//                        mp_integer size_op2;
-//                        to_integer(rhs.op0().op1().op2(), size_op2);
-//                        unsigned diff = integer2unsigned(size_op1 - size_op2);
-//                        ashr_exprt shr(rhs_symbol, rhs.op0().op1().op2());
-//                        constant_exprt constant1 = from_integer(power(2, diff + 1) - 1, integer_typet());
-//                        bitand_exprt andexpr(shr, constant1);
-//                        rhs.op0().op1() = andexpr;
-//                    }
-//                    if (rhs.op0().op0().id() == ID_extractbits) {
-//                        symbol_exprt rhs_symbol = to_symbol_expr(rhs.op0().op0().op0());
-//                        mp_integer size_op1;
-//                        to_integer(rhs.op0().op0().op1(), size_op1);
-//                        mp_integer size_op2;
-//                        to_integer(rhs.op0().op0().op2(), size_op2);
-//                        unsigned diff = integer2unsigned(size_op1 - size_op2);
-//                        ashr_exprt shr(rhs_symbol, rhs.op0().op0().op2());
-//                        constant_exprt constant1 = from_integer(power(2, diff + 1) - 1, integer_typet());
-//                        bitand_exprt andexpr(shr, constant1);
-//                        rhs.op0().op0() = andexpr;
-//                    }
-//                    // continuous assignment of type: "assign test = (reg1[11:8]==out[7:4]) && (reg1[12]==out[8]);"
-//                    // it can be extractbit
-//                    if (rhs.op0().op1().id() == ID_extractbit) {
-//                        symbol_exprt rhs_symbol = to_symbol_expr(rhs.op0().op1().op0());
-//                        mp_integer size_op1;
-//                        to_integer(rhs.op0().op1().op1(), size_op1);
-//                        ashr_exprt shr(rhs_symbol, rhs.op0().op1().op1());
-//                        constant_exprt constant1 = from_integer(power(2, 0), integer_typet());
-//                        bitand_exprt andexpr(shr, constant1);
-//                        rhs.op0().op1() = andexpr;
-//                    }
-//                    if (rhs.op0().op0().id() == ID_extractbit) {
-//                        symbol_exprt rhs_symbol = to_symbol_expr(rhs.op0().op0().op0());
-//                        mp_integer size_op1;
-//                        to_integer(rhs.op0().op0().op1(), size_op1);
-//                        ashr_exprt shr(rhs_symbol, rhs.op0().op0().op1());
-//                        constant_exprt constant1 = from_integer(power(2, 0), integer_typet());
-//                        bitand_exprt andexpr(shr, constant1);
-//                        rhs.op0().op0() = andexpr;
-//                    }
-//                }
-//                if (rhs.op1().id() == ID_equal) {
-//                    if (rhs.op1().op0().id() == ID_extractbits) {
-//                        symbol_exprt lhs_symbol = to_symbol_expr(rhs.op1().op0().op0());
-//                        mp_integer size_opl1;
-//                        to_integer(rhs.op1().op0().op1(), size_opl1);
-//                        mp_integer size_opl2;
-//                        to_integer(rhs.op1().op0().op2(), size_opl2);
-//                        unsigned diff = integer2unsigned(size_opl1 - size_opl2);
-//                        ashr_exprt shr(lhs_symbol, rhs.op1().op0().op2());
-//                        constant_exprt constant1 = from_integer(power(2, diff + 1) - 1, integer_typet());
-//                        bitand_exprt andexpr(shr, constant1);
-//                        rhs.op1().op0() = andexpr;
-//                    }
-//                    if (rhs.op1().op1().id() == ID_extractbits) {
-//                        symbol_exprt lhs_symbol = to_symbol_expr(rhs.op1().op1().op0());
-//                        mp_integer size_opl1;
-//                        to_integer(rhs.op1().op1().op1(), size_opl1);
-//                        mp_integer size_opl2;
-//                        to_integer(rhs.op1().op1().op2(), size_opl2);
-//                        unsigned diff = integer2unsigned(size_opl1 - size_opl2);
-//                        ashr_exprt shr(lhs_symbol, rhs.op1().op1().op2());
-//                        constant_exprt constant1 = from_integer(power(2, diff + 1) - 1, integer_typet());
-//                        bitand_exprt andexpr(shr, constant1);
-//                        rhs.op1().op1() = andexpr;
-//                    }
-//                    // it can be extractbit
-//                    // continuous assignment of type: "assign test = (reg1[11:8]==out[7:4]) && (reg1[9]==out[5]);"
-//                    if (rhs.op1().op1().id() == ID_extractbit) {
-//                        symbol_exprt rhs_symbol = to_symbol_expr(rhs.op1().op1().op0());
-//                        mp_integer size_op1;
-//                        to_integer(rhs.op1().op1().op1(), size_op1);
-//                        ashr_exprt shr(rhs_symbol, rhs.op1().op1().op1());
-//                        constant_exprt constant1 = from_integer(power(2, 0), integer_typet());
-//                        bitand_exprt andexpr(shr, constant1);
-//                        rhs.op1().op1() = andexpr;
-//                    }
-//                    if (rhs.op1().op0().id() == ID_extractbit) {
-//                        symbol_exprt rhs_symbol = to_symbol_expr(rhs.op1().op0().op0());
-//                        mp_integer size_op1;
-//                        to_integer(rhs.op1().op0().op1(), size_op1);
-//                        ashr_exprt shr(rhs_symbol, rhs.op1().op0().op1());
-//                        constant_exprt constant1 = from_integer(power(2, 0), integer_typet());
-//                        bitand_exprt andexpr(shr, constant1);
-//                        rhs.op1().op0() = andexpr;
-//                    }
-//                }
-//                code_assignv.lhs() = lhs;
-//                code_assignv.rhs() = rhs;
-//            }
-//                // continuous assignment of type: "assign test = (reg1[11:8]==out[7:4]);"
-//            else if (rhs.id() == ID_equal) {
-//                if (rhs.op1().id() == ID_extractbits) {
-//                    symbol_exprt rhs_symbol = to_symbol_expr(rhs.op1().op0());
-//                    mp_integer size_op1;
-//                    to_integer(rhs.op1().op1(), size_op1);
-//                    mp_integer size_op2;
-//                    to_integer(rhs.op1().op2(), size_op2);
-//                    unsigned diff = integer2unsigned(size_op1 - size_op2);
-//                    ashr_exprt shr(rhs_symbol, rhs.op1().op2());
-//                    constant_exprt constant1 = from_integer(power(2, diff + 1) - 1, integer_typet());
-//                    bitand_exprt andexpr(shr, constant1);
-//                    rhs.op1() = andexpr;
-//                }
-//                if (rhs.op0().id() == ID_extractbits) {
-//                    symbol_exprt lhs_symbol = to_symbol_expr(rhs.op0().op0());
-//                    mp_integer size_opl1;
-//                    to_integer(rhs.op0().op1(), size_opl1);
-//                    mp_integer size_opl2;
-//                    to_integer(rhs.op0().op2(), size_opl2);
-//                    unsigned diff = integer2unsigned(size_opl1 - size_opl2);
-//                    ashr_exprt shr(lhs_symbol, rhs.op0().op2());
-//                    constant_exprt constant1 = from_integer(power(2, diff + 1) - 1, integer_typet());
-//                    bitand_exprt andexpr(shr, constant1);
-//                    rhs.op0() = andexpr;
-//                }
-//                // continuous assignment of type: "assign test = (reg1[9]==out[5]);"
-//                if (rhs.op1().id() == ID_extractbit) {
-//                    symbol_exprt rhs_symbol = to_symbol_expr(rhs.op1().op0());
-//                    mp_integer size_op1;
-//                    to_integer(rhs.op1().op1(), size_op1);
-//                    ashr_exprt shr(rhs_symbol, rhs.op1().op1());
-//                    constant_exprt constant1 = from_integer(power(2, 0), integer_typet());
-//                    bitand_exprt andexpr(shr, constant1);
-//                    rhs.op1() = andexpr;
-//                }
-//                if (rhs.op0().id() == ID_extractbit) {
-//                    symbol_exprt rhs_symbol = to_symbol_expr(rhs.op0().op0());
-//                    mp_integer size_op1;
-//                    to_integer(rhs.op0().op1(), size_op1);
-//                    ashr_exprt shr(rhs_symbol, rhs.op0().op1());
-//                    constant_exprt constant1 = from_integer(power(2, 0), integer_typet());
-//                    bitand_exprt andexpr(shr, constant1);
-//                    rhs.op0() = andexpr;
-//                }
-//                code_assignv.lhs() = lhs;
-//                code_assignv.rhs() = rhs;
-//            }
-//                // Handle statement assign "data_out = fifo[out[3:0]];"
-//            else if (rhs.id() == ID_index) {
-//                symbol_exprt main_symbol = to_symbol_expr(rhs.op0());
-//                if (rhs.op1().id() == ID_extractbits) {
-//                    symbol_exprt rhs_symbol = to_symbol_expr(rhs.op1().op0());
-//                    mp_integer size_opl1;
-//                    to_integer(rhs.op1().op1(), size_opl1);
-//                    mp_integer size_opl2;
-//                    to_integer(rhs.op1().op2(), size_opl2);
-//                    unsigned diff = integer2unsigned(size_opl1 - size_opl2);
-//                    ashr_exprt shr(rhs_symbol, rhs.op1().op2());
-//                    constant_exprt constant1 = from_integer(power(2, diff + 1) - 1, integer_typet());
-//                    bitand_exprt andexpr(shr, constant1);
-//                    rhs.op1() = andexpr;
-//                }
-//                code_assignv.rhs() = rhs;
-//                code_assignv.lhs() = lhs;
-//            }
-//                // Handle statement assign "fifo[out[3:0]] = data_out;"
-//            else if (lhs.id() == ID_index) {
-//                symbol_exprt main_symbol = to_symbol_expr(lhs.op0());
-//                if (lhs.op1().id() == ID_extractbits) {
-//                    symbol_exprt rhs_symbol = to_symbol_expr(lhs.op1().op0());
-//                    mp_integer size_opl1;
-//                    to_integer(lhs.op1().op1(), size_opl1);
-//                    mp_integer size_opl2;
-//                    to_integer(lhs.op1().op2(), size_opl2);
-//                    unsigned diff = integer2unsigned(size_opl1 - size_opl2);
-//                    ashr_exprt shr(rhs_symbol, lhs.op1().op2());
-//                    constant_exprt constant1 = from_integer(power(2, diff + 1) - 1, integer_typet());
-//                    bitand_exprt andexpr(shr, constant1);
-//                    lhs.op1() = andexpr;
-//                }
-//                code_assignv.rhs() = rhs;
-//                code_assignv.lhs() = lhs;
-//            }
-//                // concatenation assignment: assign x = {y[2:3], z, w[0] };
-//            else if (rhs.id() == ID_concatenation) {
-//                exprt concat_expr = rhs;
-//                if (concat_expr.id() == ID_concatenation) {
-//                    if (concat_expr.operands().size() == 0) {
-//                        throw "concatenation expected to have at least one operand";
-//                        throw 0;
-//                    }
-//                    bitor_exprt final_bitor;
-//                    unsigned saved_diff = 0;
-//                    unsigned int diff = 0;
-//                    exprt::operandst expr_concat;
+//    else if (rhs.id() == ID_concatenation || rhs.id() == ID_xor) {
+//        // handle ID_concatenation
+//        //转换成调用convert_expr
+//        exprt concat_expr = rhs;
+//        if (concat_expr.id() == ID_concatenation) {
+//            unsigned char saved_diff = 0;
+//            code_assignv.rhs() = convert_expr(rhs, saved_diff);
+//        } // end of concatenation handling
 //
-//                    // Iterate over inverted direction to get the saved_diff properly !!
-//                    // Forall_operands(it, concat_expr)
-//                    for (exprt::operandst::const_reverse_iterator
-//                                 it = concat_expr.operands().rbegin();
-//                         it != concat_expr.operands().rend();
-//                         it++) {
-//                        if (it->id() == ID_extractbits) {
-//                            exprt rhs = it->op0();
-//                            if (it->operands().size() != 3)
-//                                throw "extractbits takes three operands";
-//                            symbol_exprt rhs_symbol = to_symbol_expr(rhs);
-//                            mp_integer size_op1;
-//                            to_integer(it->op1(), size_op1);
-//                            mp_integer size_op2;
-//                            to_integer(it->op2(), size_op2);
-//                            diff = integer2unsigned(size_op1 - size_op2);
-//                            ashr_exprt shr(rhs_symbol, it->op2());
-//                            constant_exprt constant = from_integer(power(2, diff + 1) - 1, integer_typet());
-//                            bitand_exprt andexpr(shr, constant);
-//                            shl_exprt shl(andexpr, saved_diff);
-//                            saved_diff = saved_diff + (diff + 1);
-//                            expr_concat.push_back(shl);
-//                        } else if (it->id() == ID_extractbit) {
-//                            exprt rhs = it->op0();
-//                            if (it->operands().size() != 2)
-//                                throw "extractbit takes two operands";
-//                            symbol_exprt rhs_symbol = to_symbol_expr(rhs);
-//                            mp_integer size_op1;
-//                            to_integer(it->op1(), size_op1);
-//                            ashr_exprt shr(rhs_symbol, it->op1());
-//                            diff = integer2unsigned(size_op1);
-//
-//                            constant_exprt constant = from_integer(power(2, 1) - 1, integer_typet());
-//                            bitand_exprt andexpr(shr, constant);
-//                            shl_exprt shl(andexpr, saved_diff);
-//                            saved_diff = saved_diff + (diff + 1);
-//                            expr_concat.push_back(shl);
-//                        }
-//                            // normal register assignment, handle constants
-//                        else { //if (it->id() == ID_symbol || it->id() == ID_constant) {
-//                            exprt rhs = *it;
-//                            shl_exprt shlsym(rhs, saved_diff);
-//                            // find the size of the symbol
-//                            mp_integer width = pointer_offset_bits(rhs.type(), ns);
-//                            assert(width > 0);
-//                            if (width > 1) {
-//                                constant_exprt constant = from_integer(power(2, width) - 1, integer_typet());
-//                                bitand_exprt andexpr(shlsym, constant);
-//                                expr_concat.push_back(andexpr);
-//                            } else
-//                                expr_concat.push_back(shlsym);
-//                            saved_diff = saved_diff + integer2unsigned(width);
-//                        }
-//                    } // end for
-//                    // do a disjunction over all expressions stored in expr_concat
-//                    bitor_exprt bitwise_or;
-//                    std::swap(bitwise_or.operands(), expr_concat);
-//                    // finally do the assignment
-//                    code_assignv.rhs() = bitwise_or;
-//                    code_assignv.lhs() = lhs;
-//                } // end of concatenation handling
+//        // handle ID_bitxor
+//        exprt::operandst xor_expr;
+//        exprt bitxor_expr = rhs;
+//        if (bitxor_expr.id() == ID_xor) {
+//            if (bitxor_expr.operands().size() == 0) {
+//                throw "bit-wise xor expected to have at least one operand";
+//                throw 0;
 //            }
-                // normal continuous assignments
-                // need to handle special case like assign "x = {y,z} + t;"
-                // handle the normal case of ID_constant and ID_symbol
-            else {
-                exprt rhsexp = rhs;
-                if (rhs.id() == ID_typecast && rhs.type().id() == ID_integer) {
-                    exprt rhsexp = rhs.op0();
-                }
-
-                exprt cexpr;
-                exprt::operandst expressions;
-                exprt rhs_op;
-//                Forall_operands(it, rhsexp) {
-//                        unsigned char saved_diff = 0;
-//                        rhs_op = convert_expr(*it, saved_diff);
-//                        expressions.push_back(rhs_op);
+//            Forall_operands(it, bitxor_expr) {
+//                    if (it->id() == ID_xor) {
 //                    }
-//                cexpr = rhsexp; //todo 这里还没有转换
-//                unsigned width = lhs.type().id() == ID_integer ? 32 : 1;
-//                if (width > 1) {
-//                    bitand_exprt band(cexpr,
-//                                      from_integer(power(2, width) - 1, rhs.type()));
-//                    code_assignv.rhs() = band;
-//                } else {
-//                    code_assignv.rhs() = cexpr;
+//
+//                    if (it->id() == ID_symbol) { //赋值给异或表达式
+//                        xor_expr.push_back(*it);
+//                    }
+//
+//                    if (it->id() == ID_extractbit) {
+//                        exprt rhs = it->op0();
+//                        if (it->operands().size() != 2)
+//                            throw "extractbit takes two operands";
+//                        symbol_exprt rhs_symbol = to_symbol_expr(rhs);
+//                        mp_integer size_op1;
+//                        to_integer(it->op1(), size_op1);
+//                        ashr_exprt shr(rhs_symbol, it->op1());
+//                        constant_exprt constant1 = from_integer(power(2, 0), integer_typet());
+//                        bitand_exprt andexpr(shr, constant1);
+//                        //rhs = andexpr;
+//                        //code_assignv.rhs() = andexpr;
+//                        xor_expr.push_back(andexpr);
+//                    }
 //                }
+////            exprt conjunction_expr = conjunction(xor_expr);
+////            code_assignv.rhs() = conjunction_expr;
+//            code_assignv.rhs() = bitxor_expr; //这里先直接将异或赋值
+//        }
+//    } // end of ID_concatenation or ID_bitxor
+                //增加函数内直接调用函数
+            else if (rhs.id() == ID_function_call && rhs.op1().id() == dstring(0, 0) && rhs.op1().has_operands() &&
+                     rhs.op1().op0().id() == ID_concatenation) { //rhs.op1().op0()是函数的参数
+                exprt arg = rhs.op1().op0();
+                code_assignv.lhs() = lhs;
                 unsigned char saved_diff = 0;
-                code_assignv.rhs() = convert_expr(rhsexp, saved_diff);
-                code_assignv.lhs() = lhs;
+                arg = convert_expr(arg, saved_diff);
+                rhs.op1().op0() = arg;
+                code_assignv.rhs() = rhs;
+            }
+                // handle the case of ID_constant and normal assignments
+            else {
+//        exprt rhsexp = rhs;
+//        if (rhs.id() == ID_typecast && rhs.type().id() == ID_integer) {
+//            exprt rhsexp = rhs.op0();
+//        }
+//
+//        exprt cexpr;
+//        exprt::operandst expressions;
+//        exprt rhs_op;
+//        //不改变运算符为conjunction
+//        int i = 0;
+//        bool flag = 0;
+//        Forall_operands(it, rhsexp) {
+//                unsigned char saved_diff = 0;
+//                rhs_op = convert_expr(*it, saved_diff);
+//                rhsexp.operands()[i] = rhs_op;
+//                i++;
+//            }
+//        cexpr = rhsexp;
+//        exprt *expr_ref = &cexpr; //DFS给过程赋值单个bv类型与位宽不匹配时加&
+//        std::stack<exprt *> exp_st;
+//        exp_st.push(expr_ref);
+//        while (!exp_st.empty()) {
+//            exprt *exp_tmp = exp_st.top();
+//            exp_st.pop();
+//            while (exp_tmp->id() == ID_typecast)
+//                exp_tmp = &(exp_tmp->operands().back());
+//            if (exp_tmp->operands().size() == 2) { //二元运算符连接的表达式或数组名+索引
+//                exprt *firstexp = &(exp_tmp->operands()[0]), *secondexp = &(exp_tmp->operands()[1]);
+//                exp_st.push(firstexp);
+//                exp_st.push(secondexp);
+//            } else if (exp_tmp->operands().size() == 0) {
+//                if (exp_tmp->id() == ID_symbol) {
+//                    if (exp_tmp->type().id() == ID_unsignedbv) { //数组索引也符合条件,数组名不符合
+//                        int width = exp_tmp->type().get_int(ID_width);
+//                        if (width > 0 && width != 1 && width != 8 && width != 16 && width != 32 && width != 64 &&
+//                            width != 128) {
+//                            bitand_exprt band(*exp_tmp,
+//                                              from_integer(power(2, width) - 1, integer_typet()));
+//                            *exp_tmp = band;
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//
+//        unsigned width = lhs.type().id() == ID_integer ? 32 : 1;
+//        if (lhs.type().id() == ID_unsignedbv && rhs.operands().size() > 1) { //过程赋值左值bv类型与位宽不匹配时右边增加&
+//            width = lhs.type().get_int(ID_width);
+//        }
+                //修改过程赋值rhs是否增加&判定
+//        if (width > 0 && width != 1 && width != 8 && width != 16 && width != 32 && width != 64 && width != 128) {
+                //todo 暂时过程赋值rhs是否增加&判定
+//        if (false) {
+//            bitand_exprt band(cexpr,
+//                              from_integer(power(2, width) - 1, rhs.type()));
+//            code_assignv.rhs() = band;
+//        } else {
+//            code_assignv.rhs() = cexpr;
+//        }
+
+                unsigned char saved_diff = 0;
+                convert_expr(rhs, saved_diff);
+                code_assignv.rhs() = rhs;
             }// end of normal case
         } // end for
 
