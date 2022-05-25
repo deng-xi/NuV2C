@@ -278,10 +278,11 @@ bool verilog_exprt::convert_module(const symbolt &symbol, std::ostream &out) {
 
     code_blockt code_temp;
     code_temp.swap(code_verilogblock);
+    //删除被掉函数中wire等局部变量的定义,改为后面的全局定义
     // Declare all new temporary shadow variables introduced for non-blocking and blocking assignment
-    for (std::list<code_declt>::const_iterator it4 = modulevb.new_var.begin();
-         it4 != modulevb.new_var.end(); ++it4)
-        code_verilogblock.operands().push_back(*it4);
+//    for (std::list<code_declt>::const_iterator it4 = modulevb.new_var.begin();
+//         it4 != modulevb.new_var.end(); ++it4)
+//        code_verilogblock.operands().push_back(*it4);
 
 
     // handle the case of shadow assignments to be put before the clocked block
@@ -418,6 +419,18 @@ bool verilog_exprt::do_conversion(code_blockt &code_verilogblock, const symbolt 
         forall_operands(itp, parameter_block) { //str_print改为out,首先输出parameter
                 out << verilog_expression2c(*itp, ns) << std::endl; // This is also correct
             }
+        out << std::endl;
+    }
+
+    //修改wire等变量为全局定义
+    code_blockt code_verilogblock_new_var;
+    for (std::list<code_declt>::const_iterator it4 = modulevb.new_var.begin();
+         it4 != modulevb.new_var.end(); ++it4)
+        code_verilogblock_new_var.operands().push_back(*it4);
+    if (code_verilogblock_new_var.has_operands()) {
+        forall_operands(itp, code_verilogblock_new_var) {
+            out << verilog_expression2c(*itp, ns) << std::endl;
+        }
         out << std::endl;
     }
 
