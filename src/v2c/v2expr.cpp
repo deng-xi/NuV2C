@@ -2846,6 +2846,8 @@ codet verilog_exprt::translate_block_assign(
         std::string lhs_symbol;
         if (code_block_assignv.lhs().id() == ID_member)
             lhs_symbol = code_block_assignv.lhs().get_string(ID_component_name);
+        if (code_block_assignv.lhs().id() == ID_index)
+            lhs_symbol = code_block_assignv.lhs().op0().get_string(ID_component_name);
         assert(lhs_symbol != "");
 //        for (std::list<code_assignt>::const_iterator it3 = modulevb.cassignReg.begin();
 //             it3 != modulevb.cassignReg.end(); ++it3) {
