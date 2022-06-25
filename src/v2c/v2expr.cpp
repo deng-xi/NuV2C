@@ -240,6 +240,13 @@ bool verilog_exprt::convert_module(const symbolt &symbol, std::ostream &out) {
     for (std::set<irep_idt>::iterator iter = intersect.begin(); iter != intersect.end(); ++iter) {
     }
 
+    //统计一个模块中always的数量
+    int always_num = 0;
+    forall_operands(it, symbol.value) {
+            if (it->id() == ID_always) {
+                always_num++;
+            }
+        }
     // Process module items
     forall_operands(it, symbol.value) { //一个模块
             if (it->id() == ID_inst) {
@@ -260,8 +267,19 @@ bool verilog_exprt::convert_module(const symbolt &symbol, std::ostream &out) {
             // guards and the second part contains actual assignment with guards. This
             // is also needed with same if-else blocks defined in multiple clocked blocks.
 
+            bool is_always = it->id() == ID_always;
             codet codefinal =
                     convert_module_item(static_cast<const verilog_module_itemt &>(*it));//给模块每个项赋具体值
+
+            //对多个always的情况增加brandom()
+            if (always_num > 1 && is_always) {
+                irep_idt if_brandom = "brandom()";
+                exprt cond_expr = exprt(if_brandom);
+                code_ifthenelset codeif;
+                codeif.cond() = cond_expr;
+                codeif.then_case() = codefinal;
+                codefinal = codeif;
+            }
 
             //删除被调函数中的assert
             if (codefinal.get_statement() == ID_assert) {
