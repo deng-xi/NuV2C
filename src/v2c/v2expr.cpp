@@ -691,9 +691,9 @@ codet verilog_exprt::convert_decl(
                 member_exprt reg_member(symbol_exprt(modulevb.struct_name, modulevb.st), symbol.base_name);
                 module_info[current_module].registers.insert(symbol.name, reg_member);
                 // this is handled for non-blocking assignment 先删去所有的影子变量定义
-//                symbol_exprt old_reg(symbol_exprt(id2string(symbol.base_name) +"_old"));
-//                module_info[current_module].oldvar.insert(symbol.name, old_reg);
-//                old_reg.type() = symbol.type;
+                symbol_exprt old_reg(symbol_exprt(id2string(symbol.base_name) +"_old"));
+                module_info[current_module].oldvar.insert(symbol.name, old_reg);
+                old_reg.type() = symbol.type;
 //                // insert the newly created symbol into new_var
 //                module_info[current_module].new_var.push_back(code_declt(old_reg));
 
