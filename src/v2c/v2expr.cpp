@@ -778,6 +778,36 @@ codet verilog_exprt::convert_decl(
 
 /*******************************************************************\
 
+Function: drop_typecast
+
+Inputs:
+
+Outputs:
+
+Purpose: drop the typecast of expression
+
+\*******************************************************************/
+void drop_typecast(exprt &expression) {
+    while (expression.id() == ID_typecast)
+        expression = expression.op0();
+     //处理= and nand or nor xor xnor not bitand bitor bitnot bitxor bitnand bitnor notequal >= <= > < + - * /
+     //todo 还有一些类型没有考虑
+    if ((expression.id().get_no() == 37) || (expression.id().get_no() >= 40 && expression.id().get_no() <= 54) ||
+             (expression.id().get_no() >= 356 && expression.id().get_no() <= 361) ||
+             (expression.id().get_no() >= 364 && expression.id().get_no() <= 365)) {
+        Forall_operands(it, expression) {
+                drop_typecast(*it);
+            }
+    } else {
+        if (expression.id() == ID_index) {
+            Forall_operands(it, expression) {
+                    drop_typecast(*it);
+                }
+        }
+    }
+}
+/*******************************************************************\
+
 Function: verilog_exprt::convert_expr
 
 Inputs:
@@ -1832,6 +1862,10 @@ Purpose: Introduce a shadow variable here and pass it to code_assignt
 \*******************************************************************/
 
 codet verilog_exprt::translate_nb_assign(const verilog_statementt &statement, bool need_cassign) {
+    exprt lhs = statement.op0();
+    exprt rhs = statement.op1();
+    drop_typecast(lhs);
+    drop_typecast(rhs);
     module_infot &modulevb = module_info[current_module];
 
     code_assignt code_blockv;
@@ -1850,15 +1884,13 @@ codet verilog_exprt::translate_nb_assign(const verilog_statementt &statement, bo
 
     if (modulevb.nb_duplicate.insert(nvar.get_identifier()).second) {
         modulevb.new_var.push_back(code_declt(nvar)); //出现nb_assign才定义影子变量
-        exprt reg_lhs = statement.op0();
+        exprt reg_lhs = lhs;
         modulevb.registers(reg_lhs);
         code_assignt code_nb(nvar, reg_lhs);
         modulevb.shadowassign.push_back(code_nb);
     }
 
-    exprt lhs = statement.op0();
-    exprt rhs = statement.op1();
-    code_assignv.lhs() = statement.op0();
+    code_assignv.lhs() = lhs;
 
     //RM: do I need this?
     code_blockv.rhs() = statement.op1();
