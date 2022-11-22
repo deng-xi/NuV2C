@@ -958,6 +958,12 @@ verilog_exprt::convert_expr(exprt &expression, unsigned char &saved_diff, dstrin
                 *it = convert_expr(*it, saved_diff);
             }
     } else {
+        if (expression.id() == ID_index) {
+            Forall_operands(it, expression) {
+                unsigned char saved_diff = 0;
+                *it = convert_expr(*it, saved_diff);
+            }
+        }
         if (expression.id() == ID_symbol) {
             if (expression.type().id() == ID_unsignedbv) {
                 int width = expression.type().get_int(ID_width);
@@ -1874,12 +1880,16 @@ codet verilog_exprt::translate_nb_assign(const verilog_statementt &statement, bo
         throw "assign statement expected to have two operands";
     }
     symbol_exprt nvar;
-    if (statement.op0().id() == ID_extractbit)
-        nvar = symbol_exprt(id2string(statement.op0().op0().get(ID_identifier)).
-                substr(id2string(current_module).size() + 1) + "_old", statement.op0().op0().type());
-    else
-        nvar = symbol_exprt(id2string(statement.op0().get(ID_identifier)).
-                substr(id2string(current_module).size() + 1) + "_old", statement.op0().type());
+    if (lhs.id() == ID_extractbit)
+        nvar = symbol_exprt(id2string(lhs.op0().get(ID_identifier)).
+                substr(id2string(current_module).size() + 1) + "_old", lhs.op0().type());
+    else if (!lhs.get(ID_identifier).empty())
+        nvar = symbol_exprt(id2string(lhs.get(ID_identifier)).
+                substr(id2string(current_module).size() + 1) + "_old", lhs.type());
+    else if (lhs.id() == ID_index)
+        nvar = symbol_exprt(id2string(lhs.op0().get(ID_identifier)).
+                substr(id2string(current_module).size() + 1) + "_" + id2string(lhs.op1().get(ID_identifier)).
+                substr(id2string(current_module).size() + 1) + "_old", lhs.type());
     code_blockv.lhs() = nvar;
 
     if (modulevb.nb_duplicate.insert(nvar.get_identifier()).second) {
