@@ -1786,6 +1786,8 @@ std::string expr2ct::convert_norep(
     lispexprt lisp;
     irep2lisp(src, lisp);
     std::string dest = "irep(\"" + MetaString(lisp.expr2string()) + "\")";
+    if (dest == "irep(\"(\\\"brandom()\\\")\")")
+        dest = "brandom()";
     precedence = 16;
     return dest;
 }

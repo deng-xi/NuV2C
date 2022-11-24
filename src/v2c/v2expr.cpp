@@ -2197,6 +2197,23 @@ codet verilog_exprt::translate_nb_assign(const verilog_statementt &statement, bo
     // output variable, in which case both the register struct and the
     // output variable need to be assigned to
     modulevb.output_var(code_reg.lhs());
+
+    //在非阻塞赋值中判断是否增加连续赋值
+    if (need_cassign) {
+        code_blockt my_code_block;
+        std::string lhs_symbol;
+        if (code_assignv.lhs().id() == ID_member)
+            lhs_symbol = code_assignv.lhs().get_string(ID_component_name);
+        if (code_assignv.lhs().id() == ID_index)
+            lhs_symbol = code_assignv.lhs().op0().get_string(ID_component_name);
+        assert(lhs_symbol != "");
+        std::set<std::string> updated_symbols;
+        updated_symbols.emplace(lhs_symbol);
+        add_cassignAll(my_code_block, updated_symbols);
+        my_code_block.operands().insert(my_code_block.operands().begin(), code_assignv);
+        return my_code_block;
+    }
+
     return code_assignv;
 }
 
