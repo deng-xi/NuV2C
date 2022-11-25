@@ -34,6 +34,7 @@
 #include <verilog/verilog_expr.h>
 #include <verilog/verilog_parse_tree.h>
 #include <queue>
+#include <math.h>
 
 #include "v2expr.h"
 #include "expression_datatype.h"

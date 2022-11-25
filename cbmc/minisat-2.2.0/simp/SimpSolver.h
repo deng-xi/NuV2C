@@ -106,7 +106,7 @@ class SimpSolver : public Solver {
 
         // TODO: are 64-bit operations here noticably bad on 32-bit platforms? Could use a saturating
         // 32-bit implementation instead then, but this will have to do for now.
-        uint64_t cost  (Var x)        const { return (uint64_t)n_occ[toInt(mkLit(x))] * (uint64_t)n_occ[toInt(~mkLit(x))]; }
+        uint64_t cost  (Var x)        const { return (uint64_t)n_occ[toInt(mkLit(x, false))] * (uint64_t)n_occ[toInt(~mkLit(x, false))]; }
         bool operator()(Var x, Var y) const { return cost(x) < cost(y); }
         
         // TODO: investigate this order alternative more.
