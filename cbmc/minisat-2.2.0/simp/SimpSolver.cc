@@ -478,7 +478,7 @@ bool SimpSolver::eliminateVar(Var v)
     const vec<CRef>& cls = occurs.lookup(v);
     vec<CRef>        pos, neg;
     for (int i = 0; i < cls.size(); i++)
-        (find(ca[cls[i]], mkLit(v)) ? pos : neg).push(cls[i]);
+        (find(ca[cls[i]], mkLit(v, false)) ? pos : neg).push(cls[i]);
 
     // Check wether the increase in number of clauses stays within the allowed ('grow'). Moreover, no
     // clause must exceed the limit on the maximal clause size (if it is set):
@@ -500,11 +500,11 @@ bool SimpSolver::eliminateVar(Var v)
     if (pos.size() > neg.size()){
         for (int i = 0; i < neg.size(); i++)
             mkElimClause(elimclauses, v, ca[neg[i]]);
-        mkElimClause(elimclauses, mkLit(v));
+        mkElimClause(elimclauses, mkLit(v, false));
     }else{
         for (int i = 0; i < pos.size(); i++)
             mkElimClause(elimclauses, v, ca[pos[i]]);
-        mkElimClause(elimclauses, ~mkLit(v));
+        mkElimClause(elimclauses, ~mkLit(v, false));
     }
 
     for (int i = 0; i < cls.size(); i++)
@@ -521,8 +521,8 @@ bool SimpSolver::eliminateVar(Var v)
     occurs[v].clear(true);
     
     // Free watchers lists for this variable, if possible:
-    if (watches[ mkLit(v)].size() == 0) watches[ mkLit(v)].clear(true);
-    if (watches[~mkLit(v)].size() == 0) watches[~mkLit(v)].clear(true);
+    if (watches[ mkLit(v, false)].size() == 0) watches[ mkLit(v, false)].clear(true);
+    if (watches[~mkLit(v, false)].size() == 0) watches[~mkLit(v, false)].clear(true);
 
     return backwardSubsumptionCheck();
 }

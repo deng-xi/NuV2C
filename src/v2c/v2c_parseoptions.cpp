@@ -33,13 +33,13 @@ Module: Main Module
 \*******************************************************************/
 
 int v2c_parseoptionst::doit() {
-    std::cout << "|----------------------------------------------------------------------|\n";
-    std::cout << "|*********                       v2c                              *****|\n";
-    std::cout << "|*********            Verilog to C Translator                     *****|\n";
+    std::cout << "|------------------------------------------------------------------------|\n";
+    std::cout << "|*********                      NuV2C                               *****|\n";
+    std::cout << "|*********             Verilog to C Translator                      *****|\n";
 //    std::cout << "|********* Authors: Rajdeep Mukherjee and Michael Tautschnig      *****|\n";
 //    std::cout << "|*********           Developed at University of Oxford            *****|\n";
-    std::cout << "|********* Usage: v2c main.v --module <name of top module> main.c *****|\n";
-    std::cout << "|----------------------------------------------------------------------|\n";
+    std::cout << "|********* Usage: NuV2C main.v --module <name of top module> main.c *****|\n";
+    std::cout << "|------------------------------------------------------------------------|\n";
 
     register_languages();
 
