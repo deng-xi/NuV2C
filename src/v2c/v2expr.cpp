@@ -2175,6 +2175,16 @@ codet verilog_exprt::translate_nb_assign(const verilog_statementt &statement, bo
         rhs.op1().op0() = arg;
         code_assignv.rhs() = rhs;
     }
+        //handle the case of array and normal assignments
+    else if (lhs.id() == ID_index) {
+        exprt lhs_index = symbol_exprt(id2string(lhs.op1().get(ID_identifier)).substr(id2string(current_module).size() + 1) + "_old", lhs.op1().type());
+        exprt lhs_tmp = lhs;
+        lhs_tmp.op1() = lhs_index;
+        code_assignv.lhs() = lhs_tmp;
+        unsigned char saved_diff = 0;
+        convert_expr_nb(rhs, saved_diff);
+        code_assignv.rhs() = rhs;
+    }
         // handle the case of ID_constant and normal assignments
     else {
         unsigned char saved_diff = 0;
