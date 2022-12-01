@@ -540,8 +540,40 @@ bool verilog_exprt::do_conversion(code_blockt &code_verilogblock, const symbolt 
             }
 
             str_print << "  }" << std::endl << std::endl;
-        } else
+        } else {
             str_print << "  " << verilog_expression2c(code_function_callv, ns) << std::endl;
+            //增加assert
+            for (std::list<codet>::const_iterator it_assert = myCodeAssert.begin();
+                 it_assert != myCodeAssert.end(); ++it_assert) {
+                if (it_assert->get_statement() == ID_assert && it_assert->has_operands() &&
+                    it_assert->get_sub().front().id() == ID_overlapped_implication) {
+                    exprt before_implication = it_assert->op0().op0();
+                    exprt after_implication = it_assert->op0().op1();
+                    str_print << "  if(" << verilog_expression2c(before_implication, ns) << ") {\n";
+                    if (after_implication.id() == ID_sva_cycle_delay) {
+                        int delay_time = after_implication.op0().get_int(ID_value);
+                        //二进制转换为十进制
+                        int decimalNumber = 0, i = 0, remainder;
+                        while (delay_time != 0) {
+                            remainder = delay_time % 10;
+                            delay_time /= 10;
+                            decimalNumber += remainder * pow(2, i);
+                            ++i;
+                        }
+                        for (; decimalNumber > 0; --decimalNumber) {
+                            str_print << "    " << verilog_expression2c(code_function_callv, ns) << std::endl;
+                        }
+                        str_print << "    assert(" << verilog_expression2c(after_implication.op2(), ns) << ");\n";
+                        str_print << "  }\n\n";
+                    } else {
+                        str_print << "    assert(" << verilog_expression2c(after_implication, ns) << ");\n";
+                        str_print << "  }\n\n";
+                    }
+                } else {
+                    str_print << "  " << verilog_expression2c(*it_assert, ns) << "\n\n";
+                }
+            }
+        }
         // End of top level function
         str_print << "}" << std::endl;
     }
