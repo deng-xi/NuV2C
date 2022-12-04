@@ -36,8 +36,6 @@ int v2c_parseoptionst::doit() {
     std::cout << "|------------------------------------------------------------------------|\n";
     std::cout << "|*********                      NuV2C                               *****|\n";
     std::cout << "|*********             Verilog to C Translator                      *****|\n";
-//    std::cout << "|********* Authors: Rajdeep Mukherjee and Michael Tautschnig      *****|\n";
-//    std::cout << "|*********           Developed at University of Oxford            *****|\n";
     std::cout << "|********* Usage: NuV2C main.v --module <name of top module> main.c *****|\n";
     std::cout << "|------------------------------------------------------------------------|\n";
 

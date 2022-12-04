@@ -284,7 +284,11 @@ bool verilog_exprt::convert_module(const symbolt &symbol, std::ostream &out) {
         code_verilogblock.operands().push_back(*it3);
     }
 
-    // Handle the case of continuous assignment
+    // Handle the case of continuous assignment, top函数开始部分进行连续赋值
+    for(std::list<code_assignt>::const_iterator it3 = modulevb.cassign.begin();
+        it3!=modulevb.cassign.end();++it3)
+        code_verilogblock.operands().push_back(*it3);
+
 //    std::tr1::unordered_set<std::string> lhSymbols;
     Forall_operands(it, code_temp) {
             if (*it != codet()) { //是指不为空?
