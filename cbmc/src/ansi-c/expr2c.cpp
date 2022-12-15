@@ -1786,11 +1786,14 @@ std::string expr2ct::convert_norep(
         unsigned &precedence) {
     lispexprt lisp;
     irep2lisp(src, lisp);
-//    std::string dest = "irep(\"" + MetaString(lisp.expr2string()) + "\")";
+    std::string dest = "irep(\"" + MetaString(lisp.expr2string()) + "\")";
 //    if (dest == "irep(\"(\\\"brandom()\\\")\")")
 //        dest = "brandom()";
+//    if (dest == "irep(\"(\\\"clk == 0 && last_clk == 1\\\")\")")
+//        dest = "clk == 0 && last_clk == 1";
+    dest = dest.substr(9, dest.size() - 14);
     precedence = 16;
-    return lisp.expr2string();
+    return dest;
 }
 
 /*******************************************************************\

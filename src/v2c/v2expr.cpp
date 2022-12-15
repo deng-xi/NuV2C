@@ -2315,6 +2315,14 @@ codet verilog_exprt::translate_event_guard(
                 guards.push_back(*it);
             }
         }
+    if (event_guard_expr.op0().id() == ID_posedge) {
+        irep_idt cond = "clk == 0 && last_clk == 1";
+        exprt cond_expr = exprt(cond);
+        code_ifthenelset codeif;
+        codeif.cond() = cond_expr;
+        codeif.then_case() = translate_statement(statement.body(), true);;
+        return codeif;
+    }
     return translate_statement(statement.body(), true);
 }
 
