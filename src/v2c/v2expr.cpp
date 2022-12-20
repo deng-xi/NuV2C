@@ -246,16 +246,6 @@ bool verilog_exprt::convert_module(const symbolt &symbol, std::ostream &out) {
             codet codefinal =
                     convert_module_item(static_cast<const verilog_module_itemt &>(*it));//给模块每个项赋具体值
 
-            //对多个always的情况增加brandom()
-            if (always_num > 1 && is_always) {
-                irep_idt if_brandom = "brandom()";
-                exprt cond_expr = exprt(if_brandom);
-                code_ifthenelset codeif;
-                codeif.cond() = cond_expr;
-                codeif.then_case() = codefinal;
-                codefinal = codeif;
-            }
-
             //删除被调函数中的assert
             if (codefinal.get_statement() == ID_assert) {
                 myCodeAssert.push_back(codefinal);
@@ -374,8 +364,10 @@ bool verilog_exprt::do_conversion(code_blockt &code_verilogblock, const symbolt 
         forall_operands(itp, code_verilogblock_new_var) {
             out << verilog_expression2c(*itp, ns) << std::endl;
         }
-        out << std::endl;
+//        out << std::endl;
     }
+
+    out << "_Bool last_clk;\n\n";
 
     // Finally, iterate over a module to replace all reg type variables with its corresponding structure
     iterate_module(code_verilogblock, modulevb);
@@ -461,13 +453,16 @@ bool verilog_exprt::do_conversion(code_blockt &code_verilogblock, const symbolt 
         }
         str_print << std::endl;
         if (modulevb.initial == true)
-            str_print << "  initial_" + id2string(symbol.base_name) + "();\n\n";
+            str_print << "  initial_" + id2string(symbol.base_name) + "();\n";
+
+        str_print << "  clk = 0;\n\n";
 
         // print the while loop only for top level module call from the main function
         // and if the design is sequential circuit
         if (symbol.base_name != top_name && sequential)
             str_print << "  while(1) {" << std::endl;
 
+        str_print << "    last_clk = clk;\n    clk = !clk;\n";
         //增加input变量非确定性赋值
         for (symbol_tablet::symbolst::const_iterator it = symbol_table.symbols.begin();
              it != symbol_table.symbols.end(); ++it) {
@@ -483,6 +478,8 @@ bool verilog_exprt::do_conversion(code_blockt &code_verilogblock, const symbolt 
                 } else if (typeString == "unsigned int") {
                     typeString = "uint";
                 }
+                if (nondet == "clk")
+                    continue;
                 nondet = nondet + " = nondet_" + typeString + "();\n";
                 if (symbol.base_name != top_name && sequential)
                     str_print << "    " << nondet;
