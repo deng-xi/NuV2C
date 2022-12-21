@@ -2288,6 +2288,7 @@ codet verilog_exprt::translate_event_guard(
     // these guards are ORed
     exprt::operandst guards;
 
+    std::string event_guard = "";
     forall_operands(it, event_guard_expr) {
             if (it->id() == ID_posedge || it->id() == ID_negedge) {
                 // clocked mean sequential circuit, set the sequential flag
@@ -2306,21 +2307,34 @@ codet verilog_exprt::translate_event_guard(
                     throw "pos/negedge expected to have Boolean as operand ";
                 }
                 modulev.always = true;
+
+                if (it->id() == ID_posedge) {
+                    std::string name = ns.lookup(it->op0().get(ID_identifier)).base_name.c_str();
+                    event_guard = event_guard + " || " + name + " == 1 && last_" + name + " == 0";
+                }
+                else if (it->id() == ID_negedge) {
+                    std::string name = ns.lookup(it->op0().get(ID_identifier)).base_name.c_str();
+                    event_guard = event_guard + " || " + name + " == 0 && last_" + name + " == 1";
+                }
             } else if (it->id() != ID_posedge && it->id() != ID_negedge) {
 
                 modulev.always = false;
                 guards.push_back(*it);
+
+                if (it->id() == ID_symbol) {
+                    std::string name = ns.lookup(it->get(ID_identifier)).base_name.c_str();
+                    event_guard = event_guard + " || " + name + " != last_" +name;
+                }
             }
         }
-    if (event_guard_expr.op0().id() == ID_posedge) {
-        irep_idt cond = "clk == 0 && last_clk == 1";
-        exprt cond_expr = exprt(cond);
-        code_ifthenelset codeif;
-        codeif.cond() = cond_expr;
-        codeif.then_case() = translate_statement(statement.body(), true);;
-        return codeif;
-    }
-    return translate_statement(statement.body(), true);
+    event_guard = event_guard.substr(4);
+    irep_idt cond = event_guard;
+    exprt cond_expr = exprt(cond);
+    code_ifthenelset codeif;
+    codeif.cond() = cond_expr;
+    codeif.then_case() = translate_statement(statement.body(), true);;
+    return codeif;
+//    return translate_statement(statement.body(), true);
 }
 
 /*******************************************************************\
