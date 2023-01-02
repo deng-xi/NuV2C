@@ -398,17 +398,18 @@ bool verilog_exprt::do_conversion(code_blockt &code_verilogblock, const symbolt 
         out << "struct state_elements_" << symbol.base_name << " s" << symbol.base_name << ";\n\n";
     }
 
-    if (modulevb.initial == true) { //初始化函数
-        out << "void initial_" + id2string(symbol.base_name) + "()";
-        if (initial_block.op0().id() == ID_code && initial_block.operands().size() == 1) { //优化initial输出格式
-            exprt exprBlock = initial_block.op0();
-            initial_block.operands().pop_back();
-            for (auto exprTmp: exprBlock.operands()) {
-                initial_block.operands().push_back(exprTmp);
-            }
-        }
-        out << verilog_expression2c(initial_block, ns) << std::endl << std::endl;
-    }
+//    initial部分是不可综合的，验证也不需要，所以删除
+//    if (modulevb.initial == true) { //初始化函数
+//        out << "void initial_" + id2string(symbol.base_name) + "()";
+//        if (initial_block.op0().id() == ID_code && initial_block.operands().size() == 1) { //优化initial输出格式
+//            exprt exprBlock = initial_block.op0();
+//            initial_block.operands().pop_back();
+//            for (auto exprTmp: exprBlock.operands()) {
+//                initial_block.operands().push_back(exprTmp);
+//            }
+//        }
+//        out << verilog_expression2c(initial_block, ns) << std::endl << std::endl;
+//    }
 
     // Function definition printing here
     code_typet typev;
@@ -452,8 +453,9 @@ bool verilog_exprt::do_conversion(code_blockt &code_verilogblock, const symbolt 
             str_print << "  " << verilog_expression2c(code_declt(sym), ns) << std::endl;
         }
         str_print << std::endl;
-        if (modulevb.initial == true)
-            str_print << "  initial_" + id2string(symbol.base_name) + "();\n";
+//    initial部分是不可综合的，验证也不需要，所以删除
+//        if (modulevb.initial == true)
+//            str_print << "  initial_" + id2string(symbol.base_name) + "();\n";
 
         str_print << "  clk = 0;\n\n";
 
@@ -1824,7 +1826,7 @@ codet verilog_exprt::translate_if(
     codet save_thenpair = translate_statement(statement.true_case(), need_cassign);
     codeif.then_case() = save_thenpair;
 
-    modulevb.oldvar(codeif.cond());
+//    modulevb.oldvar(codeif.cond());
     modulevb.registers(codeif.cond());
     codet save_elsepair;
     //codet final_assignment;
