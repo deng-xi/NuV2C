@@ -1,9 +1,3 @@
-/***********************************************************************
- Tool Name : v2c
- Purpose : Verilog RTL to ANSI-C translator tool
- Author: Rajdeep Mukherjee, Michael Tautschnig and Daniel Kroening
-***********************************************************************/
-
 #include <cassert>
 #include <cstdlib>
 #include <algorithm>
@@ -36,8 +30,8 @@
 #include <queue>
 #include <math.h>
 
-#include "v2expr.h"
-#include "expression_datatype.h"
+#include "NuV2Cexpr.h"
+#include "../v2c/expression_datatype.h"
 
 
 /*******************************************************************\
@@ -96,7 +90,7 @@ Outputs:
 Purpose:
 
 \*******************************************************************/
-std::set<std::string> verilog_exprt::exprSymbols(irept ireptTmp) {
+std::set<std::string> verilog_exprt::exprSymbols(irept ireptTmp) { //获取类中的变量名
     std::set<std::string> res;
     if (ireptTmp.id() == ID_member) {
         res.emplace(ireptTmp.get_string(ID_component_name));
@@ -827,7 +821,6 @@ void drop_typecast(exprt &expression) {
     while (expression.id() == ID_typecast)
         expression = expression.op0();
      //处理= and nand or nor xor xnor not bitand bitor bitnot bitxor bitnand bitnor notequal >= <= > < + - * /
-     //todo 还有一些类型没有考虑
     if ((expression.id().get_no() == 37) || (expression.id().get_no() >= 40 && expression.id().get_no() <= 54) ||
              (expression.id().get_no() >= 356 && expression.id().get_no() <= 361) ||
              (expression.id().get_no() >= 364 && expression.id().get_no() <= 365)) {
@@ -947,7 +940,7 @@ verilog_exprt::convert_expr(exprt &expression, unsigned char &saved_diff, dstrin
         // finally do the assignment
         expression = bitwise_or;
     } // end of concatenation handling
-    else if (expression.id() == ID_extractbits) {
+    else if (expression.id() == ID_extractbits) { //处理位选择的情况
         exprt rhs = expression;
         if (rhs.operands().size() != 3)
             throw "extractbits takes three operands";
@@ -985,7 +978,6 @@ verilog_exprt::convert_expr(exprt &expression, unsigned char &saved_diff, dstrin
         expression = andexpr;
         saved_diff = saved_diff = saved_diff + 1;
     } //处理= and nand or nor xor xnor not bitand bitor bitnot bitxor bitnand bitnor notequal >= <= > < + - * /
-        //todo 还有一些类型没有考虑
     else if ((expression.id().get_no() == 37) || (expression.id().get_no() >= 40 && expression.id().get_no() <= 54) ||
              (expression.id().get_no() >= 356 && expression.id().get_no() <= 361) ||
              (expression.id().get_no() >= 364 && expression.id().get_no() <= 365)) {
@@ -994,13 +986,13 @@ verilog_exprt::convert_expr(exprt &expression, unsigned char &saved_diff, dstrin
                 *it = convert_expr(*it, saved_diff);
             }
     } else {
-        if (expression.id() == ID_index) {
+        if (expression.id() == ID_index) { //处理存储器类型
             Forall_operands(it, expression) {
                 unsigned char saved_diff = 0;
                 *it = convert_expr(*it, saved_diff);
             }
         }
-        if (expression.id() == ID_symbol) {
+        if (expression.id() == ID_symbol) { //处理普通变量
             if (expression.type().id() == ID_unsignedbv) {
                 int width = expression.type().get_int(ID_width);
                 if (width > 0 && width != 1 && width != 8 && width != 16 && width != 32 && width != 64 &&
@@ -1027,6 +1019,7 @@ Purpose: convert expression of any type appearing in prodedural and
          non-procedural statements in nb
 
 \*******************************************************************/
+//处理非阻塞赋值的情况
 exprt
 verilog_exprt::convert_expr_nb(exprt &expression, unsigned char &saved_diff, dstring expr_type) {
     while (expression.id() == ID_typecast)
@@ -1064,7 +1057,7 @@ verilog_exprt::convert_expr_nb(exprt &expression, unsigned char &saved_diff, dst
                 shl_exprt shl(andexpr, saved_diff);
                 saved_diff = saved_diff + (diff + 1);
                 expr_concat.push_back(shl);
-            } else if (it->id() == ID_extractbit) {
+            } else if (it->id() == ID_extractbit) { //处理位选择的情况
                 exprt rhs = it->op0();
                 if (it->operands().size() != 2)
                     throw "extractbit takes two operands";

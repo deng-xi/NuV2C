@@ -1,14 +1,13 @@
-SUBDIRS = v2c
-all: v2c
+SUBDIRS = NuV2C
+all: NuV2C
 
 .PHONY: $(SUBDIRS)
 .PHONY: clean
 
 $(SUBDIRS):
-	#$(MAKE) -C $@; cp $@/v2c ../bin/
 	$(MAKE) -C ../cbmc/src;
 	$(MAKE) -C ../hw-cbmc/src;
-	$(MAKE) -C $@; mv $@/v2c $@/NuV2C; cp $@/NuV2C ../bin/
+	$(MAKE) -C $@; mv $@/NuV2C ../bin/NuV2C
 	
 # Dependencies
 

@@ -1,4 +1,4 @@
-SRC = v2c_main.cpp v2c_parseoptions.cpp v2expr.cpp expression_datatype.cpp 
+SRC = ../v2c/v2c_main.cpp NuV2C_parseoptions.cpp NuV2Cexpr.cpp ../v2c/expression_datatype.cpp
 
 OBJ+= $(CBMC)/src/ansi-c/expr2c$(OBJEXT) \
       $(CBMC)/src/ansi-c/c_qualifiers$(OBJEXT) \
@@ -15,11 +15,11 @@ INCLUDES= -I $(CBMC)/src -I $(HW_CBMC)/src
 
 LIBS =
 
-all: v2c$(EXEEXT)
+all: NuV2C$(EXEEXT)
 
 ###############################################################################
 
-v2c$(EXEEXT): $(OBJ)
+NuV2C$(EXEEXT): $(OBJ)
 	$(LINKBIN)
 
 .PHONY: v2c-mac-signed

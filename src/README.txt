@@ -1,5 +1,5 @@
 ***********************************
-Tool Name:: v2c
+Tool Name:: NuV2C
 Purpose:: Verilog to C Translator
 ***********************************
 
@@ -10,13 +10,13 @@ Output: Equivalent ANSI-C program
 
 ****************************************************************************
 Directory Structure:
-v2c/  Contains source code of the Translator 
+NuV2C/  Contains source code of the Translator
 *****************************************************************************
 
 
 *****************************************************************************
-Command to run v2c:
-./v2c main.v --module top main.c
+Command to run NuV2C:
+./NuV2C source_files.v --module <name of top module> output_c_file.c
 *****************************************************************************
 
 *****************************************************************************

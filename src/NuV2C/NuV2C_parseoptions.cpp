@@ -17,8 +17,8 @@ Module: Main Module
 
 #include <verilog/verilog_language.h>
 
-#include "v2expr.h"
-#include "v2c_parseoptions.h"
+#include "NuV2Cexpr.h"
+#include "NuV2C_parseoptions.h"
 
 /*******************************************************************\
 
@@ -33,11 +33,10 @@ Module: Main Module
 \*******************************************************************/
 
 int v2c_parseoptionst::doit() {
-    std::cout << "|------------------------------------------------------------------------|\n";
-    std::cout << "|*********                      NuV2C                               *****|\n";
-    std::cout << "|*********             Verilog to C Translator                      *****|\n";
-    std::cout << "|********* Usage: NuV2C main.v --module <name of top module> main.c *****|\n";
-    std::cout << "|------------------------------------------------------------------------|\n";
+    std::cout << "                                NuV2C                                      \n";
+    std::cout << "                       基于综合语义的Verilog到C转换系统                        \n";
+    std::cout << "使用方法: NuV2C source_files.v --module <name of top module> output_c_file.c\n";
+    std::cout << "****************************************************************************\n\n";
 
     register_languages();
 

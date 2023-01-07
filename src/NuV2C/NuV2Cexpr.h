@@ -1,8 +1,3 @@
-/***********************************************************************
-	Tool Name : v2c
-	Purpose : Verilog RTL to ANSI-C translator tool
-    Author: Rajdeep Mukherjee, Michael Tautschnig and Daniel Kroening
- ***********************************************************************/
 #include <cassert>
 #include <map>
 #include <set>
@@ -48,6 +43,7 @@ public:
             identifier_name(0) {
     }
 
+    //转换模块
     bool convert_module(const symbolt &symbol, std::ostream &out);
 
     irep_idt top_name;
@@ -64,10 +60,12 @@ protected:
     std::map<irep_idt, irep_idt> input_dependency_map;
     std::map<irep_idt, irep_idt> output_dependency_map;
 
+    //转换为C文件输出
     bool do_conversion(code_blockt &code_verilogblock, const symbolt &symbol,
                        const irep_idt &curr_module_backup, const std::set<irep_idt>::iterator &in_progress_it,
                        std::ostream &out);
 
+    //存储模块信息
     struct module_infot {
         std::list<symbol_exprt> parameters;
         std::list<symbol_exprt> local_sym;
