@@ -6,7 +6,7 @@ Tool: Verilog to C translator
 
 \*******************************************************************/
 
-#include "v2c_parseoptions.h"
+#include "../NuV2C/NuV2C_parseoptions.h"
 
 /*******************************************************************\
 
