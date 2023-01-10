@@ -1,11 +1,3 @@
-/*******************************************************************\
-
-Module:
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
-
 #ifndef CPROVER_EXPRESSION_DATATYPE_H
 #define CPROVER_EXPRESSION_DATATYPE_H
 
