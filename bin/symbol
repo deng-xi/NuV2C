@@ -1,0 +1,3094 @@
+
+Symbols:
+  Verilog::top.LINE1
+    type:  bool
+    value: nil
+  flags: input mode=Verilog base_name=LINE1 module=Verilog::top
+  location: file main.sv line 7
+
+  Verilog::top.LINE2
+    type:  bool
+    value: nil
+  flags: input mode=Verilog base_name=LINE2 module=Verilog::top
+  location: file main.sv line 7
+
+  Verilog::top.OUTP
+    type:  bool
+    value: nil
+  flags: output state_var mode=Verilog base_name=OUTP module=Verilog::top
+  location: file main.sv line 8
+
+  Verilog::top.OVERFLW
+    type:  bool
+    value: nil
+  flags: output state_var mode=Verilog base_name=OVERFLW module=Verilog::top
+  location: file main.sv line 8
+
+  Verilog::top.property.1
+    type:  bool
+    value: AG
+      * type: bool
+      0: overlapped_implication
+          * type: bool
+          * #source_location: 
+            * file: main.sv
+            * line: 98
+          0: =
+              * type: bool
+              * #source_location: 
+                * file: main.sv
+                * line: 98
+              0: typecast
+                  * type: unsignedbv
+                      * width: 32
+                  0: symbol
+                      * type: bool
+                      * identifier: Verilog::top.OVERFLW
+                      * #source_location: 
+                        * file: main.sv
+                        * line: 98
+              1: constant
+                  * type: unsignedbv
+                      * width: 32
+                  * value: 00000000000000000000000000000001
+          1: sva_cycle_delay
+              * type: bool
+              * #source_location: 
+                * file: main.sv
+                * line: 98
+              0: constant
+                  * type: signedbv
+                      * width: 32
+                  * value: 00000000000000000000000000000010
+                  * #source_location: 
+                    * file: main.sv
+                    * line: 98
+                  * #little_endian: 1
+                  * #verilog_value: 2
+              1: nil
+              2: =
+                  * type: bool
+                  * #source_location: 
+                    * file: main.sv
+                    * line: 98
+                  0: typecast
+                      * type: unsignedbv
+                          * width: 32
+                      0: symbol
+                          * type: bool
+                          * identifier: Verilog::top.OVERFLW
+                          * #source_location: 
+                            * file: main.sv
+                            * line: 98
+                  1: constant
+                      * type: unsignedbv
+                          * width: 32
+                      * value: 00000000000000000000000000000000
+  flags: property mode=Verilog base_name=1 module=Verilog::top
+  location: file main.sv line 100
+
+  Verilog::top.clk
+    type:  bool
+    value: nil
+  flags: input mode=Verilog base_name=clk module=Verilog::top
+  location: file main.sv line 9
+
+  Verilog::top.stato
+    type:  unsignedbv
+      * width: 3
+      * #source_location: 
+        * file: main.sv
+        * line: 12
+      * #little_endian: 1
+      * #offset: 0
+    value: nil
+  flags: state_var mode=Verilog base_name=stato module=Verilog::top
+  location: file main.sv line 12
+
+  Verilog::top.a
+    type:  signedbv
+      * width: 32
+    value: constant
+      * type: signedbv
+          * width: 32
+      * value: 00000000000000000000000000000000
+      * #source_location: 
+        * file: main.sv
+        * line: 14
+      * #little_endian: 1
+      * #verilog_value: 0
+  flags: macro mode=Verilog base_name=a module=Verilog::top
+  location: 
+
+  Verilog::top.b
+    type:  signedbv
+      * width: 32
+    value: constant
+      * type: signedbv
+          * width: 32
+      * value: 00000000000000000000000000000001
+      * #source_location: 
+        * file: main.sv
+        * line: 15
+      * #little_endian: 1
+      * #verilog_value: 1
+  flags: macro mode=Verilog base_name=b module=Verilog::top
+  location: 
+
+  Verilog::top.c
+    type:  signedbv
+      * width: 32
+    value: constant
+      * type: signedbv
+          * width: 32
+      * value: 00000000000000000000000000000010
+      * #source_location: 
+        * file: main.sv
+        * line: 16
+      * #little_endian: 1
+      * #verilog_value: 2
+  flags: macro mode=Verilog base_name=c module=Verilog::top
+  location: 
+
+  Verilog::top.e
+    type:  signedbv
+      * width: 32
+    value: constant
+      * type: signedbv
+          * width: 32
+      * value: 00000000000000000000000000000011
+      * #source_location: 
+        * file: main.sv
+        * line: 17
+      * #little_endian: 1
+      * #verilog_value: 3
+  flags: macro mode=Verilog base_name=e module=Verilog::top
+  location: 
+
+  Verilog::top.f
+    type:  signedbv
+      * width: 32
+    value: constant
+      * type: signedbv
+          * width: 32
+      * value: 00000000000000000000000000000100
+      * #source_location: 
+        * file: main.sv
+        * line: 18
+      * #little_endian: 1
+      * #verilog_value: 4
+  flags: macro mode=Verilog base_name=f module=Verilog::top
+  location: 
+
+  Verilog::top.g
+    type:  signedbv
+      * width: 32
+    value: constant
+      * type: signedbv
+          * width: 32
+      * value: 00000000000000000000000000000101
+      * #source_location: 
+        * file: main.sv
+        * line: 19
+      * #little_endian: 1
+      * #verilog_value: 5
+  flags: macro mode=Verilog base_name=g module=Verilog::top
+  location: 
+
+  Verilog::top.wf0
+    type:  signedbv
+      * width: 32
+    value: constant
+      * type: signedbv
+          * width: 32
+      * value: 00000000000000000000000000000110
+      * #source_location: 
+        * file: main.sv
+        * line: 20
+      * #little_endian: 1
+      * #verilog_value: 6
+  flags: macro mode=Verilog base_name=wf0 module=Verilog::top
+  location: 
+
+  Verilog::top.wf1
+    type:  signedbv
+      * width: 32
+    value: constant
+      * type: signedbv
+          * width: 32
+      * value: 00000000000000000000000000000111
+      * #source_location: 
+        * file: main.sv
+        * line: 21
+      * #little_endian: 1
+      * #verilog_value: 7
+  flags: macro mode=Verilog base_name=wf1 module=Verilog::top
+  location: 
+
+  Verilog::top
+    type:  module
+      * module_source: 
+        * name: top
+        * module_items: 
+          * #source_location: 
+            * file: main.sv
+            * line: 6
+          0: decl
+              * type: nil
+              * class: input
+              * #source_location: 
+                * file: main.sv
+                * line: 7
+              0: symbol
+                  * type: nil
+                  * identifier: LINE1
+                  * #source_location: 
+                    * file: main.sv
+                    * line: 7
+              1: symbol
+                  * type: nil
+                  * identifier: LINE2
+                  * #source_location: 
+                    * file: main.sv
+                    * line: 7
+          1: decl
+              * type: nil
+              * class: output
+              * #source_location: 
+                * file: main.sv
+                * line: 8
+              0: symbol
+                  * type: nil
+                  * identifier: OUTP
+                  * #source_location: 
+                    * file: main.sv
+                    * line: 8
+              1: symbol
+                  * type: nil
+                  * identifier: OVERFLW
+                  * #source_location: 
+                    * file: main.sv
+                    * line: 8
+          2: decl
+              * type: nil
+              * class: input
+              * #source_location: 
+                * file: main.sv
+                * line: 9
+              0: symbol
+                  * type: nil
+                  * identifier: clk
+                  * #source_location: 
+                    * file: main.sv
+                    * line: 9
+          3: decl
+              * type: nil
+              * class: reg
+              * #source_location: 
+                * file: main.sv
+                * line: 11
+              0: symbol
+                  * type: nil
+                  * identifier: OUTP
+                  * #source_location: 
+                    * file: main.sv
+                    * line: 11
+              1: symbol
+                  * type: nil
+                  * identifier: OVERFLW
+                  * #source_location: 
+                    * file: main.sv
+                    * line: 11
+          4: decl
+              * type: array
+                  * range: 
+                    0: constant
+                        * value: 2
+                        * #source_location: 
+                          * file: main.sv
+                          * line: 12
+                    1: constant
+                        * value: 0
+                        * #source_location: 
+                          * file: main.sv
+                          * line: 12
+                  * #source_location: 
+                    * file: main.sv
+                    * line: 12
+                  0: nil
+              * class: reg
+              * #source_location: 
+                * file: main.sv
+                * line: 12
+              0: symbol
+                  * type: nil
+                  * identifier: stato
+                  * #source_location: 
+                    * file: main.sv
+                    * line: 12
+          5: parameter_decl
+              * #source_location: 
+                * file: main.sv
+                * line: 14
+              0: parameter
+                  * value: constant
+                      * value: 0
+                      * #source_location: 
+                        * file: main.sv
+                        * line: 14
+                  * identifier: a
+                  * #source_location: 
+                    * file: main.sv
+                    * line: 14
+          6: parameter_decl
+              * #source_location: 
+                * file: main.sv
+                * line: 15
+              0: parameter
+                  * value: constant
+                      * value: 1
+                      * #source_location: 
+                        * file: main.sv
+                        * line: 15
+                  * identifier: b
+                  * #source_location: 
+                    * file: main.sv
+                    * line: 15
+          7: parameter_decl
+              * #source_location: 
+                * file: main.sv
+                * line: 16
+              0: parameter
+                  * value: constant
+                      * value: 2
+                      * #source_location: 
+                        * file: main.sv
+                        * line: 16
+                  * identifier: c
+                  * #source_location: 
+                    * file: main.sv
+                    * line: 16
+          8: parameter_decl
+              * #source_location: 
+                * file: main.sv
+                * line: 17
+              0: parameter
+                  * value: constant
+                      * value: 3
+                      * #source_location: 
+                        * file: main.sv
+                        * line: 17
+                  * identifier: e
+                  * #source_location: 
+                    * file: main.sv
+                    * line: 17
+          9: parameter_decl
+              * #source_location: 
+                * file: main.sv
+                * line: 18
+              0: parameter
+                  * value: constant
+                      * value: 4
+                      * #source_location: 
+                        * file: main.sv
+                        * line: 18
+                  * identifier: f
+                  * #source_location: 
+                    * file: main.sv
+                    * line: 18
+          10: parameter_decl
+              * #source_location: 
+                * file: main.sv
+                * line: 19
+              0: parameter
+                  * value: constant
+                      * value: 5
+                      * #source_location: 
+                        * file: main.sv
+                        * line: 19
+                  * identifier: g
+                  * #source_location: 
+                    * file: main.sv
+                    * line: 19
+          11: parameter_decl
+              * #source_location: 
+                * file: main.sv
+                * line: 20
+              0: parameter
+                  * value: constant
+                      * value: 6
+                      * #source_location: 
+                        * file: main.sv
+                        * line: 20
+                  * identifier: wf0
+                  * #source_location: 
+                    * file: main.sv
+                    * line: 20
+          12: parameter_decl
+              * #source_location: 
+                * file: main.sv
+                * line: 21
+              0: parameter
+                  * value: constant
+                      * value: 7
+                      * #source_location: 
+                        * file: main.sv
+                        * line: 21
+                  * identifier: wf1
+                  * #source_location: 
+                    * file: main.sv
+                    * line: 21
+          13: initial
+              * #source_location: 
+                * file: main.sv
+                * line: 27
+              0: block
+                  * #source_location: 
+                    * file: main.sv
+                    * line: 27
+                  0: blocking_assign
+                      * #source_location: 
+                        * file: main.sv
+                        * line: 24
+                      0: symbol
+                          * identifier: stato
+                          * #source_location: 
+                            * file: main.sv
+                            * line: 24
+                      1: symbol
+                          * identifier: a
+                          * #source_location: 
+                            * file: main.sv
+                            * line: 24
+                  1: blocking_assign
+                      * #source_location: 
+                        * file: main.sv
+                        * line: 25
+                      0: symbol
+                          * identifier: OUTP
+                          * #source_location: 
+                            * file: main.sv
+                            * line: 25
+                      1: constant
+                          * value: 0
+                          * #source_location: 
+                            * file: main.sv
+                            * line: 25
+                  2: blocking_assign
+                      * #source_location: 
+                        * file: main.sv
+                        * line: 26
+                      0: symbol
+                          * identifier: OVERFLW
+                          * #source_location: 
+                            * file: main.sv
+                            * line: 26
+                      1: constant
+                          * value: 0
+                          * #source_location: 
+                            * file: main.sv
+                            * line: 26
+          14: always
+              * #source_location: 
+                * file: main.sv
+                * line: 96
+              0: event_guard
+                  * #source_location: 
+                    * file: main.sv
+                    * line: 29
+                  0: event
+                      * #source_location: 
+                        * file: main.sv
+                        * line: 29
+                      0: posedge
+                          * #source_location: 
+                            * file: main.sv
+                            * line: 29
+                          0: symbol
+                              * identifier: clk
+                              * #source_location: 
+                                * file: main.sv
+                                * line: 29
+                  1: block
+                      * #source_location: 
+                        * file: main.sv
+                        * line: 96
+                      0: case
+                          * #source_location: 
+                            * file: main.sv
+                            * line: 95
+                          0: symbol
+                              * identifier: stato
+                              * #source_location: 
+                                * file: main.sv
+                                * line: 30
+                          1: case_item
+                              * #source_location: 
+                                * file: main.sv
+                                * line: 38
+                              0: 
+                                * #source_location: 
+                                  * file: main.sv
+                                  * line: 31
+                                0: symbol
+                                    * identifier: a
+                                    * #source_location: 
+                                      * file: main.sv
+                                      * line: 31
+                              1: block
+                                  * #source_location: 
+                                    * file: main.sv
+                                    * line: 38
+                                  0: if
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 35
+                                      0: bitand
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 32
+                                          0: symbol
+                                              * identifier: LINE1
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 32
+                                          1: symbol
+                                              * identifier: LINE2
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 32
+                                      1: blocking_assign
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 33
+                                          0: symbol
+                                              * identifier: stato
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 33
+                                          1: symbol
+                                              * identifier: f
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 33
+                                      2: blocking_assign
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 35
+                                          0: symbol
+                                              * identifier: stato
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 35
+                                          1: symbol
+                                              * identifier: b
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 35
+                                  1: blocking_assign
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 36
+                                      0: symbol
+                                          * identifier: OUTP
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 36
+                                      1: bitxor
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 36
+                                          0: symbol
+                                              * identifier: LINE1
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 36
+                                          1: symbol
+                                              * identifier: LINE2
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 36
+                                  2: blocking_assign
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 37
+                                      0: symbol
+                                          * identifier: OVERFLW
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 37
+                                      1: constant
+                                          * value: 0
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 37
+                          2: case_item
+                              * #source_location: 
+                                * file: main.sv
+                                * line: 46
+                              0: 
+                                * #source_location: 
+                                  * file: main.sv
+                                  * line: 39
+                                0: symbol
+                                    * identifier: e
+                                    * #source_location: 
+                                      * file: main.sv
+                                      * line: 39
+                              1: block
+                                  * #source_location: 
+                                    * file: main.sv
+                                    * line: 46
+                                  0: if
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 43
+                                      0: bitand
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 40
+                                          0: symbol
+                                              * identifier: LINE1
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 40
+                                          1: symbol
+                                              * identifier: LINE2
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 40
+                                      1: blocking_assign
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 41
+                                          0: symbol
+                                              * identifier: stato
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 41
+                                          1: symbol
+                                              * identifier: f
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 41
+                                      2: blocking_assign
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 43
+                                          0: symbol
+                                              * identifier: stato
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 43
+                                          1: symbol
+                                              * identifier: b
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 43
+                                  1: blocking_assign
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 44
+                                      0: symbol
+                                          * identifier: OUTP
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 44
+                                      1: bitxor
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 44
+                                          0: symbol
+                                              * identifier: LINE1
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 44
+                                          1: symbol
+                                              * identifier: LINE2
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 44
+                                  2: blocking_assign
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 45
+                                      0: symbol
+                                          * identifier: OVERFLW
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 45
+                                      1: constant
+                                          * value: 1
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 45
+                          3: case_item
+                              * #source_location: 
+                                * file: main.sv
+                                * line: 54
+                              0: 
+                                * #source_location: 
+                                  * file: main.sv
+                                  * line: 47
+                                0: symbol
+                                    * identifier: b
+                                    * #source_location: 
+                                      * file: main.sv
+                                      * line: 47
+                              1: block
+                                  * #source_location: 
+                                    * file: main.sv
+                                    * line: 54
+                                  0: if
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 51
+                                      0: bitand
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 48
+                                          0: symbol
+                                              * identifier: LINE1
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 48
+                                          1: symbol
+                                              * identifier: LINE2
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 48
+                                      1: blocking_assign
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 49
+                                          0: symbol
+                                              * identifier: stato
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 49
+                                          1: symbol
+                                              * identifier: g
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 49
+                                      2: blocking_assign
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 51
+                                          0: symbol
+                                              * identifier: stato
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 51
+                                          1: symbol
+                                              * identifier: c
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 51
+                                  1: blocking_assign
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 52
+                                      0: symbol
+                                          * identifier: OUTP
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 52
+                                      1: bitxor
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 52
+                                          0: symbol
+                                              * identifier: LINE1
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 52
+                                          1: symbol
+                                              * identifier: LINE2
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 52
+                                  2: blocking_assign
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 53
+                                      0: symbol
+                                          * identifier: OVERFLW
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 53
+                                      1: constant
+                                          * value: 0
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 53
+                          4: case_item
+                              * #source_location: 
+                                * file: main.sv
+                                * line: 62
+                              0: 
+                                * #source_location: 
+                                  * file: main.sv
+                                  * line: 55
+                                0: symbol
+                                    * identifier: f
+                                    * #source_location: 
+                                      * file: main.sv
+                                      * line: 55
+                              1: block
+                                  * #source_location: 
+                                    * file: main.sv
+                                    * line: 62
+                                  0: if
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 59
+                                      0: bitor
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 56
+                                          0: symbol
+                                              * identifier: LINE1
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 56
+                                          1: symbol
+                                              * identifier: LINE2
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 56
+                                      1: blocking_assign
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 57
+                                          0: symbol
+                                              * identifier: stato
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 57
+                                          1: symbol
+                                              * identifier: g
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 57
+                                      2: blocking_assign
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 59
+                                          0: symbol
+                                              * identifier: stato
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 59
+                                          1: symbol
+                                              * identifier: c
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 59
+                                  1: blocking_assign
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 60
+                                      0: symbol
+                                          * identifier: OUTP
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 60
+                                      1: bitnot
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 60
+                                          0: bitxor
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 60
+                                              0: symbol
+                                                  * identifier: LINE1
+                                                  * #source_location: 
+                                                    * file: main.sv
+                                                    * line: 60
+                                              1: symbol
+                                                  * identifier: LINE2
+                                                  * #source_location: 
+                                                    * file: main.sv
+                                                    * line: 60
+                                  2: blocking_assign
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 61
+                                      0: symbol
+                                          * identifier: OVERFLW
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 61
+                                      1: constant
+                                          * value: 0
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 61
+                          5: case_item
+                              * #source_location: 
+                                * file: main.sv
+                                * line: 70
+                              0: 
+                                * #source_location: 
+                                  * file: main.sv
+                                  * line: 63
+                                0: symbol
+                                    * identifier: c
+                                    * #source_location: 
+                                      * file: main.sv
+                                      * line: 63
+                              1: block
+                                  * #source_location: 
+                                    * file: main.sv
+                                    * line: 70
+                                  0: if
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 67
+                                      0: bitand
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 64
+                                          0: symbol
+                                              * identifier: LINE1
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 64
+                                          1: symbol
+                                              * identifier: LINE2
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 64
+                                      1: blocking_assign
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 65
+                                          0: symbol
+                                              * identifier: stato
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 65
+                                          1: symbol
+                                              * identifier: wf1
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 65
+                                      2: blocking_assign
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 67
+                                          0: symbol
+                                              * identifier: stato
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 67
+                                          1: symbol
+                                              * identifier: wf0
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 67
+                                  1: blocking_assign
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 68
+                                      0: symbol
+                                          * identifier: OUTP
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 68
+                                      1: bitxor
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 68
+                                          0: symbol
+                                              * identifier: LINE1
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 68
+                                          1: symbol
+                                              * identifier: LINE2
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 68
+                                  2: blocking_assign
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 69
+                                      0: symbol
+                                          * identifier: OVERFLW
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 69
+                                      1: constant
+                                          * value: 0
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 69
+                          6: case_item
+                              * #source_location: 
+                                * file: main.sv
+                                * line: 78
+                              0: 
+                                * #source_location: 
+                                  * file: main.sv
+                                  * line: 71
+                                0: symbol
+                                    * identifier: g
+                                    * #source_location: 
+                                      * file: main.sv
+                                      * line: 71
+                              1: block
+                                  * #source_location: 
+                                    * file: main.sv
+                                    * line: 78
+                                  0: if
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 75
+                                      0: bitor
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 72
+                                          0: symbol
+                                              * identifier: LINE1
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 72
+                                          1: symbol
+                                              * identifier: LINE2
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 72
+                                      1: blocking_assign
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 73
+                                          0: symbol
+                                              * identifier: stato
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 73
+                                          1: symbol
+                                              * identifier: wf1
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 73
+                                      2: blocking_assign
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 75
+                                          0: symbol
+                                              * identifier: stato
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 75
+                                          1: symbol
+                                              * identifier: wf0
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 75
+                                  1: blocking_assign
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 76
+                                      0: symbol
+                                          * identifier: OUTP
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 76
+                                      1: bitnot
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 76
+                                          0: bitxor
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 76
+                                              0: symbol
+                                                  * identifier: LINE1
+                                                  * #source_location: 
+                                                    * file: main.sv
+                                                    * line: 76
+                                              1: symbol
+                                                  * identifier: LINE2
+                                                  * #source_location: 
+                                                    * file: main.sv
+                                                    * line: 76
+                                  2: blocking_assign
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 77
+                                      0: symbol
+                                          * identifier: OVERFLW
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 77
+                                      1: constant
+                                          * value: 0
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 77
+                          7: case_item
+                              * #source_location: 
+                                * file: main.sv
+                                * line: 86
+                              0: 
+                                * #source_location: 
+                                  * file: main.sv
+                                  * line: 79
+                                0: symbol
+                                    * identifier: wf0
+                                    * #source_location: 
+                                      * file: main.sv
+                                      * line: 79
+                              1: block
+                                  * #source_location: 
+                                    * file: main.sv
+                                    * line: 86
+                                  0: if
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 83
+                                      0: bitand
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 80
+                                          0: symbol
+                                              * identifier: LINE1
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 80
+                                          1: symbol
+                                              * identifier: LINE2
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 80
+                                      1: blocking_assign
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 81
+                                          0: symbol
+                                              * identifier: stato
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 81
+                                          1: symbol
+                                              * identifier: e
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 81
+                                      2: blocking_assign
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 83
+                                          0: symbol
+                                              * identifier: stato
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 83
+                                          1: symbol
+                                              * identifier: a
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 83
+                                  1: blocking_assign
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 84
+                                      0: symbol
+                                          * identifier: OUTP
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 84
+                                      1: bitxor
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 84
+                                          0: symbol
+                                              * identifier: LINE1
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 84
+                                          1: symbol
+                                              * identifier: LINE2
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 84
+                                  2: blocking_assign
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 85
+                                      0: symbol
+                                          * identifier: OVERFLW
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 85
+                                      1: constant
+                                          * value: 0
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 85
+                          8: case_item
+                              * #source_location: 
+                                * file: main.sv
+                                * line: 94
+                              0: 
+                                * #source_location: 
+                                  * file: main.sv
+                                  * line: 87
+                                0: symbol
+                                    * identifier: wf1
+                                    * #source_location: 
+                                      * file: main.sv
+                                      * line: 87
+                              1: block
+                                  * #source_location: 
+                                    * file: main.sv
+                                    * line: 94
+                                  0: if
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 91
+                                      0: bitor
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 88
+                                          0: symbol
+                                              * identifier: LINE1
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 88
+                                          1: symbol
+                                              * identifier: LINE2
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 88
+                                      1: blocking_assign
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 89
+                                          0: symbol
+                                              * identifier: stato
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 89
+                                          1: symbol
+                                              * identifier: e
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 89
+                                      2: blocking_assign
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 91
+                                          0: symbol
+                                              * identifier: stato
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 91
+                                          1: symbol
+                                              * identifier: a
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 91
+                                  1: blocking_assign
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 92
+                                      0: symbol
+                                          * identifier: OUTP
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 92
+                                      1: bitnot
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 92
+                                          0: bitxor
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 92
+                                              0: symbol
+                                                  * identifier: LINE1
+                                                  * #source_location: 
+                                                    * file: main.sv
+                                                    * line: 92
+                                              1: symbol
+                                                  * identifier: LINE2
+                                                  * #source_location: 
+                                                    * file: main.sv
+                                                    * line: 92
+                                  2: blocking_assign
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 93
+                                      0: symbol
+                                          * identifier: OVERFLW
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 93
+                                      1: constant
+                                          * value: 0
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 93
+          15: assert
+              * #source_location: 
+                * file: main.sv
+                * line: 100
+              0: overlapped_implication
+                  * #source_location: 
+                    * file: main.sv
+                    * line: 98
+                  0: =
+                      * #source_location: 
+                        * file: main.sv
+                        * line: 98
+                      0: symbol
+                          * identifier: OVERFLW
+                          * #source_location: 
+                            * file: main.sv
+                            * line: 98
+                      1: constant
+                          * value: 1
+                          * #source_location: 
+                            * file: main.sv
+                            * line: 98
+                  1: sva_cycle_delay
+                      * #source_location: 
+                        * file: main.sv
+                        * line: 98
+                      0: constant
+                          * value: 2
+                          * #source_location: 
+                            * file: main.sv
+                            * line: 98
+                      1: nil
+                      2: =
+                          * #source_location: 
+                            * file: main.sv
+                            * line: 98
+                          0: symbol
+                              * identifier: OVERFLW
+                              * #source_location: 
+                                * file: main.sv
+                                * line: 98
+                          1: constant
+                              * value: 0
+                              * #source_location: 
+                                * file: main.sv
+                                * line: 98
+              1: skip
+                  * #source_location: 
+                    * file: main.sv
+                    * line: 98
+        * ports: 
+          * #source_location: 
+            * file: main.sv
+            * line: 6
+          0: decl
+              * #source_location: 
+                * file: main.sv
+                * line: 6
+              0: symbol
+                  * identifier: LINE1
+                  * #source_location: 
+                    * file: main.sv
+                    * line: 6
+          1: decl
+              * #source_location: 
+                * file: main.sv
+                * line: 6
+              0: symbol
+                  * identifier: LINE2
+                  * #source_location: 
+                    * file: main.sv
+                    * line: 6
+          2: decl
+              * #source_location: 
+                * file: main.sv
+                * line: 6
+              0: symbol
+                  * identifier: OUTP
+                  * #source_location: 
+                    * file: main.sv
+                    * line: 6
+          3: decl
+              * #source_location: 
+                * file: main.sv
+                * line: 6
+              0: symbol
+                  * identifier: OVERFLW
+                  * #source_location: 
+                    * file: main.sv
+                    * line: 6
+          4: decl
+              * #source_location: 
+                * file: main.sv
+                * line: 6
+              0: symbol
+                  * identifier: clk
+                  * #source_location: 
+                    * file: main.sv
+                    * line: 6
+      * ports: 
+        0: symbol
+            * type: bool
+            * identifier: Verilog::top.LINE1
+            * input: 1
+            * output: 0
+            * #source_location: 
+              * file: main.sv
+              * line: 6
+            * #name: LINE1
+        1: symbol
+            * type: bool
+            * identifier: Verilog::top.LINE2
+            * input: 1
+            * output: 0
+            * #source_location: 
+              * file: main.sv
+              * line: 6
+            * #name: LINE2
+        2: symbol
+            * type: bool
+            * identifier: Verilog::top.OUTP
+            * input: 0
+            * output: 1
+            * #source_location: 
+              * file: main.sv
+              * line: 6
+            * #name: OUTP
+        3: symbol
+            * type: bool
+            * identifier: Verilog::top.OVERFLW
+            * input: 0
+            * output: 1
+            * #source_location: 
+              * file: main.sv
+              * line: 6
+            * #name: OVERFLW
+        4: symbol
+            * type: bool
+            * identifier: Verilog::top.clk
+            * input: 1
+            * output: 0
+            * #source_location: 
+              * file: main.sv
+              * line: 6
+            * #name: clk
+    value: verilog_module
+      0: decl
+          * type: nil
+          * class: input
+          * #source_location: 
+            * file: main.sv
+            * line: 7
+          0: symbol
+              * type: nil
+              * identifier: LINE1
+              * #source_location: 
+                * file: main.sv
+                * line: 7
+          1: symbol
+              * type: nil
+              * identifier: LINE2
+              * #source_location: 
+                * file: main.sv
+                * line: 7
+      1: decl
+          * type: nil
+          * class: output
+          * #source_location: 
+            * file: main.sv
+            * line: 8
+          0: symbol
+              * type: nil
+              * identifier: OUTP
+              * #source_location: 
+                * file: main.sv
+                * line: 8
+          1: symbol
+              * type: nil
+              * identifier: OVERFLW
+              * #source_location: 
+                * file: main.sv
+                * line: 8
+      2: decl
+          * type: nil
+          * class: input
+          * #source_location: 
+            * file: main.sv
+            * line: 9
+          0: symbol
+              * type: nil
+              * identifier: clk
+              * #source_location: 
+                * file: main.sv
+                * line: 9
+      3: decl
+          * type: nil
+          * class: reg
+          * #source_location: 
+            * file: main.sv
+            * line: 11
+          0: symbol
+              * type: nil
+              * identifier: OUTP
+              * #source_location: 
+                * file: main.sv
+                * line: 11
+          1: symbol
+              * type: nil
+              * identifier: OVERFLW
+              * #source_location: 
+                * file: main.sv
+                * line: 11
+      4: decl
+          * type: array
+              * range: 
+                0: constant
+                    * value: 2
+                    * #source_location: 
+                      * file: main.sv
+                      * line: 12
+                1: constant
+                    * value: 0
+                    * #source_location: 
+                      * file: main.sv
+                      * line: 12
+              * #source_location: 
+                * file: main.sv
+                * line: 12
+              0: nil
+          * class: reg
+          * #source_location: 
+            * file: main.sv
+            * line: 12
+          0: symbol
+              * type: nil
+              * identifier: stato
+              * #source_location: 
+                * file: main.sv
+                * line: 12
+      5: parameter_decl
+          * #source_location: 
+            * file: main.sv
+            * line: 14
+          0: parameter
+              * value: constant
+                  * value: 0
+                  * #source_location: 
+                    * file: main.sv
+                    * line: 14
+              * identifier: a
+              * #source_location: 
+                * file: main.sv
+                * line: 14
+      6: parameter_decl
+          * #source_location: 
+            * file: main.sv
+            * line: 15
+          0: parameter
+              * value: constant
+                  * value: 1
+                  * #source_location: 
+                    * file: main.sv
+                    * line: 15
+              * identifier: b
+              * #source_location: 
+                * file: main.sv
+                * line: 15
+      7: parameter_decl
+          * #source_location: 
+            * file: main.sv
+            * line: 16
+          0: parameter
+              * value: constant
+                  * value: 2
+                  * #source_location: 
+                    * file: main.sv
+                    * line: 16
+              * identifier: c
+              * #source_location: 
+                * file: main.sv
+                * line: 16
+      8: parameter_decl
+          * #source_location: 
+            * file: main.sv
+            * line: 17
+          0: parameter
+              * value: constant
+                  * value: 3
+                  * #source_location: 
+                    * file: main.sv
+                    * line: 17
+              * identifier: e
+              * #source_location: 
+                * file: main.sv
+                * line: 17
+      9: parameter_decl
+          * #source_location: 
+            * file: main.sv
+            * line: 18
+          0: parameter
+              * value: constant
+                  * value: 4
+                  * #source_location: 
+                    * file: main.sv
+                    * line: 18
+              * identifier: f
+              * #source_location: 
+                * file: main.sv
+                * line: 18
+      10: parameter_decl
+          * #source_location: 
+            * file: main.sv
+            * line: 19
+          0: parameter
+              * value: constant
+                  * value: 5
+                  * #source_location: 
+                    * file: main.sv
+                    * line: 19
+              * identifier: g
+              * #source_location: 
+                * file: main.sv
+                * line: 19
+      11: parameter_decl
+          * #source_location: 
+            * file: main.sv
+            * line: 20
+          0: parameter
+              * value: constant
+                  * value: 6
+                  * #source_location: 
+                    * file: main.sv
+                    * line: 20
+              * identifier: wf0
+              * #source_location: 
+                * file: main.sv
+                * line: 20
+      12: parameter_decl
+          * #source_location: 
+            * file: main.sv
+            * line: 21
+          0: parameter
+              * value: constant
+                  * value: 7
+                  * #source_location: 
+                    * file: main.sv
+                    * line: 21
+              * identifier: wf1
+              * #source_location: 
+                * file: main.sv
+                * line: 21
+      13: initial
+          * #source_location: 
+            * file: main.sv
+            * line: 27
+          0: block
+              * #source_location: 
+                * file: main.sv
+                * line: 27
+              0: blocking_assign
+                  * #source_location: 
+                    * file: main.sv
+                    * line: 24
+                  0: symbol
+                      * type: unsignedbv
+                          * width: 3
+                          * #source_location: 
+                            * file: main.sv
+                            * line: 12
+                          * #little_endian: 1
+                          * #offset: 0
+                      * identifier: Verilog::top.stato
+                      * #source_location: 
+                        * file: main.sv
+                        * line: 24
+                  1: typecast
+                      * type: unsignedbv
+                          * width: 3
+                          * #source_location: 
+                            * file: main.sv
+                            * line: 12
+                          * #little_endian: 1
+                          * #offset: 0
+                      0: symbol
+                          * type: signedbv
+                              * width: 32
+                          * identifier: Verilog::top.a
+                          * #source_location: 
+                            * file: main.sv
+                            * line: 24
+              1: blocking_assign
+                  * #source_location: 
+                    * file: main.sv
+                    * line: 25
+                  0: symbol
+                      * type: bool
+                      * identifier: Verilog::top.OUTP
+                      * #source_location: 
+                        * file: main.sv
+                        * line: 25
+                  1: extractbit
+                      * type: bool
+                      0: constant
+                          * type: signedbv
+                              * width: 32
+                          * value: 00000000000000000000000000000000
+                          * #source_location: 
+                            * file: main.sv
+                            * line: 25
+                          * #little_endian: 1
+                          * #verilog_value: 0
+                      1: constant
+                          * type: integer
+                          * value: 0
+              2: blocking_assign
+                  * #source_location: 
+                    * file: main.sv
+                    * line: 26
+                  0: symbol
+                      * type: bool
+                      * identifier: Verilog::top.OVERFLW
+                      * #source_location: 
+                        * file: main.sv
+                        * line: 26
+                  1: extractbit
+                      * type: bool
+                      0: constant
+                          * type: signedbv
+                              * width: 32
+                          * value: 00000000000000000000000000000000
+                          * #source_location: 
+                            * file: main.sv
+                            * line: 26
+                          * #little_endian: 1
+                          * #verilog_value: 0
+                      1: constant
+                          * type: integer
+                          * value: 0
+      14: always
+          * #source_location: 
+            * file: main.sv
+            * line: 96
+          0: event_guard
+              * #source_location: 
+                * file: main.sv
+                * line: 29
+              0: event
+                  * type: bool
+                  * #source_location: 
+                    * file: main.sv
+                    * line: 29
+                  0: posedge
+                      * type: bool
+                      * #source_location: 
+                        * file: main.sv
+                        * line: 29
+                      0: symbol
+                          * type: bool
+                          * identifier: Verilog::top.clk
+                          * #source_location: 
+                            * file: main.sv
+                            * line: 29
+              1: block
+                  * #source_location: 
+                    * file: main.sv
+                    * line: 96
+                  0: case
+                      * #source_location: 
+                        * file: main.sv
+                        * line: 95
+                      0: symbol
+                          * type: unsignedbv
+                              * width: 3
+                              * #source_location: 
+                                * file: main.sv
+                                * line: 12
+                              * #little_endian: 1
+                              * #offset: 0
+                          * identifier: Verilog::top.stato
+                          * #source_location: 
+                            * file: main.sv
+                            * line: 30
+                      1: case_item
+                          * #source_location: 
+                            * file: main.sv
+                            * line: 38
+                          0: 
+                            * #source_location: 
+                              * file: main.sv
+                              * line: 31
+                            0: typecast
+                                * type: unsignedbv
+                                    * width: 32
+                                0: symbol
+                                    * type: signedbv
+                                        * width: 32
+                                    * identifier: Verilog::top.a
+                                    * #source_location: 
+                                      * file: main.sv
+                                      * line: 31
+                          1: block
+                              * #source_location: 
+                                * file: main.sv
+                                * line: 38
+                              0: if
+                                  * #source_location: 
+                                    * file: main.sv
+                                    * line: 35
+                                  0: and
+                                      * type: bool
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 32
+                                      0: symbol
+                                          * type: bool
+                                          * identifier: Verilog::top.LINE1
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 32
+                                      1: symbol
+                                          * type: bool
+                                          * identifier: Verilog::top.LINE2
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 32
+                                  1: blocking_assign
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 33
+                                      0: symbol
+                                          * type: unsignedbv
+                                              * width: 3
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 12
+                                              * #little_endian: 1
+                                              * #offset: 0
+                                          * identifier: Verilog::top.stato
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 33
+                                      1: typecast
+                                          * type: unsignedbv
+                                              * width: 3
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 12
+                                              * #little_endian: 1
+                                              * #offset: 0
+                                          0: symbol
+                                              * type: signedbv
+                                                  * width: 32
+                                              * identifier: Verilog::top.f
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 33
+                                  2: blocking_assign
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 35
+                                      0: symbol
+                                          * type: unsignedbv
+                                              * width: 3
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 12
+                                              * #little_endian: 1
+                                              * #offset: 0
+                                          * identifier: Verilog::top.stato
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 35
+                                      1: typecast
+                                          * type: unsignedbv
+                                              * width: 3
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 12
+                                              * #little_endian: 1
+                                              * #offset: 0
+                                          0: symbol
+                                              * type: signedbv
+                                                  * width: 32
+                                              * identifier: Verilog::top.b
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 35
+                              1: blocking_assign
+                                  * #source_location: 
+                                    * file: main.sv
+                                    * line: 36
+                                  0: symbol
+                                      * type: bool
+                                      * identifier: Verilog::top.OUTP
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 36
+                                  1: xor
+                                      * type: bool
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 36
+                                      0: symbol
+                                          * type: bool
+                                          * identifier: Verilog::top.LINE1
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 36
+                                      1: symbol
+                                          * type: bool
+                                          * identifier: Verilog::top.LINE2
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 36
+                              2: blocking_assign
+                                  * #source_location: 
+                                    * file: main.sv
+                                    * line: 37
+                                  0: symbol
+                                      * type: bool
+                                      * identifier: Verilog::top.OVERFLW
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 37
+                                  1: extractbit
+                                      * type: bool
+                                      0: constant
+                                          * type: signedbv
+                                              * width: 32
+                                          * value: 00000000000000000000000000000000
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 37
+                                          * #little_endian: 1
+                                          * #verilog_value: 0
+                                      1: constant
+                                          * type: integer
+                                          * value: 0
+                      2: case_item
+                          * #source_location: 
+                            * file: main.sv
+                            * line: 46
+                          0: 
+                            * #source_location: 
+                              * file: main.sv
+                              * line: 39
+                            0: typecast
+                                * type: unsignedbv
+                                    * width: 32
+                                0: symbol
+                                    * type: signedbv
+                                        * width: 32
+                                    * identifier: Verilog::top.e
+                                    * #source_location: 
+                                      * file: main.sv
+                                      * line: 39
+                          1: block
+                              * #source_location: 
+                                * file: main.sv
+                                * line: 46
+                              0: if
+                                  * #source_location: 
+                                    * file: main.sv
+                                    * line: 43
+                                  0: and
+                                      * type: bool
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 40
+                                      0: symbol
+                                          * type: bool
+                                          * identifier: Verilog::top.LINE1
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 40
+                                      1: symbol
+                                          * type: bool
+                                          * identifier: Verilog::top.LINE2
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 40
+                                  1: blocking_assign
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 41
+                                      0: symbol
+                                          * type: unsignedbv
+                                              * width: 3
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 12
+                                              * #little_endian: 1
+                                              * #offset: 0
+                                          * identifier: Verilog::top.stato
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 41
+                                      1: typecast
+                                          * type: unsignedbv
+                                              * width: 3
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 12
+                                              * #little_endian: 1
+                                              * #offset: 0
+                                          0: symbol
+                                              * type: signedbv
+                                                  * width: 32
+                                              * identifier: Verilog::top.f
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 41
+                                  2: blocking_assign
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 43
+                                      0: symbol
+                                          * type: unsignedbv
+                                              * width: 3
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 12
+                                              * #little_endian: 1
+                                              * #offset: 0
+                                          * identifier: Verilog::top.stato
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 43
+                                      1: typecast
+                                          * type: unsignedbv
+                                              * width: 3
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 12
+                                              * #little_endian: 1
+                                              * #offset: 0
+                                          0: symbol
+                                              * type: signedbv
+                                                  * width: 32
+                                              * identifier: Verilog::top.b
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 43
+                              1: blocking_assign
+                                  * #source_location: 
+                                    * file: main.sv
+                                    * line: 44
+                                  0: symbol
+                                      * type: bool
+                                      * identifier: Verilog::top.OUTP
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 44
+                                  1: xor
+                                      * type: bool
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 44
+                                      0: symbol
+                                          * type: bool
+                                          * identifier: Verilog::top.LINE1
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 44
+                                      1: symbol
+                                          * type: bool
+                                          * identifier: Verilog::top.LINE2
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 44
+                              2: blocking_assign
+                                  * #source_location: 
+                                    * file: main.sv
+                                    * line: 45
+                                  0: symbol
+                                      * type: bool
+                                      * identifier: Verilog::top.OVERFLW
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 45
+                                  1: extractbit
+                                      * type: bool
+                                      0: constant
+                                          * type: signedbv
+                                              * width: 32
+                                          * value: 00000000000000000000000000000001
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 45
+                                          * #little_endian: 1
+                                          * #verilog_value: 1
+                                      1: constant
+                                          * type: integer
+                                          * value: 0
+                      3: case_item
+                          * #source_location: 
+                            * file: main.sv
+                            * line: 54
+                          0: 
+                            * #source_location: 
+                              * file: main.sv
+                              * line: 47
+                            0: typecast
+                                * type: unsignedbv
+                                    * width: 32
+                                0: symbol
+                                    * type: signedbv
+                                        * width: 32
+                                    * identifier: Verilog::top.b
+                                    * #source_location: 
+                                      * file: main.sv
+                                      * line: 47
+                          1: block
+                              * #source_location: 
+                                * file: main.sv
+                                * line: 54
+                              0: if
+                                  * #source_location: 
+                                    * file: main.sv
+                                    * line: 51
+                                  0: and
+                                      * type: bool
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 48
+                                      0: symbol
+                                          * type: bool
+                                          * identifier: Verilog::top.LINE1
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 48
+                                      1: symbol
+                                          * type: bool
+                                          * identifier: Verilog::top.LINE2
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 48
+                                  1: blocking_assign
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 49
+                                      0: symbol
+                                          * type: unsignedbv
+                                              * width: 3
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 12
+                                              * #little_endian: 1
+                                              * #offset: 0
+                                          * identifier: Verilog::top.stato
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 49
+                                      1: typecast
+                                          * type: unsignedbv
+                                              * width: 3
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 12
+                                              * #little_endian: 1
+                                              * #offset: 0
+                                          0: symbol
+                                              * type: signedbv
+                                                  * width: 32
+                                              * identifier: Verilog::top.g
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 49
+                                  2: blocking_assign
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 51
+                                      0: symbol
+                                          * type: unsignedbv
+                                              * width: 3
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 12
+                                              * #little_endian: 1
+                                              * #offset: 0
+                                          * identifier: Verilog::top.stato
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 51
+                                      1: typecast
+                                          * type: unsignedbv
+                                              * width: 3
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 12
+                                              * #little_endian: 1
+                                              * #offset: 0
+                                          0: symbol
+                                              * type: signedbv
+                                                  * width: 32
+                                              * identifier: Verilog::top.c
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 51
+                              1: blocking_assign
+                                  * #source_location: 
+                                    * file: main.sv
+                                    * line: 52
+                                  0: symbol
+                                      * type: bool
+                                      * identifier: Verilog::top.OUTP
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 52
+                                  1: xor
+                                      * type: bool
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 52
+                                      0: symbol
+                                          * type: bool
+                                          * identifier: Verilog::top.LINE1
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 52
+                                      1: symbol
+                                          * type: bool
+                                          * identifier: Verilog::top.LINE2
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 52
+                              2: blocking_assign
+                                  * #source_location: 
+                                    * file: main.sv
+                                    * line: 53
+                                  0: symbol
+                                      * type: bool
+                                      * identifier: Verilog::top.OVERFLW
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 53
+                                  1: extractbit
+                                      * type: bool
+                                      0: constant
+                                          * type: signedbv
+                                              * width: 32
+                                          * value: 00000000000000000000000000000000
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 53
+                                          * #little_endian: 1
+                                          * #verilog_value: 0
+                                      1: constant
+                                          * type: integer
+                                          * value: 0
+                      4: case_item
+                          * #source_location: 
+                            * file: main.sv
+                            * line: 62
+                          0: 
+                            * #source_location: 
+                              * file: main.sv
+                              * line: 55
+                            0: typecast
+                                * type: unsignedbv
+                                    * width: 32
+                                0: symbol
+                                    * type: signedbv
+                                        * width: 32
+                                    * identifier: Verilog::top.f
+                                    * #source_location: 
+                                      * file: main.sv
+                                      * line: 55
+                          1: block
+                              * #source_location: 
+                                * file: main.sv
+                                * line: 62
+                              0: if
+                                  * #source_location: 
+                                    * file: main.sv
+                                    * line: 59
+                                  0: or
+                                      * type: bool
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 56
+                                      0: symbol
+                                          * type: bool
+                                          * identifier: Verilog::top.LINE1
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 56
+                                      1: symbol
+                                          * type: bool
+                                          * identifier: Verilog::top.LINE2
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 56
+                                  1: blocking_assign
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 57
+                                      0: symbol
+                                          * type: unsignedbv
+                                              * width: 3
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 12
+                                              * #little_endian: 1
+                                              * #offset: 0
+                                          * identifier: Verilog::top.stato
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 57
+                                      1: typecast
+                                          * type: unsignedbv
+                                              * width: 3
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 12
+                                              * #little_endian: 1
+                                              * #offset: 0
+                                          0: symbol
+                                              * type: signedbv
+                                                  * width: 32
+                                              * identifier: Verilog::top.g
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 57
+                                  2: blocking_assign
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 59
+                                      0: symbol
+                                          * type: unsignedbv
+                                              * width: 3
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 12
+                                              * #little_endian: 1
+                                              * #offset: 0
+                                          * identifier: Verilog::top.stato
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 59
+                                      1: typecast
+                                          * type: unsignedbv
+                                              * width: 3
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 12
+                                              * #little_endian: 1
+                                              * #offset: 0
+                                          0: symbol
+                                              * type: signedbv
+                                                  * width: 32
+                                              * identifier: Verilog::top.c
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 59
+                              1: blocking_assign
+                                  * #source_location: 
+                                    * file: main.sv
+                                    * line: 60
+                                  0: symbol
+                                      * type: bool
+                                      * identifier: Verilog::top.OUTP
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 60
+                                  1: not
+                                      * type: bool
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 60
+                                      0: xor
+                                          * type: bool
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 60
+                                          0: symbol
+                                              * type: bool
+                                              * identifier: Verilog::top.LINE1
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 60
+                                          1: symbol
+                                              * type: bool
+                                              * identifier: Verilog::top.LINE2
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 60
+                              2: blocking_assign
+                                  * #source_location: 
+                                    * file: main.sv
+                                    * line: 61
+                                  0: symbol
+                                      * type: bool
+                                      * identifier: Verilog::top.OVERFLW
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 61
+                                  1: extractbit
+                                      * type: bool
+                                      0: constant
+                                          * type: signedbv
+                                              * width: 32
+                                          * value: 00000000000000000000000000000000
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 61
+                                          * #little_endian: 1
+                                          * #verilog_value: 0
+                                      1: constant
+                                          * type: integer
+                                          * value: 0
+                      5: case_item
+                          * #source_location: 
+                            * file: main.sv
+                            * line: 70
+                          0: 
+                            * #source_location: 
+                              * file: main.sv
+                              * line: 63
+                            0: typecast
+                                * type: unsignedbv
+                                    * width: 32
+                                0: symbol
+                                    * type: signedbv
+                                        * width: 32
+                                    * identifier: Verilog::top.c
+                                    * #source_location: 
+                                      * file: main.sv
+                                      * line: 63
+                          1: block
+                              * #source_location: 
+                                * file: main.sv
+                                * line: 70
+                              0: if
+                                  * #source_location: 
+                                    * file: main.sv
+                                    * line: 67
+                                  0: and
+                                      * type: bool
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 64
+                                      0: symbol
+                                          * type: bool
+                                          * identifier: Verilog::top.LINE1
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 64
+                                      1: symbol
+                                          * type: bool
+                                          * identifier: Verilog::top.LINE2
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 64
+                                  1: blocking_assign
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 65
+                                      0: symbol
+                                          * type: unsignedbv
+                                              * width: 3
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 12
+                                              * #little_endian: 1
+                                              * #offset: 0
+                                          * identifier: Verilog::top.stato
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 65
+                                      1: typecast
+                                          * type: unsignedbv
+                                              * width: 3
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 12
+                                              * #little_endian: 1
+                                              * #offset: 0
+                                          0: symbol
+                                              * type: signedbv
+                                                  * width: 32
+                                              * identifier: Verilog::top.wf1
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 65
+                                  2: blocking_assign
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 67
+                                      0: symbol
+                                          * type: unsignedbv
+                                              * width: 3
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 12
+                                              * #little_endian: 1
+                                              * #offset: 0
+                                          * identifier: Verilog::top.stato
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 67
+                                      1: typecast
+                                          * type: unsignedbv
+                                              * width: 3
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 12
+                                              * #little_endian: 1
+                                              * #offset: 0
+                                          0: symbol
+                                              * type: signedbv
+                                                  * width: 32
+                                              * identifier: Verilog::top.wf0
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 67
+                              1: blocking_assign
+                                  * #source_location: 
+                                    * file: main.sv
+                                    * line: 68
+                                  0: symbol
+                                      * type: bool
+                                      * identifier: Verilog::top.OUTP
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 68
+                                  1: xor
+                                      * type: bool
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 68
+                                      0: symbol
+                                          * type: bool
+                                          * identifier: Verilog::top.LINE1
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 68
+                                      1: symbol
+                                          * type: bool
+                                          * identifier: Verilog::top.LINE2
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 68
+                              2: blocking_assign
+                                  * #source_location: 
+                                    * file: main.sv
+                                    * line: 69
+                                  0: symbol
+                                      * type: bool
+                                      * identifier: Verilog::top.OVERFLW
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 69
+                                  1: extractbit
+                                      * type: bool
+                                      0: constant
+                                          * type: signedbv
+                                              * width: 32
+                                          * value: 00000000000000000000000000000000
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 69
+                                          * #little_endian: 1
+                                          * #verilog_value: 0
+                                      1: constant
+                                          * type: integer
+                                          * value: 0
+                      6: case_item
+                          * #source_location: 
+                            * file: main.sv
+                            * line: 78
+                          0: 
+                            * #source_location: 
+                              * file: main.sv
+                              * line: 71
+                            0: typecast
+                                * type: unsignedbv
+                                    * width: 32
+                                0: symbol
+                                    * type: signedbv
+                                        * width: 32
+                                    * identifier: Verilog::top.g
+                                    * #source_location: 
+                                      * file: main.sv
+                                      * line: 71
+                          1: block
+                              * #source_location: 
+                                * file: main.sv
+                                * line: 78
+                              0: if
+                                  * #source_location: 
+                                    * file: main.sv
+                                    * line: 75
+                                  0: or
+                                      * type: bool
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 72
+                                      0: symbol
+                                          * type: bool
+                                          * identifier: Verilog::top.LINE1
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 72
+                                      1: symbol
+                                          * type: bool
+                                          * identifier: Verilog::top.LINE2
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 72
+                                  1: blocking_assign
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 73
+                                      0: symbol
+                                          * type: unsignedbv
+                                              * width: 3
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 12
+                                              * #little_endian: 1
+                                              * #offset: 0
+                                          * identifier: Verilog::top.stato
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 73
+                                      1: typecast
+                                          * type: unsignedbv
+                                              * width: 3
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 12
+                                              * #little_endian: 1
+                                              * #offset: 0
+                                          0: symbol
+                                              * type: signedbv
+                                                  * width: 32
+                                              * identifier: Verilog::top.wf1
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 73
+                                  2: blocking_assign
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 75
+                                      0: symbol
+                                          * type: unsignedbv
+                                              * width: 3
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 12
+                                              * #little_endian: 1
+                                              * #offset: 0
+                                          * identifier: Verilog::top.stato
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 75
+                                      1: typecast
+                                          * type: unsignedbv
+                                              * width: 3
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 12
+                                              * #little_endian: 1
+                                              * #offset: 0
+                                          0: symbol
+                                              * type: signedbv
+                                                  * width: 32
+                                              * identifier: Verilog::top.wf0
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 75
+                              1: blocking_assign
+                                  * #source_location: 
+                                    * file: main.sv
+                                    * line: 76
+                                  0: symbol
+                                      * type: bool
+                                      * identifier: Verilog::top.OUTP
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 76
+                                  1: not
+                                      * type: bool
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 76
+                                      0: xor
+                                          * type: bool
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 76
+                                          0: symbol
+                                              * type: bool
+                                              * identifier: Verilog::top.LINE1
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 76
+                                          1: symbol
+                                              * type: bool
+                                              * identifier: Verilog::top.LINE2
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 76
+                              2: blocking_assign
+                                  * #source_location: 
+                                    * file: main.sv
+                                    * line: 77
+                                  0: symbol
+                                      * type: bool
+                                      * identifier: Verilog::top.OVERFLW
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 77
+                                  1: extractbit
+                                      * type: bool
+                                      0: constant
+                                          * type: signedbv
+                                              * width: 32
+                                          * value: 00000000000000000000000000000000
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 77
+                                          * #little_endian: 1
+                                          * #verilog_value: 0
+                                      1: constant
+                                          * type: integer
+                                          * value: 0
+                      7: case_item
+                          * #source_location: 
+                            * file: main.sv
+                            * line: 86
+                          0: 
+                            * #source_location: 
+                              * file: main.sv
+                              * line: 79
+                            0: typecast
+                                * type: unsignedbv
+                                    * width: 32
+                                0: symbol
+                                    * type: signedbv
+                                        * width: 32
+                                    * identifier: Verilog::top.wf0
+                                    * #source_location: 
+                                      * file: main.sv
+                                      * line: 79
+                          1: block
+                              * #source_location: 
+                                * file: main.sv
+                                * line: 86
+                              0: if
+                                  * #source_location: 
+                                    * file: main.sv
+                                    * line: 83
+                                  0: and
+                                      * type: bool
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 80
+                                      0: symbol
+                                          * type: bool
+                                          * identifier: Verilog::top.LINE1
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 80
+                                      1: symbol
+                                          * type: bool
+                                          * identifier: Verilog::top.LINE2
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 80
+                                  1: blocking_assign
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 81
+                                      0: symbol
+                                          * type: unsignedbv
+                                              * width: 3
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 12
+                                              * #little_endian: 1
+                                              * #offset: 0
+                                          * identifier: Verilog::top.stato
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 81
+                                      1: typecast
+                                          * type: unsignedbv
+                                              * width: 3
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 12
+                                              * #little_endian: 1
+                                              * #offset: 0
+                                          0: symbol
+                                              * type: signedbv
+                                                  * width: 32
+                                              * identifier: Verilog::top.e
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 81
+                                  2: blocking_assign
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 83
+                                      0: symbol
+                                          * type: unsignedbv
+                                              * width: 3
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 12
+                                              * #little_endian: 1
+                                              * #offset: 0
+                                          * identifier: Verilog::top.stato
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 83
+                                      1: typecast
+                                          * type: unsignedbv
+                                              * width: 3
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 12
+                                              * #little_endian: 1
+                                              * #offset: 0
+                                          0: symbol
+                                              * type: signedbv
+                                                  * width: 32
+                                              * identifier: Verilog::top.a
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 83
+                              1: blocking_assign
+                                  * #source_location: 
+                                    * file: main.sv
+                                    * line: 84
+                                  0: symbol
+                                      * type: bool
+                                      * identifier: Verilog::top.OUTP
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 84
+                                  1: xor
+                                      * type: bool
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 84
+                                      0: symbol
+                                          * type: bool
+                                          * identifier: Verilog::top.LINE1
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 84
+                                      1: symbol
+                                          * type: bool
+                                          * identifier: Verilog::top.LINE2
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 84
+                              2: blocking_assign
+                                  * #source_location: 
+                                    * file: main.sv
+                                    * line: 85
+                                  0: symbol
+                                      * type: bool
+                                      * identifier: Verilog::top.OVERFLW
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 85
+                                  1: extractbit
+                                      * type: bool
+                                      0: constant
+                                          * type: signedbv
+                                              * width: 32
+                                          * value: 00000000000000000000000000000000
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 85
+                                          * #little_endian: 1
+                                          * #verilog_value: 0
+                                      1: constant
+                                          * type: integer
+                                          * value: 0
+                      8: case_item
+                          * #source_location: 
+                            * file: main.sv
+                            * line: 94
+                          0: 
+                            * #source_location: 
+                              * file: main.sv
+                              * line: 87
+                            0: typecast
+                                * type: unsignedbv
+                                    * width: 32
+                                0: symbol
+                                    * type: signedbv
+                                        * width: 32
+                                    * identifier: Verilog::top.wf1
+                                    * #source_location: 
+                                      * file: main.sv
+                                      * line: 87
+                          1: block
+                              * #source_location: 
+                                * file: main.sv
+                                * line: 94
+                              0: if
+                                  * #source_location: 
+                                    * file: main.sv
+                                    * line: 91
+                                  0: or
+                                      * type: bool
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 88
+                                      0: symbol
+                                          * type: bool
+                                          * identifier: Verilog::top.LINE1
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 88
+                                      1: symbol
+                                          * type: bool
+                                          * identifier: Verilog::top.LINE2
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 88
+                                  1: blocking_assign
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 89
+                                      0: symbol
+                                          * type: unsignedbv
+                                              * width: 3
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 12
+                                              * #little_endian: 1
+                                              * #offset: 0
+                                          * identifier: Verilog::top.stato
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 89
+                                      1: typecast
+                                          * type: unsignedbv
+                                              * width: 3
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 12
+                                              * #little_endian: 1
+                                              * #offset: 0
+                                          0: symbol
+                                              * type: signedbv
+                                                  * width: 32
+                                              * identifier: Verilog::top.e
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 89
+                                  2: blocking_assign
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 91
+                                      0: symbol
+                                          * type: unsignedbv
+                                              * width: 3
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 12
+                                              * #little_endian: 1
+                                              * #offset: 0
+                                          * identifier: Verilog::top.stato
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 91
+                                      1: typecast
+                                          * type: unsignedbv
+                                              * width: 3
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 12
+                                              * #little_endian: 1
+                                              * #offset: 0
+                                          0: symbol
+                                              * type: signedbv
+                                                  * width: 32
+                                              * identifier: Verilog::top.a
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 91
+                              1: blocking_assign
+                                  * #source_location: 
+                                    * file: main.sv
+                                    * line: 92
+                                  0: symbol
+                                      * type: bool
+                                      * identifier: Verilog::top.OUTP
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 92
+                                  1: not
+                                      * type: bool
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 92
+                                      0: xor
+                                          * type: bool
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 92
+                                          0: symbol
+                                              * type: bool
+                                              * identifier: Verilog::top.LINE1
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 92
+                                          1: symbol
+                                              * type: bool
+                                              * identifier: Verilog::top.LINE2
+                                              * #source_location: 
+                                                * file: main.sv
+                                                * line: 92
+                              2: blocking_assign
+                                  * #source_location: 
+                                    * file: main.sv
+                                    * line: 93
+                                  0: symbol
+                                      * type: bool
+                                      * identifier: Verilog::top.OVERFLW
+                                      * #source_location: 
+                                        * file: main.sv
+                                        * line: 93
+                                  1: extractbit
+                                      * type: bool
+                                      0: constant
+                                          * type: signedbv
+                                              * width: 32
+                                          * value: 00000000000000000000000000000000
+                                          * #source_location: 
+                                            * file: main.sv
+                                            * line: 93
+                                          * #little_endian: 1
+                                          * #verilog_value: 0
+                                      1: constant
+                                          * type: integer
+                                          * value: 0
+      15: assert
+          * identifier: Verilog::top.property.1
+          * #source_location: 
+            * file: main.sv
+            * line: 100
+          0: nil
+          1: skip
+              * #source_location: 
+                * file: main.sv
+                * line: 98
+  flags: mode=Verilog base_name=top module=Verilog::top pretty_name=top
+  location: file main.sv line 6
+
