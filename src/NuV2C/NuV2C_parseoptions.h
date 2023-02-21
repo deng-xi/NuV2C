@@ -13,14 +13,14 @@ Module: Command Line Parsing
 #define TRANSLATOR_OPTIONS \
   "(string)(symbol)(show-parse-tree)(module):(translate-c):"
 
-class v2c_parseoptionst:public parse_options_baset,
+class NuV2C_parseoptionst:public parse_options_baset,
                         public language_uit
 {
 public:
   virtual int doit();
   virtual void help();
   
-  v2c_parseoptionst(int argc, const char **argv):
+  NuV2C_parseoptionst(int argc, const char **argv):
     parse_options_baset(TRANSLATOR_OPTIONS, argc, argv),  //类中只有cmdline,和一个bool成员变量
     language_uit("VerilogtoC Version 1",cmdline)  //类中只有args和options两个成员变量
   {

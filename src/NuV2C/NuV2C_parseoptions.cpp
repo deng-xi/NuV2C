@@ -8,75 +8,19 @@ Module: Main Module
 #include <iostream>
 #include <fstream>
 #include <unistd.h>
-
 #include <util/config.h>
 #include <util/get_module.h>
 #include <util/std_expr.h>
-
 #include <langapi/mode.h>
-
 #include <verilog/verilog_language.h>
 
-#include "NuV2Cexpr.h"
+#include "Nuv2expr.h"
 #include "NuV2C_parseoptions.h"
 
-/*******************************************************************\
-
-  Function: v2c_parseoptionst:: vtoc
-
-  Inputs:
-
-  Outputs:
-
-  Purpose: invoke main modules
-
-\*******************************************************************/
-
-int v2c_parseoptionst::doit() {
-    std::cout << "                                NuV2C                                      \n";
-    std::cout << "                       基于综合语义的Verilog到C转换系统                        \n";
-    std::cout << "使用方法: NuV2C source_files.v --module <name of top module> output_c_file.c\n";
-    std::cout << "****************************************************************************\n\n";
-
-    register_languages();
-
-    //
-    // command line options
-    //
-
-    if (config.set(cmdline)) {
-        usage_error();
-        exit(1);
-    }
-
-    if (!translator() && !translate_module()) {
-        if (cmdline.isset("string")) {
-//            char fullname[30]; //输出string容器到解析目录下
-//            gethostname(fullname, 30);
-//            std::string realname = fullname;
-//            size_t pos = realname.find("-VirtualBox");
-//            if (pos != std::string::npos)
-//                realname = realname.substr(0, pos);
-//            std::string path = "/home/" + realname + "/myv2c/bin/string.h";
-//            std::ofstream string_out(path);
-            std::ofstream string_out("./string");
-            if (string_out)
-                string_container.my_showall(string_out);
-//        symbol_table.show(string_out);
-        }
-        if (cmdline.isset("symbol")) {
-            std::ofstream string_out("./symbol");
-            if (string_out)
-                symbol_table.show(string_out);
-        }
-        return 0;
-    } else
-        return 1;
-}
 
 /*******************************************************************\
 
-  Function: v2c_parseoptionst::translator()
+  Function: NuV2C_parseoptionst::translator()
 
   Inputs:
 
@@ -86,7 +30,7 @@ int v2c_parseoptionst::doit() {
 
 \*******************************************************************/
 
-bool v2c_parseoptionst::translator() {
+bool NuV2C_parseoptionst::translator() {
     if (cmdline.args.size() == 0) {
         error() << "Please provide a source file to translate" << eom;
         return true;
@@ -168,7 +112,7 @@ bool v2c_parseoptionst::translator() {
 
 /*******************************************************************\
 
-  Function: v2c_parseoptionst::translate_module
+  Function: NuV2C_parseoptionst::translate_module
 
   Inputs:
 
@@ -178,7 +122,7 @@ bool v2c_parseoptionst::translator() {
 
 \*******************************************************************/
 
-bool v2c_parseoptionst::translate_module() {
+bool NuV2C_parseoptionst::translate_module() {
     const std::string module =
             cmdline.isset("module") ? cmdline.get_value("module") : "";
 
@@ -222,7 +166,7 @@ bool v2c_parseoptionst::translate_module() {
 
 /*******************************************************************\
 
-  Function: v2c_parseoptionst::help
+  Function: NuV2C_parseoptionst::help
 
   Inputs:
 
@@ -232,9 +176,9 @@ bool v2c_parseoptionst::translate_module() {
 
 \*******************************************************************/
 
-void v2c_parseoptionst::help() {
+void NuV2C_parseoptionst::help() {
     std::cout <<
-              "v2c accepts the following options:\n"
+              "NuV2C accepts the following options:\n"
               " --show-parse-tree            shows the parse tree\n"
               " --module name                top module for unwinding\n"
               " --string                     print string_container\n"
@@ -244,7 +188,7 @@ void v2c_parseoptionst::help() {
 
 /*******************************************************************\
 
-  Function: v2c_parseoptionst::register_languages
+  Function: NuV2C_parseoptionst::register_languages
 
   Inputs:
 
@@ -254,7 +198,49 @@ void v2c_parseoptionst::help() {
 
 \*******************************************************************/
 
-void v2c_parseoptionst::register_languages() {
+void NuV2C_parseoptionst::register_languages() {
     register_language(new_verilog_language);
 }
 
+/*******************************************************************\
+  Function: NuV2C_parseoptionst:: doit
+  Purpose: invoke main modules
+\*******************************************************************/
+
+int NuV2C_parseoptionst::doit() {
+    std::cout << "                                NuV2C                                      \n";
+    std::cout << "                       基于综合语义的Verilog到C转换系统                        \n";
+    std::cout << "使用方法: NuV2C source_files.v --module <name of top module> output_c_file.c\n";
+    std::cout << "****************************************************************************\n\n";
+
+    register_languages();
+    // command line options
+    if (config.set(cmdline)) {
+        usage_error();
+        exit(1);
+    }
+
+    if (!translator() && !translate_module()) {
+        if (cmdline.isset("string")) {
+//            char fullname[30]; //输出string容器到解析目录下
+//            gethostname(fullname, 30);
+//            std::string realname = fullname;
+//            size_t pos = realname.find("-VirtualBox");
+//            if (pos != std::string::npos)
+//                realname = realname.substr(0, pos);
+//            std::string path = "/home/" + realname + "/NuV2C/bin/string.h";
+//            std::ofstream string_out(path);
+            std::ofstream string_out("./string");
+            if (string_out)
+                string_container.my_showall(string_out);
+//        symbol_table.show(string_out);
+        }
+        if (cmdline.isset("symbol")) {
+            std::ofstream string_out("./symbol");
+            if (string_out)
+                symbol_table.show(string_out);
+        }
+        return 0;
+    } else
+        return 1;
+}

@@ -1,3 +1,9 @@
+/***********************************************************************
+	Tool Name : NuV2C
+	Purpose : Verilog RTL to ANSI-C translator tool
+    Modified
+ ***********************************************************************/
+
 #include <cassert>
 #include <cstdlib>
 #include <algorithm>
@@ -30,7 +36,7 @@
 #include <queue>
 #include <math.h>
 
-#include "NuV2Cexpr.h"
+#include "Nuv2expr.h"
 #include "../v2c/expression_datatype.h"
 
 
@@ -1380,7 +1386,7 @@ codet verilog_exprt::convert_continuous_assign(
                 // of a symbol(x) and constant(1).
                 if (rhs.operands().size() != 2)
                     throw "extractbit takes two operands";
-                //不知道怎么解析的函数if块内的concatenation,解析到了extractbit里面
+                //原来的程序解析函数if块内的concatenation时,解析到了extractbit里面
                 //因此自己在这里增加一个判断与转换
                 if (rhs.op0().id() == ID_concatenation && rhs.op1().id() == ID_constant &&
                     rhs.op1().get_int(ID_value) == 0) {
@@ -1919,7 +1925,7 @@ codet verilog_exprt::translate_block_assign(
         // of a symbol(x) and constant(1).
         if (rhs.operands().size() != 2)
             throw "extractbit takes two operands";
-        //不知道怎么解析的函数if块内的concatenation,解析到了extractbit里面
+        //原来的程序解析函数if块内的concatenation时,解析到了extractbit里面
         //因此自己在这里增加一个判断与转换
         if (rhs.op0().id() == ID_concatenation && rhs.op1().id() == ID_constant && rhs.op1().get_int(ID_value) == 0) {
             code_block_assignv.lhs() = lhs;
@@ -2153,7 +2159,7 @@ codet verilog_exprt::translate_nb_assign(const verilog_statementt &statement, bo
         // of a symbol(x) and constant(1).
         if (rhs.operands().size() != 2)
             throw "extractbit takes two operands";
-        //不知道怎么解析的函数if块内的concatenation,解析到了extractbit里面
+        //原来的程序解析函数if块内的concatenation时,解析到了extractbit里面
         //因此自己在这里增加一个判断与转换
         if (rhs.op0().id() == ID_concatenation && rhs.op1().id() == ID_constant && rhs.op1().get_int(ID_value) == 0) {
             code_assignv.lhs() = lhs;

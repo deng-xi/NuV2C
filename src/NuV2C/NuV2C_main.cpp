@@ -6,7 +6,7 @@ Tool: Verilog to C translator
 
 \*******************************************************************/
 
-#include "../NuV2C/NuV2C_parseoptions.h"
+#include "NuV2C_parseoptions.h"
 
 /*******************************************************************\
 
@@ -22,6 +22,6 @@ Tool: Verilog to C translator
 
 int main(int argc, const char **argv)
 {
-  v2c_parseoptionst v2c_parseoptions(argc, argv);
-  return v2c_parseoptions.main();
+  NuV2C_parseoptionst NuV2C_parseoptions(argc, argv);
+  return NuV2C_parseoptions.main();
 }

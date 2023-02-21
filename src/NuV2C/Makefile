@@ -1,4 +1,4 @@
-SRC = ../v2c/v2c_main.cpp NuV2C_parseoptions.cpp NuV2Cexpr.cpp ../v2c/expression_datatype.cpp
+SRC = NuV2C_main.cpp NuV2C_parseoptions.cpp Nuv2expr.cpp ../v2c/expression_datatype.cpp
 
 OBJ+= $(CBMC)/src/ansi-c/expr2c$(OBJEXT) \
       $(CBMC)/src/ansi-c/c_qualifiers$(OBJEXT) \

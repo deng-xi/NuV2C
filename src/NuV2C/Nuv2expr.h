@@ -1,3 +1,8 @@
+/***********************************************************************
+	Tool Name : NuV2C
+	Purpose : Verilog RTL to ANSI-C translator tool
+    Modified
+ ***********************************************************************/
 #include <cassert>
 #include <map>
 #include <set>
