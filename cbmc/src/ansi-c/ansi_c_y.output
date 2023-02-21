@@ -1,54 +1,54 @@
 Terminals unused in grammar
 
-   "wchar_t"
-   "__auto_type"
-   "__interface"
-   "__cdecl"
-   "__stdcall"
-   "__fastcall"
-   "__clrcall"
-   "TRUE"
-   "FALSE"
-   "_Alignas"
-   "_Imaginary"
-   "_Noreturn"
-   "nullptr"
-   "constexpr"
-   TOK_SCANNER_ERROR
-   TOK_SCANNER_EOF
-   "catch"
-   "char16_t"
-   "char32_t"
-   "class"
-   "delete"
-   "decltype"
-   "explicit"
-   "friend"
-   "mutable"
-   "namespace"
-   "new"
-   "noexcept"
-   "operator"
-   "private"
-   "protected"
-   "public"
-   "template"
-   "this"
-   "throw"
-   "typeid"
-   "typename"
-   "try"
-   "using"
-   "virtual"
-   "::"
-   ".*"
-   "->*"
-   TOK_MSC_UNARY_TYPE_PREDICATE
-   TOK_MSC_BINARY_TYPE_PREDICATE
-   "__uuidof"
-   "__if_exists"
-   "__if_not_exists"
-   "__underlying_type"
+    "wchar_t"
+    "__auto_type"
+    "__interface"
+    "__cdecl"
+    "__stdcall"
+    "__fastcall"
+    "__clrcall"
+    "TRUE"
+    "FALSE"
+    "_Alignas"
+    "_Imaginary"
+    "_Noreturn"
+    "nullptr"
+    "constexpr"
+    TOK_SCANNER_ERROR
+    TOK_SCANNER_EOF
+    "catch"
+    "char16_t"
+    "char32_t"
+    "class"
+    "delete"
+    "decltype"
+    "explicit"
+    "friend"
+    "mutable"
+    "namespace"
+    "new"
+    "noexcept"
+    "operator"
+    "private"
+    "protected"
+    "public"
+    "template"
+    "this"
+    "throw"
+    "typeid"
+    "typename"
+    "try"
+    "using"
+    "virtual"
+    "::"
+    ".*"
+    "->*"
+    TOK_MSC_UNARY_TYPE_PREDICATE
+    TOK_MSC_BINARY_TYPE_PREDICATE
+    "__uuidof"
+    "__if_exists"
+    "__if_not_exists"
+    "__underlying_type"
 
 
 State 952 conflicts: 1 shift/reduce
@@ -853,652 +853,814 @@ Grammar
 
 Terminals, with rules where they appear
 
-$end (0) 0
-'!' (33) 61
-'%' (37) 73
-'&' (38) 55 89
-'(' (40) 14 21 26 27 28 29 37 40 41 46 47 63 65 67 127 134 175 209
-    210 215 224 225 226 227 231 232 289 292 299 301 302 409 410 411
-    414 415 417 428 432 451 452 457 458 479 520 521 523 524 527 528
-    529 531 539 540 542 549 551 553 555 573 574 575 576 577 578 579
-    581
-')' (41) 14 21 26 27 28 29 37 40 41 46 47 63 65 67 127 134 175 209
-    210 215 224 225 226 227 231 232 289 292 299 301 302 409 410 411
-    414 415 417 428 432 451 452 457 458 479 520 521 523 524 527 528
-    529 531 539 540 542 549 551 553 555 573 574 575 576 577 578 579
-    581
-'*' (42) 57 71 518 519 523 524 525 526 535 537 558 562 563 564 565
-    566 568 569 570 571
-'+' (43) 58 75
-',' (44) 21 23 26 27 29 47 51 118 127 133 145 227 228 283 291 314 316
-    334 335 340 342 345 370 372 426 454 460 465 469 504
-'-' (45) 59 76
-'.' (46) 31 42 379 384
-'/' (47) 72
-':' (58) 24 25 103 104 324 378 398 399 400 401 449 450 455 456 461
-    462 466 467
-';' (59) 122 123 124 125 126 309 310 311 312 408 415 417 418 419 420
-    421 422 423 424 428 435 478 479 486
-'<' (60) 81 272
-'=' (61) 106 226 227 338 367 376
-'>' (62) 82 272
-'?' (63) 103 104
-'[' (91) 32 39 265 266 267 380 381 382 383 452 458 556 557 558 559
-    560 561 562
-']' (93) 32 39 265 266 267 380 381 382 383 452 458 556 557 558 559
-    560 561 562
-'^' (94) 91 536 567 572
-'{' (123) 33 35 46 47 275 277 326 328 369 370 402 403 404 429 430
-'|' (124) 93
-'}' (125) 33 35 46 47 275 277 326 328 369 370 402 403 404 429 430
-'~' (126) 60
-error (256)
-"auto" (258) 238
-"bool" (259) 263
-"complex" (260) 264
-"break" (261) 421
-"case" (262) 399 400
-"char" (263) 249
-"const" (264) 169 287
-"continue" (265) 420
-"default" (266) 25 401
-"do" (267) 415
-"double" (268) 259
-"else" (269) 410
-"enum" (270) 330
-"extern" (271) 236
-"float" (272) 252
-"for" (273) 417
-"goto" (274) 418 419 440 441 442
-"if" (275) 409 410
-"inline" (276) 240
-"int" (277) 244
-"long" (278) 251
-"register" (279) 239
-"restrict" (280) 170 222
-"return" (281) 422 423
-"short" (282) 250
-"signed" (283) 260
-"sizeof" (284) 62 63
-"static" (285) 237
-"struct" (286) 280
-"switch" (287) 411
-"typedef" (288) 235
-"union" (289) 281
-"unsigned" (290) 261
-"void" (291) 262
-"volatile" (292) 171 439 441 442
-"wchar_t" (293)
-"while" (294) 414 415
-"->" (295) 43
-"++" (296) 44 53
-"--" (297) 45 54
-"<<" (298) 78
-">>" (299) 79
-"<=" (300) 83
-">=" (301) 84
-"==" (302) 86
-"!=" (303) 87
-"&&" (304) 56 95
-"||" (305) 97
-"..." (306) 340 381 383 400
-"*=" (307) 107
-"/=" (308) 108
-"%=" (309) 109
-"+=" (310) 110
-"-=" (311) 111
-"<<=" (312) 112
-">>=" (313) 113
-"&=" (314) 114
-"^=" (315) 115
-"|=" (316) 116
-TOK_IDENTIFIER (317) 2 220
-TOK_TYPEDEFNAME (318) 3 221
-TOK_INTEGER (319) 4 225
-TOK_FLOATING (320) 5
-TOK_CHARACTER (321) 6
-TOK_STRING (322) 7 224
-TOK_ASM_STRING (323) 404 429 430 431
-"__int8" (324) 245
-"__int16" (325) 246
-"__int32" (326) 247
-"__int64" (327) 248
-"__ptr32" (328) 173
-"__ptr64" (329) 174
-"typeof" (330) 209 210
-"__auto_type" (331)
-"__float80" (332) 253
-"__float128" (333) 254
-"__int128" (334) 255
-"_Decimal32" (335) 256
-"_Decimal64" (336) 257
-"_Decimal128" (337) 258
-"__asm__" (338) 242
-"__asm__ (with parentheses)" (339) 134 428 429 479
-"__attribute__" (340) 292
-"aligned" (341) 300 301
-"transparent_union" (342) 298
-"packed" (343) 297
-"vector_size" (344) 299
-"mode" (345) 302
-"__gnu_inline__" (346) 303
-")" (347) 297 298 299 300 301 302 303
-"__label__" (348) 424
-"__asm" (349) 430 431
-"__based" (350) 175
-"_var_arg_typeof" (351) 28
-"__builtin_va_arg" (352) 26
-"__builtin_types_compatible_p" (353) 27
-"__offsetof" (354) 29
-"__alignof__" (355) 64 65
-"__try" (356) 432 433
-"__finally" (357) 433
-"__except" (358) 432
-"__leave" (359) 434
-"__declspec" (360) 231 232
-"__interface" (361)
-"__cdecl" (362)
-"__stdcall" (363)
-"__fastcall" (364)
-"__clrcall" (365)
-"forall" (366) 33
-"exists" (367) 35
-"\\forall" (368) 34
-"\\exists" (369) 36
-"array_of" (370) 272
-"__CPROVER_bitvector" (371) 265
-"__CPROVER_floatbv" (372) 266
-"__CPROVER_fixedbv" (373) 267
-"__CPROVER_atomic" (374) 172
-"__CPROVER_bool" (375) 268
-"__CPROVER_throw" (376) 435
-"__CPROVER_catch" (377) 436
-"__CPROVER_try" (378) 436 437
-"__CPROVER_finally" (379) 437
-"==>" (380) 99
-"<==>" (381) 101
-"TRUE" (382)
-"FALSE" (383)
-"__real__" (384) 68
-"__imag__" (385) 69
-"_Alignas" (386)
-"_Atomic" (387) 168
-"_Atomic()" (388) 215
-"_Generic" (389) 21
-"_Imaginary" (390)
-"_Noreturn" (391)
-"_Static_assert" (392) 127
-"_Thread_local" (393) 241
-"nullptr" (394)
-"constexpr" (395)
-TOK_SCANNER_ERROR (396)
-TOK_SCANNER_EOF (397)
-"catch" (398)
-"char16_t" (399)
-"char32_t" (400)
-"class" (401)
-"delete" (402)
-"decltype" (403)
-"explicit" (404)
-"friend" (405)
-"mutable" (406)
-"namespace" (407)
-"new" (408)
-"noexcept" (409)
-"operator" (410)
-"private" (411)
-"protected" (412)
-"public" (413)
-"template" (414)
-"this" (415)
-"throw" (416)
-"typeid" (417)
-"typename" (418)
-"try" (419)
-"using" (420)
-"virtual" (421)
-"::" (422)
-".*" (423)
-"->*" (424)
-TOK_MSC_UNARY_TYPE_PREDICATE (425)
-TOK_MSC_BINARY_TYPE_PREDICATE (426)
-"__uuidof" (427)
-"__if_exists" (428)
-"__if_not_exists" (429)
-"__underlying_type" (430)
+    $end (0) 0
+    '!' (33) 61
+    '%' (37) 73
+    '&' (38) 55 89
+    '(' (40) 14 21 26 27 28 29 37 40 41 46 47 63 65 67 127 134 175 209 210 215 224 225 226 227 231 232 289 292 299 301 302 409 410 411 414 415 417 428 432 451 452 457 458 479 520 521 523 524 527 528 529 531 539 540 542 549 551 553 555 573 574 575 576 577 578 579 581
+    ')' (41) 14 21 26 27 28 29 37 40 41 46 47 63 65 67 127 134 175 209 210 215 224 225 226 227 231 232 289 292 299 301 302 409 410 411 414 415 417 428 432 451 452 457 458 479 520 521 523 524 527 528 529 531 539 540 542 549 551 553 555 573 574 575 576 577 578 579 581
+    '*' (42) 57 71 518 519 523 524 525 526 535 537 558 562 563 564 565 566 568 569 570 571
+    '+' (43) 58 75
+    ',' (44) 21 23 26 27 29 47 51 118 127 133 145 227 228 283 291 314 316 334 335 340 342 345 370 372 426 454 460 465 469 504
+    '-' (45) 59 76
+    '.' (46) 31 42 379 384
+    '/' (47) 72
+    ':' (58) 24 25 103 104 324 378 398 399 400 401 449 450 455 456 461 462 466 467
+    ';' (59) 122 123 124 125 126 309 310 311 312 408 415 417 418 419 420 421 422 423 424 428 435 478 479 486
+    '<' (60) 81 272
+    '=' (61) 106 226 227 338 367 376
+    '>' (62) 82 272
+    '?' (63) 103 104
+    '[' (91) 32 39 265 266 267 380 381 382 383 452 458 556 557 558 559 560 561 562
+    ']' (93) 32 39 265 266 267 380 381 382 383 452 458 556 557 558 559 560 561 562
+    '^' (94) 91 536 567 572
+    '{' (123) 33 35 46 47 275 277 326 328 369 370 402 403 404 429 430
+    '|' (124) 93
+    '}' (125) 33 35 46 47 275 277 326 328 369 370 402 403 404 429 430
+    '~' (126) 60
+    error (256)
+    "auto" (258) 238
+    "bool" (259) 263
+    "complex" (260) 264
+    "break" (261) 421
+    "case" (262) 399 400
+    "char" (263) 249
+    "const" (264) 169 287
+    "continue" (265) 420
+    "default" (266) 25 401
+    "do" (267) 415
+    "double" (268) 259
+    "else" (269) 410
+    "enum" (270) 330
+    "extern" (271) 236
+    "float" (272) 252
+    "for" (273) 417
+    "goto" (274) 418 419 440 441 442
+    "if" (275) 409 410
+    "inline" (276) 240
+    "int" (277) 244
+    "long" (278) 251
+    "register" (279) 239
+    "restrict" (280) 170 222
+    "return" (281) 422 423
+    "short" (282) 250
+    "signed" (283) 260
+    "sizeof" (284) 62 63
+    "static" (285) 237
+    "struct" (286) 280
+    "switch" (287) 411
+    "typedef" (288) 235
+    "union" (289) 281
+    "unsigned" (290) 261
+    "void" (291) 262
+    "volatile" (292) 171 439 441 442
+    "wchar_t" (293)
+    "while" (294) 414 415
+    "->" (295) 43
+    "++" (296) 44 53
+    "--" (297) 45 54
+    "<<" (298) 78
+    ">>" (299) 79
+    "<=" (300) 83
+    ">=" (301) 84
+    "==" (302) 86
+    "!=" (303) 87
+    "&&" (304) 56 95
+    "||" (305) 97
+    "..." (306) 340 381 383 400
+    "*=" (307) 107
+    "/=" (308) 108
+    "%=" (309) 109
+    "+=" (310) 110
+    "-=" (311) 111
+    "<<=" (312) 112
+    ">>=" (313) 113
+    "&=" (314) 114
+    "^=" (315) 115
+    "|=" (316) 116
+    TOK_IDENTIFIER (317) 2 220
+    TOK_TYPEDEFNAME (318) 3 221
+    TOK_INTEGER (319) 4 225
+    TOK_FLOATING (320) 5
+    TOK_CHARACTER (321) 6
+    TOK_STRING (322) 7 224
+    TOK_ASM_STRING (323) 404 429 430 431
+    "__int8" (324) 245
+    "__int16" (325) 246
+    "__int32" (326) 247
+    "__int64" (327) 248
+    "__ptr32" (328) 173
+    "__ptr64" (329) 174
+    "typeof" (330) 209 210
+    "__auto_type" (331)
+    "__float80" (332) 253
+    "__float128" (333) 254
+    "__int128" (334) 255
+    "_Decimal32" (335) 256
+    "_Decimal64" (336) 257
+    "_Decimal128" (337) 258
+    "__asm__" (338) 242
+    "__asm__ (with parentheses)" (339) 134 428 429 479
+    "__attribute__" (340) 292
+    "aligned" (341) 300 301
+    "transparent_union" (342) 298
+    "packed" (343) 297
+    "vector_size" (344) 299
+    "mode" (345) 302
+    "__gnu_inline__" (346) 303
+    ")" (347) 297 298 299 300 301 302 303
+    "__label__" (348) 424
+    "__asm" (349) 430 431
+    "__based" (350) 175
+    "_var_arg_typeof" (351) 28
+    "__builtin_va_arg" (352) 26
+    "__builtin_types_compatible_p" (353) 27
+    "__offsetof" (354) 29
+    "__alignof__" (355) 64 65
+    "__try" (356) 432 433
+    "__finally" (357) 433
+    "__except" (358) 432
+    "__leave" (359) 434
+    "__declspec" (360) 231 232
+    "__interface" (361)
+    "__cdecl" (362)
+    "__stdcall" (363)
+    "__fastcall" (364)
+    "__clrcall" (365)
+    "forall" (366) 33
+    "exists" (367) 35
+    "\\forall" (368) 34
+    "\\exists" (369) 36
+    "array_of" (370) 272
+    "__CPROVER_bitvector" (371) 265
+    "__CPROVER_floatbv" (372) 266
+    "__CPROVER_fixedbv" (373) 267
+    "__CPROVER_atomic" (374) 172
+    "__CPROVER_bool" (375) 268
+    "__CPROVER_throw" (376) 435
+    "__CPROVER_catch" (377) 436
+    "__CPROVER_try" (378) 436 437
+    "__CPROVER_finally" (379) 437
+    "==>" (380) 99
+    "<==>" (381) 101
+    "TRUE" (382)
+    "FALSE" (383)
+    "__real__" (384) 68
+    "__imag__" (385) 69
+    "_Alignas" (386)
+    "_Atomic" (387) 168
+    "_Atomic()" (388) 215
+    "_Generic" (389) 21
+    "_Imaginary" (390)
+    "_Noreturn" (391)
+    "_Static_assert" (392) 127
+    "_Thread_local" (393) 241
+    "nullptr" (394)
+    "constexpr" (395)
+    TOK_SCANNER_ERROR (396)
+    TOK_SCANNER_EOF (397)
+    "catch" (398)
+    "char16_t" (399)
+    "char32_t" (400)
+    "class" (401)
+    "delete" (402)
+    "decltype" (403)
+    "explicit" (404)
+    "friend" (405)
+    "mutable" (406)
+    "namespace" (407)
+    "new" (408)
+    "noexcept" (409)
+    "operator" (410)
+    "private" (411)
+    "protected" (412)
+    "public" (413)
+    "template" (414)
+    "this" (415)
+    "throw" (416)
+    "typeid" (417)
+    "typename" (418)
+    "try" (419)
+    "using" (420)
+    "virtual" (421)
+    "::" (422)
+    ".*" (423)
+    "->*" (424)
+    TOK_MSC_UNARY_TYPE_PREDICATE (425)
+    TOK_MSC_BINARY_TYPE_PREDICATE (426)
+    "__uuidof" (427)
+    "__if_exists" (428)
+    "__if_not_exists" (429)
+    "__underlying_type" (430)
 
 
 Nonterminals, with rules where they appear
 
-$accept (200)
-    on left: 0
-grammar (201)
-    on left: 1, on right: 0
-identifier (202)
-    on left: 2, on right: 12 48 288 289 302 343 360 541
-typedef_name (203)
-    on left: 3, on right: 49 198 206 207 361 419 495 514 515 530
-integer (204)
-    on left: 4, on right: 8
-floating (205)
-    on left: 5, on right: 9
-character (206)
-    on left: 6, on right: 10
-string (207)
-    on left: 7, on right: 11 448 451 452 457 458 463 479
-constant (208)
-    on left: 8 9 10 11, on right: 13
-primary_expression (209)
-    on left: 12 13 14 15 16 17 18 19 20, on right: 34 36 38
-generic_selection (210)
-    on left: 21, on right: 20
-generic_assoc_list (211)
-    on left: 22 23, on right: 21 23
-generic_association (212)
-    on left: 24 25, on right: 22 23
-gcc_builtin_expressions (213)
-    on left: 26 27, on right: 16
-cw_builtin_expressions (214)
-    on left: 28, on right: 17
-offsetof (215)
-    on left: 29, on right: 18
-offsetof_member_designator (216)
-    on left: 30 31 32, on right: 29 31 32
-quantifier_expression (217)
-    on left: 33 34 35 36, on right: 19
-statement_expression (218)
-    on left: 37, on right: 15
-postfix_expression (219)
-    on left: 38 39 40 41 42 43 44 45 46 47, on right: 39 40 41 42 43
-    44 45 52
-member_name (220)
-    on left: 48 49, on right: 30 31 42 43 378 379 384
-argument_expression_list (221)
-    on left: 50 51, on right: 41 51
-unary_expression (222)
-    on left: 52 53 54 55 56 57 58 59 60 61 62 63 64 65, on right: 53
-    54 62 64 66
-cast_expression (223)
-    on left: 66 67 68 69, on right: 55 57 58 59 60 61 67 68 69 70 71
-    72 73 106 107 108 109 110 111 112 113 114 115 116
-multiplicative_expression (224)
-    on left: 70 71 72 73, on right: 71 72 73 74 75 76
-additive_expression (225)
-    on left: 74 75 76, on right: 75 76 77 78 79
-shift_expression (226)
-    on left: 77 78 79, on right: 78 79 80 81 82 83 84
-relational_expression (227)
-    on left: 80 81 82 83 84, on right: 81 82 83 84 85 86 87
-equality_expression (228)
-    on left: 85 86 87, on right: 86 87 88 89
-and_expression (229)
-    on left: 88 89, on right: 89 90 91
-exclusive_or_expression (230)
-    on left: 90 91, on right: 91 92 93
-inclusive_or_expression (231)
-    on left: 92 93, on right: 93 94 95
-logical_and_expression (232)
-    on left: 94 95, on right: 95 96 97
-logical_or_expression (233)
-    on left: 96 97, on right: 97 98 99
-logical_implication_expression (234)
-    on left: 98 99, on right: 99 100 101
-logical_equivalence_expression (235)
-    on left: 100 101, on right: 101 102 103 104
-conditional_expression (236)
-    on left: 102 103 104, on right: 103 104 105
-assignment_expression (237)
-    on left: 105 106 107 108 109 110 111 112 113 114 115 116, on right:
-    21 24 25 26 50 51 106 107 108 109 110 111 112 113 114 115 116 117
-    118 119 127 282 283
-comma_expression (238)
-    on left: 117 118, on right: 14 32 33 35 39 103 118 121 175 209
-    265 266 267 299 301 380 381 382 383 409 410 411 415 418 423 432
-    451 452 457 458
-constant_expression (239)
-    on left: 119, on right: 324 338 368 399 400 559 560 561
-comma_expression_opt (240)
-    on left: 120 121, on right: 408 414 417
-declaration (241)
-    on left: 122 123 124 125 126, on right: 33 34 35 36 397 476
-static_assert_declaration (242)
-    on left: 127, on right: 124 312
-default_declaring_list (243)
-    on left: 129 131 133, on right: 126 133
-@1 (244)
-    on left: 128, on right: 129
-@2 (245)
-    on left: 130, on right: 131
-$@3 (246)
-    on left: 132, on right: 133
-post_declarator_attribute (247)
-    on left: 134 135, on right: 136 137
-post_declarator_attributes (248)
-    on left: 136 137, on right: 136 139
-post_declarator_attributes_opt (249)
-    on left: 138 139, on right: 141 143 145
-declaring_list (250)
-    on left: 141 143 145, on right: 125 145
-@4 (251)
-    on left: 140, on right: 141
-@5 (252)
-    on left: 142, on right: 143
-$@6 (253)
-    on left: 144, on right: 145
-declaration_specifier (254)
-    on left: 146 147 148 149 150, on right: 122 141 346 347 348 349
-    506
-type_specifier (255)
-    on left: 151 152 153 154 155, on right: 123 143 315 353 354 355
-    356 362 363 503 507
-declaration_qualifier_list (256)
-    on left: 156 157 158 159 160, on right: 129 159 160 183 191 198
-    201 204 350 351 352 508
-type_qualifier_list (257)
-    on left: 161 162 163, on right: 131 157 162 163 165 188 195 207
-    212 213 214 217 218 219 313 357 358 359 364 365 509
-attribute_type_qualifier_list (258)
-    on left: 164 165, on right: 519 524 526 537 564 566 569 571
-declaration_qualifier (259)
-    on left: 166 167, on right: 160 185 193 199 202 205 489 492 496
-type_qualifier (260)
-    on left: 168 169 170 171 172 173 174 175, on right: 161 162 167
-    176 178 189 196 208 488
-attribute_or_type_qualifier (261)
-    on left: 176 177, on right: 164 165
-attribute_or_type_qualifier_or_storage_class (262)
-    on left: 178 179 180, on right: 181 182
-attribute_type_qualifier_storage_class_list (263)
-    on left: 181 182, on right: 182 557 560
-basic_declaration_specifier (264)
-    on left: 183 184 185 186, on right: 146 185 186
-basic_type_specifier (265)
-    on left: 187 188 189 190, on right: 151 184 189 190 491
-sue_declaration_specifier (266)
-    on left: 191 192 193, on right: 147 193
-sue_type_specifier (267)
-    on left: 194 195 196, on right: 152 192 196
-typedef_declaration_specifier (268)
-    on left: 197 198 199, on right: 148 199
-typeof_declaration_specifier (269)
-    on left: 200 201 202, on right: 149 202
-atomic_declaration_specifier (270)
-    on left: 203 204 205, on right: 150 205
-typedef_type_specifier (271)
-    on left: 206 207 208, on right: 153 197 208 494
-typeof_specifier (272)
-    on left: 209 210, on right: 201 211 212 213 214
-typeof_type_specifier (273)
-    on left: 211 212 213 214, on right: 154 200
-atomic_specifier (274)
-    on left: 215, on right: 204 216 217 218 219
-atomic_type_specifier (275)
-    on left: 216 217 218 219, on right: 155 203
-msc_decl_identifier (276)
-    on left: 220 221 222, on right: 223 224 225 226 227
-msc_decl_modifier (277)
-    on left: 223 224 225 226 227 228, on right: 229 230
-msc_declspec_seq (278)
-    on left: 229 230, on right: 230 231
-msc_declspec (279)
-    on left: 231 232, on right: 234 243
-msc_declspec_opt (280)
-    on left: 233 234, on right: 275 277 279
-storage_class (281)
-    on left: 235 236 237 238 239 240 241 242 243, on right: 156 157
-    166 180 184 192 197 200 203 487 488 491 494
-basic_type_name (282)
-    on left: 244 245 246 247 248 249 250 251 252 253 254 255 256 257
-    258 259 260 261 262 263 264 265 266 267 268, on right: 183 186
-    187 188 190 490 493
-elaborated_type_name (283)
-    on left: 269 270 271, on right: 191 194 195
-array_of_construct (284)
-    on left: 272, on right: 271
-pragma_packed (285)
-    on left: 273, on right: 275 277
-aggregate_name (286)
-    on left: 275 277 279, on right: 269
-$@7 (287)
-    on left: 274, on right: 275
-$@8 (288)
-    on left: 276, on right: 277
-$@9 (289)
-    on left: 278, on right: 279
-aggregate_key (290)
-    on left: 280 281, on right: 275 277 279 497
-gcc_attribute_expression_list (291)
-    on left: 282 283, on right: 283 285
-gcc_attribute_expression_list_opt (292)
-    on left: 284 285, on right: 289
-gcc_attribute (293)
-    on left: 286 287 288 289, on right: 290 291
-gcc_attribute_list (294)
-    on left: 290 291, on right: 291 292
-gcc_attribute_specifier (295)
-    on left: 292, on right: 304
-gcc_type_attribute_opt (296)
-    on left: 293 294, on right: 183 184 185 186 187 188 190 197 198
-    199 200 201 202 203 204 205 206 207 208 275 277 279 313 315 317
-    319 320 321 326 328 329 336 348 352 355 359 362 363 364 365 490
-    491 492 493 494 495 496 497 498
-gcc_type_attribute_list (297)
-    on left: 295 296, on right: 294 296
-gcc_type_attribute (298)
-    on left: 297 298 299 300 301 302 303 304, on right: 135 158 159
-    163 177 179 295 296
-member_declaration_list_opt (299)
-    on left: 305 306, on right: 275 277
-member_declaration_list (300)
-    on left: 307 308, on right: 306 308
-member_declaration (301)
-    on left: 309 310 311 312, on right: 307 308
-member_default_declaring_list (302)
-    on left: 313 314, on right: 310 314
-member_declaring_list (303)
-    on left: 315 316, on right: 309 316
-member_declarator (304)
-    on left: 317 318 319, on right: 315 316
-member_identifier_declarator (305)
-    on left: 320 321, on right: 313 314
-bit_field_size_opt (306)
-    on left: 322 323, on right: 317 320
-bit_field_size (307)
-    on left: 324, on right: 319 321 323
-enum_name (308)
-    on left: 326 328 329, on right: 270
-$@10 (309)
-    on left: 325, on right: 326
-$@11 (310)
-    on left: 327, on right: 328
-enum_key (311)
-    on left: 330, on right: 326 328 329 498
-enumerator_list_opt (312)
-    on left: 331 332, on right: 326 328
-enumerator_list (313)
-    on left: 333 334 335, on right: 332 334 335
-enumerator_declaration (314)
-    on left: 336, on right: 333 334
-enumerator_value_opt (315)
-    on left: 337 338, on right: 336
-parameter_type_list (316)
-    on left: 339 340, on right: 555
-KnR_parameter_list (317)
-    on left: 341 342, on right: 342 551
-KnR_parameter (318)
-    on left: 343, on right: 341 342
-parameter_list (319)
-    on left: 344 345, on right: 339 340 345
-parameter_declaration (320)
-    on left: 346 347 348 349 350 351 352 353 354 355 356 357 358 359,
-    on right: 344 345
-identifier_or_typedef_name (321)
-    on left: 360 361, on right: 277 279 328 329 336 398 427 452 458
-    497 498
-type_name (322)
-    on left: 362 363 364 365, on right: 24 26 27 28 29 46 47 63 65
-    67 210 215 272
-initializer_opt (323)
-    on left: 366 367, on right: 129 131 133 141 143 145
-initializer (324)
-    on left: 368 369 370, on right: 367 375 376 377 378
-initializer_list (325)
-    on left: 371 372, on right: 47 370 372 373
-initializer_list_opt (326)
-    on left: 373 374, on right: 46 369
-designated_initializer (327)
-    on left: 375 376 377 378, on right: 371 372
-designator (328)
-    on left: 379 380 381 382 383 384, on right: 376 377 382 383 384
-statement (329)
-    on left: 385 386 387 388 389 390 391 392 393 394 395 396, on right:
-    398 399 400 401 406 407 409 410 411 414 415 417
-declaration_statement (330)
-    on left: 397, on right: 387 412
-labeled_statement (331)
-    on left: 398 399 400 401, on right: 385
-compound_statement (332)
-    on left: 402 403 404, on right: 37 386 432 433 436 437 481
-compound_scope (333)
-    on left: 405, on right: 33 34 35 36 402 403 404
-statement_list (334)
-    on left: 406 407, on right: 403 407
-expression_statement (335)
-    on left: 408, on right: 388 413
-selection_statement (336)
-    on left: 409 410 411, on right: 389
-declaration_or_expression_statement (337)
-    on left: 412 413, on right: 417
-iteration_statement (338)
-    on left: 414 415 417, on right: 390
-$@12 (339)
-    on left: 416, on right: 417
-jump_statement (340)
-    on left: 418 419 420 421 422 423, on right: 391
-gcc_local_label_statement (341)
-    on left: 424, on right: 393
-gcc_local_label_list (342)
-    on left: 425 426, on right: 424 426
-gcc_local_label (343)
-    on left: 427, on right: 56 425 426 470
-gcc_asm_statement (344)
-    on left: 428 429, on right: 392
-msc_asm_statement (345)
-    on left: 430 431, on right: 394
-msc_seh_statement (346)
-    on left: 432 433 434, on right: 395
-cprover_exception_statement (347)
-    on left: 435 436 437, on right: 396
-volatile_or_goto_opt (348)
-    on left: 438 439 440 441 442, on right: 134 428 429
-gcc_asm_commands (349)
-    on left: 443 444 445 446 447, on right: 134 428
-gcc_asm_assembler_template (350)
-    on left: 448, on right: 443 444 445 446 447
-gcc_asm_outputs (351)
-    on left: 449 450, on right: 444 445 446 447
-gcc_asm_output (352)
-    on left: 451 452, on right: 453 454
-gcc_asm_output_list (353)
-    on left: 453 454, on right: 449 454
-gcc_asm_inputs (354)
-    on left: 455 456, on right: 445 446 447
-gcc_asm_input (355)
-    on left: 457 458, on right: 459 460
-gcc_asm_input_list (356)
-    on left: 459 460, on right: 455 460
-gcc_asm_clobbered_registers (357)
-    on left: 461 462, on right: 446 447
-gcc_asm_clobbered_register (358)
-    on left: 463, on right: 464 465
-gcc_asm_clobbered_registers_list (359)
-    on left: 464 465, on right: 461 465
-gcc_asm_labels (360)
-    on left: 466 467, on right: 447
-gcc_asm_labels_list (361)
-    on left: 468 469, on right: 466 469
-gcc_asm_label (362)
-    on left: 470, on right: 468 469
-translation_unit (363)
-    on left: 471 472, on right: 1
-external_definition_list (364)
-    on left: 473 474, on right: 472 474
-external_definition (365)
-    on left: 475 476 477 478, on right: 473 474
-asm_definition (366)
-    on left: 479, on right: 477
-function_definition (367)
-    on left: 480, on right: 475
-function_body (368)
-    on left: 481, on right: 480
-KnR_parameter_header_opt (369)
-    on left: 482 483, on right: 551
-KnR_parameter_header (370)
-    on left: 484 485, on right: 483 485 549
-KnR_parameter_declaration (371)
-    on left: 486, on right: 484 485
-KnR_declaration_qualifier_list (372)
-    on left: 487 488 489, on right: 489 490 495 497 498
-KnR_basic_declaration_specifier (373)
-    on left: 490 491 492 493, on right: 492 493 499
-KnR_typedef_declaration_specifier (374)
-    on left: 494 495 496, on right: 496 500
-KnR_sue_declaration_specifier (375)
-    on left: 497 498, on right: 501
-KnR_declaration_specifier (376)
-    on left: 499 500 501, on right: 502
-KnR_parameter_declaring_list (377)
-    on left: 502 503 504, on right: 486 504
-function_head (378)
-    on left: 505 506 507 508 509, on right: 480
-declarator (379)
-    on left: 510 511, on right: 141 143 145 317 502 503 504 506 507
-typedef_declarator (380)
-    on left: 512 513, on right: 511
-parameter_typedef_declarator (381)
-    on left: 514 515 516, on right: 349 356 513 518 519
-clean_typedef_declarator (382)
-    on left: 517 518 519, on right: 516 520 521
-clean_postfix_typedef_declarator (383)
-    on left: 520 521, on right: 517
-paren_typedef_declarator (384)
-    on left: 522 523 524 525 526, on right: 512 525 526 527 529
-paren_postfix_typedef_declarator (385)
-    on left: 527 528 529, on right: 522
-simple_paren_typedef_declarator (386)
-    on left: 530 531, on right: 523 524 528 531
-identifier_declarator (387)
-    on left: 532 533, on right: 129 131 133 320 348 352 355 359 505
-    508 509 510 535 536 537
-unary_identifier_declarator (388)
-    on left: 534 535 536 537, on right: 532 539 540
-postfix_identifier_declarator (389)
-    on left: 538 539 540, on right: 534
-paren_identifier_declarator (390)
-    on left: 541 542, on right: 533 538 542
-abstract_declarator (391)
-    on left: 543 544 545, on right: 363 365 565 566
-parameter_abstract_declarator (392)
-    on left: 546 547, on right: 347 351 354 358 570 571
-postfixing_abstract_declarator (393)
-    on left: 548 549 551, on right: 515 521 528 529 538 540 545 575
-    576 577
-$@13 (394)
-    on left: 550, on right: 551
-parameter_postfixing_abstract_declarator (395)
-    on left: 552 553 555, on right: 548 580 581
-$@14 (396)
-    on left: 554, on right: 555
-array_abstract_declarator (397)
-    on left: 556 557 558 559 560 561 562, on right: 552 561 562
-unary_abstract_declarator (398)
-    on left: 563 564 565 566 567, on right: 543 573 577
-parameter_unary_abstract_declarator (399)
-    on left: 568 569 570 571 572, on right: 546 578 581
-postfix_abstract_declarator (400)
-    on left: 573 574 575 576 577, on right: 544 574 576
-parameter_postfix_abstract_declarator (401)
-    on left: 578 579 580 581, on right: 547 579
+    $accept (200)
+        on left: 0
+    grammar (201)
+        on left: 1
+        on right: 0
+    identifier (202)
+        on left: 2
+        on right: 12 48 288 289 302 343 360 541
+    typedef_name (203)
+        on left: 3
+        on right: 49 198 206 207 361 419 495 514 515 530
+    integer (204)
+        on left: 4
+        on right: 8
+    floating (205)
+        on left: 5
+        on right: 9
+    character (206)
+        on left: 6
+        on right: 10
+    string (207)
+        on left: 7
+        on right: 11 448 451 452 457 458 463 479
+    constant (208)
+        on left: 8 9 10 11
+        on right: 13
+    primary_expression (209)
+        on left: 12 13 14 15 16 17 18 19 20
+        on right: 34 36 38
+    generic_selection (210)
+        on left: 21
+        on right: 20
+    generic_assoc_list (211)
+        on left: 22 23
+        on right: 21 23
+    generic_association (212)
+        on left: 24 25
+        on right: 22 23
+    gcc_builtin_expressions (213)
+        on left: 26 27
+        on right: 16
+    cw_builtin_expressions (214)
+        on left: 28
+        on right: 17
+    offsetof (215)
+        on left: 29
+        on right: 18
+    offsetof_member_designator (216)
+        on left: 30 31 32
+        on right: 29 31 32
+    quantifier_expression (217)
+        on left: 33 34 35 36
+        on right: 19
+    statement_expression (218)
+        on left: 37
+        on right: 15
+    postfix_expression (219)
+        on left: 38 39 40 41 42 43 44 45 46 47
+        on right: 39 40 41 42 43 44 45 52
+    member_name (220)
+        on left: 48 49
+        on right: 30 31 42 43 378 379 384
+    argument_expression_list (221)
+        on left: 50 51
+        on right: 41 51
+    unary_expression (222)
+        on left: 52 53 54 55 56 57 58 59 60 61 62 63 64 65
+        on right: 53 54 62 64 66
+    cast_expression (223)
+        on left: 66 67 68 69
+        on right: 55 57 58 59 60 61 67 68 69 70 71 72 73 106 107 108 109 110 111 112 113 114 115 116
+    multiplicative_expression (224)
+        on left: 70 71 72 73
+        on right: 71 72 73 74 75 76
+    additive_expression (225)
+        on left: 74 75 76
+        on right: 75 76 77 78 79
+    shift_expression (226)
+        on left: 77 78 79
+        on right: 78 79 80 81 82 83 84
+    relational_expression (227)
+        on left: 80 81 82 83 84
+        on right: 81 82 83 84 85 86 87
+    equality_expression (228)
+        on left: 85 86 87
+        on right: 86 87 88 89
+    and_expression (229)
+        on left: 88 89
+        on right: 89 90 91
+    exclusive_or_expression (230)
+        on left: 90 91
+        on right: 91 92 93
+    inclusive_or_expression (231)
+        on left: 92 93
+        on right: 93 94 95
+    logical_and_expression (232)
+        on left: 94 95
+        on right: 95 96 97
+    logical_or_expression (233)
+        on left: 96 97
+        on right: 97 98 99
+    logical_implication_expression (234)
+        on left: 98 99
+        on right: 99 100 101
+    logical_equivalence_expression (235)
+        on left: 100 101
+        on right: 101 102 103 104
+    conditional_expression (236)
+        on left: 102 103 104
+        on right: 103 104 105
+    assignment_expression (237)
+        on left: 105 106 107 108 109 110 111 112 113 114 115 116
+        on right: 21 24 25 26 50 51 106 107 108 109 110 111 112 113 114 115 116 117 118 119 127 282 283
+    comma_expression (238)
+        on left: 117 118
+        on right: 14 32 33 35 39 103 118 121 175 209 265 266 267 299 301 380 381 382 383 409 410 411 415 418 423 432 451 452 457 458
+    constant_expression (239)
+        on left: 119
+        on right: 324 338 368 399 400 559 560 561
+    comma_expression_opt (240)
+        on left: 120 121
+        on right: 408 414 417
+    declaration (241)
+        on left: 122 123 124 125 126
+        on right: 33 34 35 36 397 476
+    static_assert_declaration (242)
+        on left: 127
+        on right: 124 312
+    default_declaring_list (243)
+        on left: 129 131 133
+        on right: 126 133
+    @1 (244)
+        on left: 128
+        on right: 129
+    @2 (245)
+        on left: 130
+        on right: 131
+    $@3 (246)
+        on left: 132
+        on right: 133
+    post_declarator_attribute (247)
+        on left: 134 135
+        on right: 136 137
+    post_declarator_attributes (248)
+        on left: 136 137
+        on right: 136 139
+    post_declarator_attributes_opt (249)
+        on left: 138 139
+        on right: 141 143 145
+    declaring_list (250)
+        on left: 141 143 145
+        on right: 125 145
+    @4 (251)
+        on left: 140
+        on right: 141
+    @5 (252)
+        on left: 142
+        on right: 143
+    $@6 (253)
+        on left: 144
+        on right: 145
+    declaration_specifier (254)
+        on left: 146 147 148 149 150
+        on right: 122 141 346 347 348 349 506
+    type_specifier (255)
+        on left: 151 152 153 154 155
+        on right: 123 143 315 353 354 355 356 362 363 503 507
+    declaration_qualifier_list (256)
+        on left: 156 157 158 159 160
+        on right: 129 159 160 183 191 198 201 204 350 351 352 508
+    type_qualifier_list (257)
+        on left: 161 162 163
+        on right: 131 157 162 163 165 188 195 207 212 213 214 217 218 219 313 357 358 359 364 365 509
+    attribute_type_qualifier_list (258)
+        on left: 164 165
+        on right: 519 524 526 537 564 566 569 571
+    declaration_qualifier (259)
+        on left: 166 167
+        on right: 160 185 193 199 202 205 489 492 496
+    type_qualifier (260)
+        on left: 168 169 170 171 172 173 174 175
+        on right: 161 162 167 176 178 189 196 208 488
+    attribute_or_type_qualifier (261)
+        on left: 176 177
+        on right: 164 165
+    attribute_or_type_qualifier_or_storage_class (262)
+        on left: 178 179 180
+        on right: 181 182
+    attribute_type_qualifier_storage_class_list (263)
+        on left: 181 182
+        on right: 182 557 560
+    basic_declaration_specifier (264)
+        on left: 183 184 185 186
+        on right: 146 185 186
+    basic_type_specifier (265)
+        on left: 187 188 189 190
+        on right: 151 184 189 190 491
+    sue_declaration_specifier (266)
+        on left: 191 192 193
+        on right: 147 193
+    sue_type_specifier (267)
+        on left: 194 195 196
+        on right: 152 192 196
+    typedef_declaration_specifier (268)
+        on left: 197 198 199
+        on right: 148 199
+    typeof_declaration_specifier (269)
+        on left: 200 201 202
+        on right: 149 202
+    atomic_declaration_specifier (270)
+        on left: 203 204 205
+        on right: 150 205
+    typedef_type_specifier (271)
+        on left: 206 207 208
+        on right: 153 197 208 494
+    typeof_specifier (272)
+        on left: 209 210
+        on right: 201 211 212 213 214
+    typeof_type_specifier (273)
+        on left: 211 212 213 214
+        on right: 154 200
+    atomic_specifier (274)
+        on left: 215
+        on right: 204 216 217 218 219
+    atomic_type_specifier (275)
+        on left: 216 217 218 219
+        on right: 155 203
+    msc_decl_identifier (276)
+        on left: 220 221 222
+        on right: 223 224 225 226 227
+    msc_decl_modifier (277)
+        on left: 223 224 225 226 227 228
+        on right: 229 230
+    msc_declspec_seq (278)
+        on left: 229 230
+        on right: 230 231
+    msc_declspec (279)
+        on left: 231 232
+        on right: 234 243
+    msc_declspec_opt (280)
+        on left: 233 234
+        on right: 275 277 279
+    storage_class (281)
+        on left: 235 236 237 238 239 240 241 242 243
+        on right: 156 157 166 180 184 192 197 200 203 487 488 491 494
+    basic_type_name (282)
+        on left: 244 245 246 247 248 249 250 251 252 253 254 255 256 257 258 259 260 261 262 263 264 265 266 267 268
+        on right: 183 186 187 188 190 490 493
+    elaborated_type_name (283)
+        on left: 269 270 271
+        on right: 191 194 195
+    array_of_construct (284)
+        on left: 272
+        on right: 271
+    pragma_packed (285)
+        on left: 273
+        on right: 275 277
+    aggregate_name (286)
+        on left: 275 277 279
+        on right: 269
+    $@7 (287)
+        on left: 274
+        on right: 275
+    $@8 (288)
+        on left: 276
+        on right: 277
+    $@9 (289)
+        on left: 278
+        on right: 279
+    aggregate_key (290)
+        on left: 280 281
+        on right: 275 277 279 497
+    gcc_attribute_expression_list (291)
+        on left: 282 283
+        on right: 283 285
+    gcc_attribute_expression_list_opt (292)
+        on left: 284 285
+        on right: 289
+    gcc_attribute (293)
+        on left: 286 287 288 289
+        on right: 290 291
+    gcc_attribute_list (294)
+        on left: 290 291
+        on right: 291 292
+    gcc_attribute_specifier (295)
+        on left: 292
+        on right: 304
+    gcc_type_attribute_opt (296)
+        on left: 293 294
+        on right: 183 184 185 186 187 188 190 197 198 199 200 201 202 203 204 205 206 207 208 275 277 279 313 315 317 319 320 321 326 328 329 336 348 352 355 359 362 363 364 365 490 491 492 493 494 495 496 497 498
+    gcc_type_attribute_list (297)
+        on left: 295 296
+        on right: 294 296
+    gcc_type_attribute (298)
+        on left: 297 298 299 300 301 302 303 304
+        on right: 135 158 159 163 177 179 295 296
+    member_declaration_list_opt (299)
+        on left: 305 306
+        on right: 275 277
+    member_declaration_list (300)
+        on left: 307 308
+        on right: 306 308
+    member_declaration (301)
+        on left: 309 310 311 312
+        on right: 307 308
+    member_default_declaring_list (302)
+        on left: 313 314
+        on right: 310 314
+    member_declaring_list (303)
+        on left: 315 316
+        on right: 309 316
+    member_declarator (304)
+        on left: 317 318 319
+        on right: 315 316
+    member_identifier_declarator (305)
+        on left: 320 321
+        on right: 313 314
+    bit_field_size_opt (306)
+        on left: 322 323
+        on right: 317 320
+    bit_field_size (307)
+        on left: 324
+        on right: 319 321 323
+    enum_name (308)
+        on left: 326 328 329
+        on right: 270
+    $@10 (309)
+        on left: 325
+        on right: 326
+    $@11 (310)
+        on left: 327
+        on right: 328
+    enum_key (311)
+        on left: 330
+        on right: 326 328 329 498
+    enumerator_list_opt (312)
+        on left: 331 332
+        on right: 326 328
+    enumerator_list (313)
+        on left: 333 334 335
+        on right: 332 334 335
+    enumerator_declaration (314)
+        on left: 336
+        on right: 333 334
+    enumerator_value_opt (315)
+        on left: 337 338
+        on right: 336
+    parameter_type_list (316)
+        on left: 339 340
+        on right: 555
+    KnR_parameter_list (317)
+        on left: 341 342
+        on right: 342 551
+    KnR_parameter (318)
+        on left: 343
+        on right: 341 342
+    parameter_list (319)
+        on left: 344 345
+        on right: 339 340 345
+    parameter_declaration (320)
+        on left: 346 347 348 349 350 351 352 353 354 355 356 357 358 359
+        on right: 344 345
+    identifier_or_typedef_name (321)
+        on left: 360 361
+        on right: 277 279 328 329 336 398 427 452 458 497 498
+    type_name (322)
+        on left: 362 363 364 365
+        on right: 24 26 27 28 29 46 47 63 65 67 210 215 272
+    initializer_opt (323)
+        on left: 366 367
+        on right: 129 131 133 141 143 145
+    initializer (324)
+        on left: 368 369 370
+        on right: 367 375 376 377 378
+    initializer_list (325)
+        on left: 371 372
+        on right: 47 370 372 373
+    initializer_list_opt (326)
+        on left: 373 374
+        on right: 46 369
+    designated_initializer (327)
+        on left: 375 376 377 378
+        on right: 371 372
+    designator (328)
+        on left: 379 380 381 382 383 384
+        on right: 376 377 382 383 384
+    statement (329)
+        on left: 385 386 387 388 389 390 391 392 393 394 395 396
+        on right: 398 399 400 401 406 407 409 410 411 414 415 417
+    declaration_statement (330)
+        on left: 397
+        on right: 387 412
+    labeled_statement (331)
+        on left: 398 399 400 401
+        on right: 385
+    compound_statement (332)
+        on left: 402 403 404
+        on right: 37 386 432 433 436 437 481
+    compound_scope (333)
+        on left: 405
+        on right: 33 34 35 36 402 403 404
+    statement_list (334)
+        on left: 406 407
+        on right: 403 407
+    expression_statement (335)
+        on left: 408
+        on right: 388 413
+    selection_statement (336)
+        on left: 409 410 411
+        on right: 389
+    declaration_or_expression_statement (337)
+        on left: 412 413
+        on right: 417
+    iteration_statement (338)
+        on left: 414 415 417
+        on right: 390
+    $@12 (339)
+        on left: 416
+        on right: 417
+    jump_statement (340)
+        on left: 418 419 420 421 422 423
+        on right: 391
+    gcc_local_label_statement (341)
+        on left: 424
+        on right: 393
+    gcc_local_label_list (342)
+        on left: 425 426
+        on right: 424 426
+    gcc_local_label (343)
+        on left: 427
+        on right: 56 425 426 470
+    gcc_asm_statement (344)
+        on left: 428 429
+        on right: 392
+    msc_asm_statement (345)
+        on left: 430 431
+        on right: 394
+    msc_seh_statement (346)
+        on left: 432 433 434
+        on right: 395
+    cprover_exception_statement (347)
+        on left: 435 436 437
+        on right: 396
+    volatile_or_goto_opt (348)
+        on left: 438 439 440 441 442
+        on right: 134 428 429
+    gcc_asm_commands (349)
+        on left: 443 444 445 446 447
+        on right: 134 428
+    gcc_asm_assembler_template (350)
+        on left: 448
+        on right: 443 444 445 446 447
+    gcc_asm_outputs (351)
+        on left: 449 450
+        on right: 444 445 446 447
+    gcc_asm_output (352)
+        on left: 451 452
+        on right: 453 454
+    gcc_asm_output_list (353)
+        on left: 453 454
+        on right: 449 454
+    gcc_asm_inputs (354)
+        on left: 455 456
+        on right: 445 446 447
+    gcc_asm_input (355)
+        on left: 457 458
+        on right: 459 460
+    gcc_asm_input_list (356)
+        on left: 459 460
+        on right: 455 460
+    gcc_asm_clobbered_registers (357)
+        on left: 461 462
+        on right: 446 447
+    gcc_asm_clobbered_register (358)
+        on left: 463
+        on right: 464 465
+    gcc_asm_clobbered_registers_list (359)
+        on left: 464 465
+        on right: 461 465
+    gcc_asm_labels (360)
+        on left: 466 467
+        on right: 447
+    gcc_asm_labels_list (361)
+        on left: 468 469
+        on right: 466 469
+    gcc_asm_label (362)
+        on left: 470
+        on right: 468 469
+    translation_unit (363)
+        on left: 471 472
+        on right: 1
+    external_definition_list (364)
+        on left: 473 474
+        on right: 472 474
+    external_definition (365)
+        on left: 475 476 477 478
+        on right: 473 474
+    asm_definition (366)
+        on left: 479
+        on right: 477
+    function_definition (367)
+        on left: 480
+        on right: 475
+    function_body (368)
+        on left: 481
+        on right: 480
+    KnR_parameter_header_opt (369)
+        on left: 482 483
+        on right: 551
+    KnR_parameter_header (370)
+        on left: 484 485
+        on right: 483 485 549
+    KnR_parameter_declaration (371)
+        on left: 486
+        on right: 484 485
+    KnR_declaration_qualifier_list (372)
+        on left: 487 488 489
+        on right: 489 490 495 497 498
+    KnR_basic_declaration_specifier (373)
+        on left: 490 491 492 493
+        on right: 492 493 499
+    KnR_typedef_declaration_specifier (374)
+        on left: 494 495 496
+        on right: 496 500
+    KnR_sue_declaration_specifier (375)
+        on left: 497 498
+        on right: 501
+    KnR_declaration_specifier (376)
+        on left: 499 500 501
+        on right: 502
+    KnR_parameter_declaring_list (377)
+        on left: 502 503 504
+        on right: 486 504
+    function_head (378)
+        on left: 505 506 507 508 509
+        on right: 480
+    declarator (379)
+        on left: 510 511
+        on right: 141 143 145 317 502 503 504 506 507
+    typedef_declarator (380)
+        on left: 512 513
+        on right: 511
+    parameter_typedef_declarator (381)
+        on left: 514 515 516
+        on right: 349 356 513 518 519
+    clean_typedef_declarator (382)
+        on left: 517 518 519
+        on right: 516 520 521
+    clean_postfix_typedef_declarator (383)
+        on left: 520 521
+        on right: 517
+    paren_typedef_declarator (384)
+        on left: 522 523 524 525 526
+        on right: 512 525 526 527 529
+    paren_postfix_typedef_declarator (385)
+        on left: 527 528 529
+        on right: 522
+    simple_paren_typedef_declarator (386)
+        on left: 530 531
+        on right: 523 524 528 531
+    identifier_declarator (387)
+        on left: 532 533
+        on right: 129 131 133 320 348 352 355 359 505 508 509 510 535 536 537
+    unary_identifier_declarator (388)
+        on left: 534 535 536 537
+        on right: 532 539 540
+    postfix_identifier_declarator (389)
+        on left: 538 539 540
+        on right: 534
+    paren_identifier_declarator (390)
+        on left: 541 542
+        on right: 533 538 542
+    abstract_declarator (391)
+        on left: 543 544 545
+        on right: 363 365 565 566
+    parameter_abstract_declarator (392)
+        on left: 546 547
+        on right: 347 351 354 358 570 571
+    postfixing_abstract_declarator (393)
+        on left: 548 549 551
+        on right: 515 521 528 529 538 540 545 575 576 577
+    $@13 (394)
+        on left: 550
+        on right: 551
+    parameter_postfixing_abstract_declarator (395)
+        on left: 552 553 555
+        on right: 548 580 581
+    $@14 (396)
+        on left: 554
+        on right: 555
+    array_abstract_declarator (397)
+        on left: 556 557 558 559 560 561 562
+        on right: 552 561 562
+    unary_abstract_declarator (398)
+        on left: 563 564 565 566 567
+        on right: 543 573 577
+    parameter_unary_abstract_declarator (399)
+        on left: 568 569 570 571 572
+        on right: 546 578 581
+    postfix_abstract_declarator (400)
+        on left: 573 574 575 576 577
+        on right: 544 574 576
+    parameter_postfix_abstract_declarator (401)
+        on left: 578 579 580 581
+        on right: 547 579
 
 
 State 0

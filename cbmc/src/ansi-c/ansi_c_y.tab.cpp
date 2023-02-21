@@ -1,8 +1,9 @@
-/* A Bison parser, made by GNU Bison 3.0.2.  */
+/* A Bison parser, made by GNU Bison 3.5.1.  */
 
 /* Bison implementation for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2013 Free Software Foundation, Inc.
+   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2020 Free Software Foundation,
+   Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -40,11 +41,14 @@
    define necessary library symbols; they are noted "INFRINGES ON
    USER NAME SPACE" below.  */
 
+/* Undocumented macros, especially those whose name start with YY_,
+   are private implementation details.  Do not rely on them.  */
+
 /* Identify Bison output.  */
 #define YYBISON 1
 
 /* Bison version.  */
-#define YYBISON_VERSION "3.0.2"
+#define YYBISON_VERSION "3.5.1"
 
 /* Skeleton name.  */
 #define YYSKELETON_NAME "yacc.c"
@@ -65,12 +69,11 @@
 #define yyerror         yyansi_cerror
 #define yydebug         yyansi_cdebug
 #define yynerrs         yyansi_cnerrs
-
 #define yylval          yyansi_clval
 #define yychar          yyansi_cchar
 
-/* Copy the first part of user declarations.  */
-#line 1 "parser.y" /* yacc.c:339  */
+/* First part of user prologue.  */
+#line 1 "parser.y"
 
 
 /*
@@ -99,19 +102,32 @@ extern char *yyansi_ctext;
 #define YYMAXDEPTH 25600
 
 /*** token declaration **************************************************/
-#line 233 "parser.y" /* yacc.c:339  */
+#line 233 "parser.y"
 
 /************************************************************************/
 /*** rules **************************************************************/
 /************************************************************************/
 
-#line 109 "ansi_c_y.tab.cpp" /* yacc.c:339  */
+#line 112 "ansi_c_y.tab.cpp"
 
-# ifndef YY_NULLPTR
-#  if defined __cplusplus && 201103L <= __cplusplus
-#   define YY_NULLPTR nullptr
+# ifndef YY_CAST
+#  ifdef __cplusplus
+#   define YY_CAST(Type, Val) static_cast<Type> (Val)
+#   define YY_REINTERPRET_CAST(Type, Val) reinterpret_cast<Type> (Val)
 #  else
-#   define YY_NULLPTR 0
+#   define YY_CAST(Type, Val) ((Type) (Val))
+#   define YY_REINTERPRET_CAST(Type, Val) ((Type) (Val))
+#  endif
+# endif
+# ifndef YY_NULLPTR
+#  if defined __cplusplus
+#   if 201103L <= __cplusplus
+#    define YY_NULLPTR nullptr
+#   else
+#    define YY_NULLPTR 0
+#   endif
+#  else
+#   define YY_NULLPTR ((void*)0)
 #  endif
 # endif
 
@@ -123,8 +139,8 @@ extern char *yyansi_ctext;
 # define YYERROR_VERBOSE 0
 #endif
 
-/* In a future release of Bison, this section will be replaced
-   by #include "ansi_c_y.tab.hpp".  */
+/* Use api.header.include to #include this header
+   instead of duplicating it here.  */
 #ifndef YY_YYANSI_C_ANSI_C_Y_TAB_HPP_INCLUDED
 # define YY_YYANSI_C_ANSI_C_Y_TAB_HPP_INCLUDED
 /* Debug traces.  */
@@ -504,36 +520,81 @@ int yyansi_cparse (void);
 
 #endif /* !YY_YYANSI_C_ANSI_C_Y_TAB_HPP_INCLUDED  */
 
-/* Copy the second part of user declarations.  */
 
-#line 510 "ansi_c_y.tab.cpp" /* yacc.c:358  */
 
 #ifdef short
 # undef short
 #endif
 
-#ifdef YYTYPE_UINT8
-typedef YYTYPE_UINT8 yytype_uint8;
-#else
-typedef unsigned char yytype_uint8;
+/* On compilers that do not define __PTRDIFF_MAX__ etc., make sure
+   <limits.h> and (if available) <stdint.h> are included
+   so that the code can choose integer types of a good width.  */
+
+#ifndef __PTRDIFF_MAX__
+# include <limits.h> /* INFRINGES ON USER NAME SPACE */
+# if defined __STDC_VERSION__ && 199901 <= __STDC_VERSION__
+#  include <stdint.h> /* INFRINGES ON USER NAME SPACE */
+#  define YY_STDINT_H
+# endif
 #endif
 
-#ifdef YYTYPE_INT8
-typedef YYTYPE_INT8 yytype_int8;
+/* Narrow types that promote to a signed type and that can represent a
+   signed or unsigned integer of at least N bits.  In tables they can
+   save space and decrease cache pressure.  Promoting to a signed type
+   helps avoid bugs in integer arithmetic.  */
+
+#ifdef __INT_LEAST8_MAX__
+typedef __INT_LEAST8_TYPE__ yytype_int8;
+#elif defined YY_STDINT_H
+typedef int_least8_t yytype_int8;
 #else
 typedef signed char yytype_int8;
 #endif
 
-#ifdef YYTYPE_UINT16
-typedef YYTYPE_UINT16 yytype_uint16;
+#ifdef __INT_LEAST16_MAX__
+typedef __INT_LEAST16_TYPE__ yytype_int16;
+#elif defined YY_STDINT_H
+typedef int_least16_t yytype_int16;
 #else
-typedef unsigned short int yytype_uint16;
+typedef short yytype_int16;
 #endif
 
-#ifdef YYTYPE_INT16
-typedef YYTYPE_INT16 yytype_int16;
+#if defined __UINT_LEAST8_MAX__ && __UINT_LEAST8_MAX__ <= __INT_MAX__
+typedef __UINT_LEAST8_TYPE__ yytype_uint8;
+#elif (!defined __UINT_LEAST8_MAX__ && defined YY_STDINT_H \
+       && UINT_LEAST8_MAX <= INT_MAX)
+typedef uint_least8_t yytype_uint8;
+#elif !defined __UINT_LEAST8_MAX__ && UCHAR_MAX <= INT_MAX
+typedef unsigned char yytype_uint8;
 #else
-typedef short int yytype_int16;
+typedef short yytype_uint8;
+#endif
+
+#if defined __UINT_LEAST16_MAX__ && __UINT_LEAST16_MAX__ <= __INT_MAX__
+typedef __UINT_LEAST16_TYPE__ yytype_uint16;
+#elif (!defined __UINT_LEAST16_MAX__ && defined YY_STDINT_H \
+       && UINT_LEAST16_MAX <= INT_MAX)
+typedef uint_least16_t yytype_uint16;
+#elif !defined __UINT_LEAST16_MAX__ && USHRT_MAX <= INT_MAX
+typedef unsigned short yytype_uint16;
+#else
+typedef int yytype_uint16;
+#endif
+
+#ifndef YYPTRDIFF_T
+# if defined __PTRDIFF_TYPE__ && defined __PTRDIFF_MAX__
+#  define YYPTRDIFF_T __PTRDIFF_TYPE__
+#  define YYPTRDIFF_MAXIMUM __PTRDIFF_MAX__
+# elif defined PTRDIFF_MAX
+#  ifndef ptrdiff_t
+#   include <stddef.h> /* INFRINGES ON USER NAME SPACE */
+#  endif
+#  define YYPTRDIFF_T ptrdiff_t
+#  define YYPTRDIFF_MAXIMUM PTRDIFF_MAX
+# else
+#  define YYPTRDIFF_T long
+#  define YYPTRDIFF_MAXIMUM LONG_MAX
+# endif
 #endif
 
 #ifndef YYSIZE_T
@@ -541,15 +602,27 @@ typedef short int yytype_int16;
 #  define YYSIZE_T __SIZE_TYPE__
 # elif defined size_t
 #  define YYSIZE_T size_t
-# elif ! defined YYSIZE_T
+# elif defined __STDC_VERSION__ && 199901 <= __STDC_VERSION__
 #  include <stddef.h> /* INFRINGES ON USER NAME SPACE */
 #  define YYSIZE_T size_t
 # else
-#  define YYSIZE_T unsigned int
+#  define YYSIZE_T unsigned
 # endif
 #endif
 
-#define YYSIZE_MAXIMUM ((YYSIZE_T) -1)
+#define YYSIZE_MAXIMUM                                  \
+  YY_CAST (YYPTRDIFF_T,                                 \
+           (YYPTRDIFF_MAXIMUM < YY_CAST (YYSIZE_T, -1)  \
+            ? YYPTRDIFF_MAXIMUM                         \
+            : YY_CAST (YYSIZE_T, -1)))
+
+#define YYSIZEOF(X) YY_CAST (YYPTRDIFF_T, sizeof (X))
+
+/* Stored state numbers (used for stacks). */
+typedef yytype_int16 yy_state_t;
+
+/* State numbers in computations.  */
+typedef int yy_state_fast_t;
 
 #ifndef YY_
 # if defined YYENABLE_NLS && YYENABLE_NLS
@@ -563,30 +636,19 @@ typedef short int yytype_int16;
 # endif
 #endif
 
-#ifndef YY_ATTRIBUTE
-# if (defined __GNUC__                                               \
-      && (2 < __GNUC__ || (__GNUC__ == 2 && 96 <= __GNUC_MINOR__)))  \
-     || defined __SUNPRO_C && 0x5110 <= __SUNPRO_C
-#  define YY_ATTRIBUTE(Spec) __attribute__(Spec)
+#ifndef YY_ATTRIBUTE_PURE
+# if defined __GNUC__ && 2 < __GNUC__ + (96 <= __GNUC_MINOR__)
+#  define YY_ATTRIBUTE_PURE __attribute__ ((__pure__))
 # else
-#  define YY_ATTRIBUTE(Spec) /* empty */
+#  define YY_ATTRIBUTE_PURE
 # endif
 #endif
 
-#ifndef YY_ATTRIBUTE_PURE
-# define YY_ATTRIBUTE_PURE   YY_ATTRIBUTE ((__pure__))
-#endif
-
 #ifndef YY_ATTRIBUTE_UNUSED
-# define YY_ATTRIBUTE_UNUSED YY_ATTRIBUTE ((__unused__))
-#endif
-
-#if !defined _Noreturn \
-     && (!defined __STDC_VERSION__ || __STDC_VERSION__ < 201112)
-# if defined _MSC_VER && 1200 <= _MSC_VER
-#  define _Noreturn __declspec (noreturn)
+# if defined __GNUC__ && 2 < __GNUC__ + (7 <= __GNUC_MINOR__)
+#  define YY_ATTRIBUTE_UNUSED __attribute__ ((__unused__))
 # else
-#  define _Noreturn YY_ATTRIBUTE ((__noreturn__))
+#  define YY_ATTRIBUTE_UNUSED
 # endif
 #endif
 
@@ -597,13 +659,13 @@ typedef short int yytype_int16;
 # define YYUSE(E) /* empty */
 #endif
 
-#if defined __GNUC__ && 407 <= __GNUC__ * 100 + __GNUC_MINOR__
+#if defined __GNUC__ && ! defined __ICC && 407 <= __GNUC__ * 100 + __GNUC_MINOR__
 /* Suppress an incorrect diagnostic about yylval being uninitialized.  */
-# define YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN \
-    _Pragma ("GCC diagnostic push") \
-    _Pragma ("GCC diagnostic ignored \"-Wuninitialized\"")\
+# define YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN                            \
+    _Pragma ("GCC diagnostic push")                                     \
+    _Pragma ("GCC diagnostic ignored \"-Wuninitialized\"")              \
     _Pragma ("GCC diagnostic ignored \"-Wmaybe-uninitialized\"")
-# define YY_IGNORE_MAYBE_UNINITIALIZED_END \
+# define YY_IGNORE_MAYBE_UNINITIALIZED_END      \
     _Pragma ("GCC diagnostic pop")
 #else
 # define YY_INITIAL_VALUE(Value) Value
@@ -616,6 +678,20 @@ typedef short int yytype_int16;
 # define YY_INITIAL_VALUE(Value) /* Nothing. */
 #endif
 
+#if defined __cplusplus && defined __GNUC__ && ! defined __ICC && 6 <= __GNUC__
+# define YY_IGNORE_USELESS_CAST_BEGIN                          \
+    _Pragma ("GCC diagnostic push")                            \
+    _Pragma ("GCC diagnostic ignored \"-Wuseless-cast\"")
+# define YY_IGNORE_USELESS_CAST_END            \
+    _Pragma ("GCC diagnostic pop")
+#endif
+#ifndef YY_IGNORE_USELESS_CAST_BEGIN
+# define YY_IGNORE_USELESS_CAST_BEGIN
+# define YY_IGNORE_USELESS_CAST_END
+#endif
+
+
+#define YY_ASSERT(E) ((void) (0 && (E)))
 
 #if ! defined yyoverflow || YYERROR_VERBOSE
 
@@ -692,17 +768,17 @@ void free (void *); /* INFRINGES ON USER NAME SPACE */
 /* A type that is properly aligned for any stack member.  */
 union yyalloc
 {
-  yytype_int16 yyss_alloc;
+  yy_state_t yyss_alloc;
   YYSTYPE yyvs_alloc;
 };
 
 /* The size of the maximum gap between one aligned stack and the next.  */
-# define YYSTACK_GAP_MAXIMUM (sizeof (union yyalloc) - 1)
+# define YYSTACK_GAP_MAXIMUM (YYSIZEOF (union yyalloc) - 1)
 
 /* The size of an array large to enough to hold all stacks, each with
    N elements.  */
 # define YYSTACK_BYTES(N) \
-     ((N) * (sizeof (yytype_int16) + sizeof (YYSTYPE)) \
+     ((N) * (YYSIZEOF (yy_state_t) + YYSIZEOF (YYSTYPE)) \
       + YYSTACK_GAP_MAXIMUM)
 
 # define YYCOPY_NEEDED 1
@@ -715,11 +791,11 @@ union yyalloc
 # define YYSTACK_RELOCATE(Stack_alloc, Stack)                           \
     do                                                                  \
       {                                                                 \
-        YYSIZE_T yynewbytes;                                            \
+        YYPTRDIFF_T yynewbytes;                                         \
         YYCOPY (&yyptr->Stack_alloc, Stack, yysize);                    \
         Stack = &yyptr->Stack_alloc;                                    \
-        yynewbytes = yystacksize * sizeof (*Stack) + YYSTACK_GAP_MAXIMUM; \
-        yyptr += yynewbytes / sizeof (*yyptr);                          \
+        yynewbytes = yystacksize * YYSIZEOF (*Stack) + YYSTACK_GAP_MAXIMUM; \
+        yyptr += yynewbytes / YYSIZEOF (*yyptr);                        \
       }                                                                 \
     while (0)
 
@@ -731,12 +807,12 @@ union yyalloc
 # ifndef YYCOPY
 #  if defined __GNUC__ && 1 < __GNUC__
 #   define YYCOPY(Dst, Src, Count) \
-      __builtin_memcpy (Dst, Src, (Count) * sizeof (*(Src)))
+      __builtin_memcpy (Dst, Src, YY_CAST (YYSIZE_T, (Count)) * sizeof (*(Src)))
 #  else
 #   define YYCOPY(Dst, Src, Count)              \
       do                                        \
         {                                       \
-          YYSIZE_T yyi;                         \
+          YYPTRDIFF_T yyi;                      \
           for (yyi = 0; yyi < (Count); yyi++)   \
             (Dst)[yyi] = (Src)[yyi];            \
         }                                       \
@@ -759,16 +835,17 @@ union yyalloc
 /* YYNSTATES -- Number of states.  */
 #define YYNSTATES  1040
 
-/* YYTRANSLATE[YYX] -- Symbol number corresponding to YYX as returned
-   by yylex, with out-of-bounds checking.  */
 #define YYUNDEFTOK  2
 #define YYMAXUTOK   430
 
+
+/* YYTRANSLATE(TOKEN-NUM) -- Symbol number corresponding to TOKEN-NUM
+   as returned by yylex, with out-of-bounds checking.  */
 #define YYTRANSLATE(YYX)                                                \
-  ((unsigned int) (YYX) <= YYMAXUTOK ? yytranslate[YYX] : YYUNDEFTOK)
+  (0 <= (YYX) && (YYX) <= YYMAXUTOK ? yytranslate[YYX] : YYUNDEFTOK)
 
 /* YYTRANSLATE[TOKEN-NUM] -- Symbol number corresponding to TOKEN-NUM
-   as returned by yylex, without out-of-bounds checking.  */
+   as returned by yylex.  */
 static const yytype_uint8 yytranslate[] =
 {
        0,     2,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -819,7 +896,7 @@ static const yytype_uint8 yytranslate[] =
 
 #if YYDEBUG
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
-static const yytype_uint16 yyrline[] =
+static const yytype_int16 yyrline[] =
 {
        0,   241,   241,   247,   251,   255,   259,   263,   267,   272,
      273,   274,   275,   281,   282,   283,   285,   286,   287,   288,
@@ -1013,7 +1090,7 @@ static const char *const yytname[] =
 # ifdef YYPRINT
 /* YYTOKNUM[NUM] -- (External) token number corresponding to the
    (internal) symbol number NUM (which must be that of a token).  */
-static const yytype_uint16 yytoknum[] =
+static const yytype_int16 yytoknum[] =
 {
        0,   256,   257,   258,   259,   260,   261,   262,   263,   264,
      265,   266,   267,   268,   269,   270,   271,   272,   273,   274,
@@ -1038,14 +1115,14 @@ static const yytype_uint16 yytoknum[] =
 };
 # endif
 
-#define YYPACT_NINF -792
+#define YYPACT_NINF (-792)
 
-#define yypact_value_is_default(Yystate) \
-  (!!((Yystate) == (-792)))
+#define yypact_value_is_default(Yyn) \
+  ((Yyn) == YYPACT_NINF)
 
-#define YYTABLE_NINF -552
+#define YYTABLE_NINF (-552)
 
-#define yytable_value_is_error(Yytable_value) \
+#define yytable_value_is_error(Yyn) \
   0
 
   /* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
@@ -1161,7 +1238,7 @@ static const yytype_int16 yypact[] =
   /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
      Performed when YYTABLE does not specify something else to do.  Zero
      means the default is an error.  */
-static const yytype_uint16 yydefact[] =
+static const yytype_int16 yydefact[] =
 {
      472,   239,   264,   265,   250,   170,   260,   331,   237,   253,
      241,   245,   252,   240,   171,   251,   261,   238,   281,   236,
@@ -2608,7 +2685,7 @@ static const yytype_int16 yycheck[] =
 
   /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
      symbol of state STATE-NUM.  */
-static const yytype_uint16 yystos[] =
+static const yytype_int16 yystos[] =
 {
        0,     3,     4,     5,     8,     9,    13,    15,    16,    17,
       21,    22,    23,    24,    25,    27,    28,    30,    31,    33,
@@ -2717,7 +2794,7 @@ static const yytype_uint16 yystos[] =
 };
 
   /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
-static const yytype_uint16 yyr1[] =
+static const yytype_int16 yyr1[] =
 {
        0,   200,   201,   202,   203,   204,   205,   206,   207,   208,
      208,   208,   208,   209,   209,   209,   209,   209,   209,   209,
@@ -2781,7 +2858,7 @@ static const yytype_uint16 yyr1[] =
 };
 
   /* YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.  */
-static const yytype_uint8 yyr2[] =
+static const yytype_int8 yyr2[] =
 {
        0,     2,     1,     1,     1,     1,     1,     1,     1,     1,
        1,     1,     1,     1,     1,     3,     1,     1,     1,     1,
@@ -2857,22 +2934,22 @@ static const yytype_uint8 yyr2[] =
 
 #define YYRECOVERING()  (!!yyerrstatus)
 
-#define YYBACKUP(Token, Value)                                  \
-do                                                              \
-  if (yychar == YYEMPTY)                                        \
-    {                                                           \
-      yychar = (Token);                                         \
-      yylval = (Value);                                         \
-      YYPOPSTACK (yylen);                                       \
-      yystate = *yyssp;                                         \
-      goto yybackup;                                            \
-    }                                                           \
-  else                                                          \
-    {                                                           \
-      yyerror (YY_("syntax error: cannot back up")); \
-      YYERROR;                                                  \
-    }                                                           \
-while (0)
+#define YYBACKUP(Token, Value)                                    \
+  do                                                              \
+    if (yychar == YYEMPTY)                                        \
+      {                                                           \
+        yychar = (Token);                                         \
+        yylval = (Value);                                         \
+        YYPOPSTACK (yylen);                                       \
+        yystate = *yyssp;                                         \
+        goto yybackup;                                            \
+      }                                                           \
+    else                                                          \
+      {                                                           \
+        yyerror (YY_("syntax error: cannot back up")); \
+        YYERROR;                                                  \
+      }                                                           \
+  while (0)
 
 /* Error token number */
 #define YYTERROR        1
@@ -2912,37 +2989,39 @@ do {                                                                      \
 } while (0)
 
 
-/*----------------------------------------.
-| Print this symbol's value on YYOUTPUT.  |
-`----------------------------------------*/
+/*-----------------------------------.
+| Print this symbol's value on YYO.  |
+`-----------------------------------*/
 
 static void
-yy_symbol_value_print (FILE *yyoutput, int yytype, YYSTYPE const * const yyvaluep)
+yy_symbol_value_print (FILE *yyo, int yytype, YYSTYPE const * const yyvaluep)
 {
-  FILE *yyo = yyoutput;
-  YYUSE (yyo);
+  FILE *yyoutput = yyo;
+  YYUSE (yyoutput);
   if (!yyvaluep)
     return;
 # ifdef YYPRINT
   if (yytype < YYNTOKENS)
-    YYPRINT (yyoutput, yytoknum[yytype], *yyvaluep);
+    YYPRINT (yyo, yytoknum[yytype], *yyvaluep);
 # endif
+  YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN
   YYUSE (yytype);
+  YY_IGNORE_MAYBE_UNINITIALIZED_END
 }
 
 
-/*--------------------------------.
-| Print this symbol on YYOUTPUT.  |
-`--------------------------------*/
+/*---------------------------.
+| Print this symbol on YYO.  |
+`---------------------------*/
 
 static void
-yy_symbol_print (FILE *yyoutput, int yytype, YYSTYPE const * const yyvaluep)
+yy_symbol_print (FILE *yyo, int yytype, YYSTYPE const * const yyvaluep)
 {
-  YYFPRINTF (yyoutput, "%s %s (",
+  YYFPRINTF (yyo, "%s %s (",
              yytype < YYNTOKENS ? "token" : "nterm", yytname[yytype]);
 
-  yy_symbol_value_print (yyoutput, yytype, yyvaluep);
-  YYFPRINTF (yyoutput, ")");
+  yy_symbol_value_print (yyo, yytype, yyvaluep);
+  YYFPRINTF (yyo, ")");
 }
 
 /*------------------------------------------------------------------.
@@ -2951,7 +3030,7 @@ yy_symbol_print (FILE *yyoutput, int yytype, YYSTYPE const * const yyvaluep)
 `------------------------------------------------------------------*/
 
 static void
-yy_stack_print (yytype_int16 *yybottom, yytype_int16 *yytop)
+yy_stack_print (yy_state_t *yybottom, yy_state_t *yytop)
 {
   YYFPRINTF (stderr, "Stack now");
   for (; yybottom <= yytop; yybottom++)
@@ -2974,20 +3053,20 @@ do {                                                            \
 `------------------------------------------------*/
 
 static void
-yy_reduce_print (yytype_int16 *yyssp, YYSTYPE *yyvsp, int yyrule)
+yy_reduce_print (yy_state_t *yyssp, YYSTYPE *yyvsp, int yyrule)
 {
-  unsigned long int yylno = yyrline[yyrule];
+  int yylno = yyrline[yyrule];
   int yynrhs = yyr2[yyrule];
   int yyi;
-  YYFPRINTF (stderr, "Reducing stack by rule %d (line %lu):\n",
+  YYFPRINTF (stderr, "Reducing stack by rule %d (line %d):\n",
              yyrule - 1, yylno);
   /* The symbols being reduced.  */
   for (yyi = 0; yyi < yynrhs; yyi++)
     {
       YYFPRINTF (stderr, "   $%d = ", yyi + 1);
       yy_symbol_print (stderr,
-                       yystos[yyssp[yyi + 1 - yynrhs]],
-                       &(yyvsp[(yyi + 1) - (yynrhs)])
+                       yystos[+yyssp[yyi + 1 - yynrhs]],
+                       &yyvsp[(yyi + 1) - (yynrhs)]
                                               );
       YYFPRINTF (stderr, "\n");
     }
@@ -3031,13 +3110,13 @@ int yydebug;
 
 # ifndef yystrlen
 #  if defined __GLIBC__ && defined _STRING_H
-#   define yystrlen strlen
+#   define yystrlen(S) (YY_CAST (YYPTRDIFF_T, strlen (S)))
 #  else
 /* Return the length of YYSTR.  */
-static YYSIZE_T
+static YYPTRDIFF_T
 yystrlen (const char *yystr)
 {
-  YYSIZE_T yylen;
+  YYPTRDIFF_T yylen;
   for (yylen = 0; yystr[yylen]; yylen++)
     continue;
   return yylen;
@@ -3073,12 +3152,12 @@ yystpcpy (char *yydest, const char *yysrc)
    backslash-backslash).  YYSTR is taken from yytname.  If YYRES is
    null, do not copy; instead, return the length of what the result
    would have been.  */
-static YYSIZE_T
+static YYPTRDIFF_T
 yytnamerr (char *yyres, const char *yystr)
 {
   if (*yystr == '"')
     {
-      YYSIZE_T yyn = 0;
+      YYPTRDIFF_T yyn = 0;
       char const *yyp = yystr;
 
       for (;;)
@@ -3091,7 +3170,10 @@ yytnamerr (char *yyres, const char *yystr)
           case '\\':
             if (*++yyp != '\\')
               goto do_not_strip_quotes;
-            /* Fall through.  */
+            else
+              goto append;
+
+          append:
           default:
             if (yyres)
               yyres[yyn] = *yyp;
@@ -3106,10 +3188,10 @@ yytnamerr (char *yyres, const char *yystr)
     do_not_strip_quotes: ;
     }
 
-  if (! yyres)
+  if (yyres)
+    return yystpcpy (yyres, yystr) - yyres;
+  else
     return yystrlen (yystr);
-
-  return yystpcpy (yyres, yystr) - yyres;
 }
 # endif
 
@@ -3122,19 +3204,19 @@ yytnamerr (char *yyres, const char *yystr)
    *YYMSG_ALLOC to the required number of bytes.  Return 2 if the
    required number of bytes is too large to store.  */
 static int
-yysyntax_error (YYSIZE_T *yymsg_alloc, char **yymsg,
-                yytype_int16 *yyssp, int yytoken)
+yysyntax_error (YYPTRDIFF_T *yymsg_alloc, char **yymsg,
+                yy_state_t *yyssp, int yytoken)
 {
-  YYSIZE_T yysize0 = yytnamerr (YY_NULLPTR, yytname[yytoken]);
-  YYSIZE_T yysize = yysize0;
   enum { YYERROR_VERBOSE_ARGS_MAXIMUM = 5 };
   /* Internationalized format string. */
   const char *yyformat = YY_NULLPTR;
-  /* Arguments of yyformat. */
+  /* Arguments of yyformat: reported tokens (one for the "unexpected",
+     one per "expected"). */
   char const *yyarg[YYERROR_VERBOSE_ARGS_MAXIMUM];
-  /* Number of reported tokens (one for the "unexpected", one per
-     "expected"). */
+  /* Actual size of YYARG. */
   int yycount = 0;
+  /* Cumulated lengths of YYARG.  */
+  YYPTRDIFF_T yysize = 0;
 
   /* There are many possibilities here to consider:
      - If this state is a consistent state with a default action, then
@@ -3161,7 +3243,9 @@ yysyntax_error (YYSIZE_T *yymsg_alloc, char **yymsg,
   */
   if (yytoken != YYEMPTY)
     {
-      int yyn = yypact[*yyssp];
+      int yyn = yypact[+*yyssp];
+      YYPTRDIFF_T yysize0 = yytnamerr (YY_NULLPTR, yytname[yytoken]);
+      yysize = yysize0;
       yyarg[yycount++] = yytname[yytoken];
       if (!yypact_value_is_default (yyn))
         {
@@ -3186,11 +3270,12 @@ yysyntax_error (YYSIZE_T *yymsg_alloc, char **yymsg,
                   }
                 yyarg[yycount++] = yytname[yyx];
                 {
-                  YYSIZE_T yysize1 = yysize + yytnamerr (YY_NULLPTR, yytname[yyx]);
-                  if (! (yysize <= yysize1
-                         && yysize1 <= YYSTACK_ALLOC_MAXIMUM))
+                  YYPTRDIFF_T yysize1
+                    = yysize + yytnamerr (YY_NULLPTR, yytname[yyx]);
+                  if (yysize <= yysize1 && yysize1 <= YYSTACK_ALLOC_MAXIMUM)
+                    yysize = yysize1;
+                  else
                     return 2;
-                  yysize = yysize1;
                 }
               }
         }
@@ -3202,6 +3287,7 @@ yysyntax_error (YYSIZE_T *yymsg_alloc, char **yymsg,
       case N:                               \
         yyformat = S;                       \
       break
+    default: /* Avoid compiler warnings. */
       YYCASE_(0, YY_("syntax error"));
       YYCASE_(1, YY_("syntax error, unexpected %s"));
       YYCASE_(2, YY_("syntax error, unexpected %s, expecting %s"));
@@ -3212,10 +3298,13 @@ yysyntax_error (YYSIZE_T *yymsg_alloc, char **yymsg,
     }
 
   {
-    YYSIZE_T yysize1 = yysize + yystrlen (yyformat);
-    if (! (yysize <= yysize1 && yysize1 <= YYSTACK_ALLOC_MAXIMUM))
+    /* Don't count the "%s"s in the final size, but reserve room for
+       the terminator.  */
+    YYPTRDIFF_T yysize1 = yysize + (yystrlen (yyformat) - 2 * yycount) + 1;
+    if (yysize <= yysize1 && yysize1 <= YYSTACK_ALLOC_MAXIMUM)
+      yysize = yysize1;
+    else
       return 2;
-    yysize = yysize1;
   }
 
   if (*yymsg_alloc < yysize)
@@ -3241,8 +3330,8 @@ yysyntax_error (YYSIZE_T *yymsg_alloc, char **yymsg,
         }
       else
         {
-          yyp++;
-          yyformat++;
+          ++yyp;
+          ++yyformat;
         }
   }
   return 0;
@@ -3285,7 +3374,7 @@ int yynerrs;
 int
 yyparse (void)
 {
-    int yystate;
+    yy_state_fast_t yystate;
     /* Number of tokens to shift before error messages enabled.  */
     int yyerrstatus;
 
@@ -3297,16 +3386,16 @@ yyparse (void)
        to reallocate them elsewhere.  */
 
     /* The state stack.  */
-    yytype_int16 yyssa[YYINITDEPTH];
-    yytype_int16 *yyss;
-    yytype_int16 *yyssp;
+    yy_state_t yyssa[YYINITDEPTH];
+    yy_state_t *yyss;
+    yy_state_t *yyssp;
 
     /* The semantic value stack.  */
     YYSTYPE yyvsa[YYINITDEPTH];
     YYSTYPE *yyvs;
     YYSTYPE *yyvsp;
 
-    YYSIZE_T yystacksize;
+    YYPTRDIFF_T yystacksize;
 
   int yyn;
   int yyresult;
@@ -3320,7 +3409,7 @@ yyparse (void)
   /* Buffer for error messages, and its allocated size.  */
   char yymsgbuf[128];
   char *yymsg = yymsgbuf;
-  YYSIZE_T yymsg_alloc = sizeof yymsgbuf;
+  YYPTRDIFF_T yymsg_alloc = sizeof yymsgbuf;
 #endif
 
 #define YYPOPSTACK(N)   (yyvsp -= (N), yyssp -= (N))
@@ -3341,46 +3430,54 @@ yyparse (void)
   yychar = YYEMPTY; /* Cause a token to be read.  */
   goto yysetstate;
 
+
 /*------------------------------------------------------------.
-| yynewstate -- Push a new state, which is found in yystate.  |
+| yynewstate -- push a new state, which is found in yystate.  |
 `------------------------------------------------------------*/
- yynewstate:
+yynewstate:
   /* In all cases, when you get here, the value and location stacks
      have just been pushed.  So pushing a state here evens the stacks.  */
   yyssp++;
 
- yysetstate:
-  *yyssp = yystate;
+
+/*--------------------------------------------------------------------.
+| yysetstate -- set current state (the top of the stack) to yystate.  |
+`--------------------------------------------------------------------*/
+yysetstate:
+  YYDPRINTF ((stderr, "Entering state %d\n", yystate));
+  YY_ASSERT (0 <= yystate && yystate < YYNSTATES);
+  YY_IGNORE_USELESS_CAST_BEGIN
+  *yyssp = YY_CAST (yy_state_t, yystate);
+  YY_IGNORE_USELESS_CAST_END
 
   if (yyss + yystacksize - 1 <= yyssp)
+#if !defined yyoverflow && !defined YYSTACK_RELOCATE
+    goto yyexhaustedlab;
+#else
     {
       /* Get the current used size of the three stacks, in elements.  */
-      YYSIZE_T yysize = yyssp - yyss + 1;
+      YYPTRDIFF_T yysize = yyssp - yyss + 1;
 
-#ifdef yyoverflow
+# if defined yyoverflow
       {
         /* Give user a chance to reallocate the stack.  Use copies of
            these so that the &'s don't force the real ones into
            memory.  */
+        yy_state_t *yyss1 = yyss;
         YYSTYPE *yyvs1 = yyvs;
-        yytype_int16 *yyss1 = yyss;
 
         /* Each stack pointer address is followed by the size of the
            data in use in that stack, in bytes.  This used to be a
            conditional around just the two extra args, but that might
            be undefined if yyoverflow is a macro.  */
         yyoverflow (YY_("memory exhausted"),
-                    &yyss1, yysize * sizeof (*yyssp),
-                    &yyvs1, yysize * sizeof (*yyvsp),
+                    &yyss1, yysize * YYSIZEOF (*yyssp),
+                    &yyvs1, yysize * YYSIZEOF (*yyvsp),
                     &yystacksize);
-
         yyss = yyss1;
         yyvs = yyvs1;
       }
-#else /* no yyoverflow */
-# ifndef YYSTACK_RELOCATE
-      goto yyexhaustedlab;
-# else
+# else /* defined YYSTACK_RELOCATE */
       /* Extend the stack our own way.  */
       if (YYMAXDEPTH <= yystacksize)
         goto yyexhaustedlab;
@@ -3389,42 +3486,43 @@ yyparse (void)
         yystacksize = YYMAXDEPTH;
 
       {
-        yytype_int16 *yyss1 = yyss;
+        yy_state_t *yyss1 = yyss;
         union yyalloc *yyptr =
-          (union yyalloc *) YYSTACK_ALLOC (YYSTACK_BYTES (yystacksize));
+          YY_CAST (union yyalloc *,
+                   YYSTACK_ALLOC (YY_CAST (YYSIZE_T, YYSTACK_BYTES (yystacksize))));
         if (! yyptr)
           goto yyexhaustedlab;
         YYSTACK_RELOCATE (yyss_alloc, yyss);
         YYSTACK_RELOCATE (yyvs_alloc, yyvs);
-#  undef YYSTACK_RELOCATE
+# undef YYSTACK_RELOCATE
         if (yyss1 != yyssa)
           YYSTACK_FREE (yyss1);
       }
 # endif
-#endif /* no yyoverflow */
 
       yyssp = yyss + yysize - 1;
       yyvsp = yyvs + yysize - 1;
 
-      YYDPRINTF ((stderr, "Stack size increased to %lu\n",
-                  (unsigned long int) yystacksize));
+      YY_IGNORE_USELESS_CAST_BEGIN
+      YYDPRINTF ((stderr, "Stack size increased to %ld\n",
+                  YY_CAST (long, yystacksize)));
+      YY_IGNORE_USELESS_CAST_END
 
       if (yyss + yystacksize - 1 <= yyssp)
         YYABORT;
     }
-
-  YYDPRINTF ((stderr, "Entering state %d\n", yystate));
+#endif /* !defined yyoverflow && !defined YYSTACK_RELOCATE */
 
   if (yystate == YYFINAL)
     YYACCEPT;
 
   goto yybackup;
 
+
 /*-----------.
 | yybackup.  |
 `-----------*/
 yybackup:
-
   /* Do appropriate processing given the current state.  Read a
      lookahead token if we need one and don't already have one.  */
 
@@ -3474,15 +3572,13 @@ yybackup:
 
   /* Shift the lookahead token.  */
   YY_SYMBOL_PRINT ("Shifting", yytoken, &yylval, &yylloc);
-
-  /* Discard the shifted token.  */
-  yychar = YYEMPTY;
-
   yystate = yyn;
   YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN
   *++yyvsp = yylval;
   YY_IGNORE_MAYBE_UNINITIALIZED_END
 
+  /* Discard the shifted token.  */
+  yychar = YYEMPTY;
   goto yynewstate;
 
 
@@ -3497,7 +3593,7 @@ yydefault:
 
 
 /*-----------------------------.
-| yyreduce -- Do a reduction.  |
+| yyreduce -- do a reduction.  |
 `-----------------------------*/
 yyreduce:
   /* yyn is the number of a rule to reduce with.  */
@@ -3517,2714 +3613,2714 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
-        case 15:
-#line 284 "parser.y" /* yacc.c:1646  */
-    { (yyval) = (yyvsp[-1]); }
-#line 3524 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+  case 15:
+#line 284 "parser.y"
+        { yyval = yyvsp[-1]; }
+#line 3620 "ansi_c_y.tab.cpp"
     break;
 
   case 22:
-#line 295 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-5]);
-          set((yyval), ID_generic_selection);
-          mto((yyval), (yyvsp[-3]));
-          stack((yyval)).add(ID_generic_associations).get_sub().swap((irept::subt&)stack((yyvsp[-1])).operands());
+#line 295 "parser.y"
+        {
+          yyval=yyvsp[-5];
+          set(yyval, ID_generic_selection);
+          mto(yyval, yyvsp[-3]);
+          stack(yyval).add(ID_generic_associations).get_sub().swap((irept::subt&)stack(yyvsp[-1]).operands());
         }
-#line 3535 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 3631 "ansi_c_y.tab.cpp"
     break;
 
   case 23:
-#line 305 "parser.y" /* yacc.c:1646  */
-    {
-          init((yyval)); mto((yyval), (yyvsp[0]));
+#line 305 "parser.y"
+        {
+          init(yyval); mto(yyval, yyvsp[0]);
         }
-#line 3543 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 3639 "ansi_c_y.tab.cpp"
     break;
 
   case 24:
-#line 309 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-2]); mto((yyval), (yyvsp[0]));
+#line 309 "parser.y"
+        {
+          yyval=yyvsp[-2]; mto(yyval, yyvsp[0]);
         }
-#line 3551 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 3647 "ansi_c_y.tab.cpp"
     break;
 
   case 25:
-#line 316 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-1]);
-          stack((yyval)).id(ID_generic_association);
-          stack((yyval)).set(ID_type_arg, stack((yyvsp[-2])));
-          stack((yyval)).set(ID_value, stack((yyvsp[0])));
+#line 316 "parser.y"
+        {
+          yyval=yyvsp[-1];
+          stack(yyval).id(ID_generic_association);
+          stack(yyval).set(ID_type_arg, stack(yyvsp[-2]));
+          stack(yyval).set(ID_value, stack(yyvsp[0]));
         }
-#line 3562 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 3658 "ansi_c_y.tab.cpp"
     break;
 
   case 26:
-#line 323 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-1]);
-          stack((yyval)).id(ID_generic_association);
-          stack((yyval)).set(ID_type_arg, irept(ID_default));
-          stack((yyval)).set(ID_value, stack((yyvsp[0])));
+#line 323 "parser.y"
+        {
+          yyval=yyvsp[-1];
+          stack(yyval).id(ID_generic_association);
+          stack(yyval).set(ID_type_arg, irept(ID_default));
+          stack(yyval).set(ID_value, stack(yyvsp[0]));
         }
-#line 3573 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 3669 "ansi_c_y.tab.cpp"
     break;
 
   case 27:
-#line 333 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-5]);
-          stack((yyval)).id(ID_gcc_builtin_va_arg);
-          mto((yyval), (yyvsp[-3]));
-          stack((yyval)).type().swap(stack((yyvsp[-1])));
+#line 333 "parser.y"
+        {
+          yyval=yyvsp[-5];
+          stack(yyval).id(ID_gcc_builtin_va_arg);
+          mto(yyval, yyvsp[-3]);
+          stack(yyval).type().swap(stack(yyvsp[-1]));
         }
-#line 3584 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 3680 "ansi_c_y.tab.cpp"
     break;
 
   case 28:
-#line 341 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-5]);
-          stack((yyval)).id(ID_gcc_builtin_types_compatible_p);
-          typet &type_arg=(typet &)(stack((yyval)).add(ID_type_arg));
+#line 341 "parser.y"
+        {
+          yyval=yyvsp[-5];
+          stack(yyval).id(ID_gcc_builtin_types_compatible_p);
+          typet &type_arg=(typet &)(stack(yyval).add(ID_type_arg));
           typet::subtypest &subtypes=type_arg.subtypes();
           subtypes.resize(2);
-          subtypes[0].swap(stack((yyvsp[-3])));
-          subtypes[1].swap(stack((yyvsp[-1])));
+          subtypes[0].swap(stack(yyvsp[-3]));
+          subtypes[1].swap(stack(yyvsp[-1]));
         }
-#line 3598 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 3694 "ansi_c_y.tab.cpp"
     break;
 
   case 29:
-#line 354 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-3]);
-          stack((yyval)).id(ID_cw_va_arg_typeof);
-          stack((yyval)).add(ID_type_arg).swap(stack((yyvsp[-1])));
+#line 354 "parser.y"
+        {
+          yyval=yyvsp[-3];
+          stack(yyval).id(ID_cw_va_arg_typeof);
+          stack(yyval).add(ID_type_arg).swap(stack(yyvsp[-1]));
         }
-#line 3608 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 3704 "ansi_c_y.tab.cpp"
     break;
 
   case 30:
-#line 363 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-5]);
-          stack((yyval)).id(ID_builtin_offsetof);
-          stack((yyval)).add(ID_type_arg).swap(stack((yyvsp[-3])));
-          stack((yyval)).add(ID_designator).swap(stack((yyvsp[-1])));
+#line 363 "parser.y"
+        {
+          yyval=yyvsp[-5];
+          stack(yyval).id(ID_builtin_offsetof);
+          stack(yyval).add(ID_type_arg).swap(stack(yyvsp[-3]));
+          stack(yyval).add(ID_designator).swap(stack(yyvsp[-1]));
         }
-#line 3619 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 3715 "ansi_c_y.tab.cpp"
     break;
 
   case 31:
-#line 373 "parser.y" /* yacc.c:1646  */
-    {
-          init((yyval), ID_designated_initializer);
-          stack((yyval)).operands().resize(1);
-          stack((yyval)).op0().id(ID_member);
-          stack((yyval)).op0().add_source_location()=stack((yyvsp[0])).source_location();
-          stack((yyval)).op0().set(ID_component_name, stack((yyvsp[0])).get(ID_C_base_name));
+#line 373 "parser.y"
+        {
+          init(yyval, ID_designated_initializer);
+          stack(yyval).operands().resize(1);
+          stack(yyval).op0().id(ID_member);
+          stack(yyval).op0().add_source_location()=stack(yyvsp[0]).source_location();
+          stack(yyval).op0().set(ID_component_name, stack(yyvsp[0]).get(ID_C_base_name));
         }
-#line 3631 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 3727 "ansi_c_y.tab.cpp"
     break;
 
   case 32:
-#line 381 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-2]);
-          set((yyvsp[-1]), ID_member);
-          stack((yyvsp[-1])).set(ID_component_name, stack((yyvsp[0])).get(ID_C_base_name));
-          mto((yyval), (yyvsp[-1]));
+#line 381 "parser.y"
+        {
+          yyval=yyvsp[-2];
+          set(yyvsp[-1], ID_member);
+          stack(yyvsp[-1]).set(ID_component_name, stack(yyvsp[0]).get(ID_C_base_name));
+          mto(yyval, yyvsp[-1]);
         }
-#line 3642 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 3738 "ansi_c_y.tab.cpp"
     break;
 
   case 33:
-#line 388 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-3]);
-          set((yyvsp[-2]), ID_index);
-          mto((yyvsp[-2]), (yyvsp[-1]));
-          mto((yyval), (yyvsp[-2]));
+#line 388 "parser.y"
+        {
+          yyval=yyvsp[-3];
+          set(yyvsp[-2], ID_index);
+          mto(yyvsp[-2], yyvsp[-1]);
+          mto(yyval, yyvsp[-2]);
         }
-#line 3653 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 3749 "ansi_c_y.tab.cpp"
     break;
 
   case 34:
-#line 398 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-5]);
-          set((yyval), ID_forall);
-          mto((yyval), (yyvsp[-2]));
-          mto((yyval), (yyvsp[-1]));
+#line 398 "parser.y"
+        {
+          yyval=yyvsp[-5];
+          set(yyval, ID_forall);
+          mto(yyval, yyvsp[-2]);
+          mto(yyval, yyvsp[-1]);
           PARSER.pop_scope();
         }
-#line 3665 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 3761 "ansi_c_y.tab.cpp"
     break;
 
   case 35:
-#line 406 "parser.y" /* yacc.c:1646  */
-    {
+#line 406 "parser.y"
+        {
           // The precedence of this operator is too high; it is meant
           // to bind only very weakly.
-          (yyval)=(yyvsp[-3]);
-          set((yyval), ID_forall);
-          mto((yyval), (yyvsp[-1]));
-          mto((yyval), (yyvsp[0]));
+          yyval=yyvsp[-3];
+          set(yyval, ID_forall);
+          mto(yyval, yyvsp[-1]);
+          mto(yyval, yyvsp[0]);
           PARSER.pop_scope();
         }
-#line 3679 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 3775 "ansi_c_y.tab.cpp"
     break;
 
   case 36:
-#line 416 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-5]);
-          set((yyval), ID_exists);
-          mto((yyval), (yyvsp[-2]));
-          mto((yyval), (yyvsp[-1]));
+#line 416 "parser.y"
+        {
+          yyval=yyvsp[-5];
+          set(yyval, ID_exists);
+          mto(yyval, yyvsp[-2]);
+          mto(yyval, yyvsp[-1]);
           PARSER.pop_scope();
         }
-#line 3691 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 3787 "ansi_c_y.tab.cpp"
     break;
 
   case 37:
-#line 424 "parser.y" /* yacc.c:1646  */
-    {
+#line 424 "parser.y"
+        {
           // The precedence of this operator is too high; it is meant
           // to bind only very weakly.
-          (yyval)=(yyvsp[-3]);
-          set((yyval), ID_exists);
-          mto((yyval), (yyvsp[-1]));
-          mto((yyval), (yyvsp[0]));
+          yyval=yyvsp[-3];
+          set(yyval, ID_exists);
+          mto(yyval, yyvsp[-1]);
+          mto(yyval, yyvsp[0]);
           PARSER.pop_scope();
         }
-#line 3705 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 3801 "ansi_c_y.tab.cpp"
     break;
 
   case 38:
-#line 436 "parser.y" /* yacc.c:1646  */
-    { 
-          (yyval)=(yyvsp[-2]);
-          set((yyval), ID_side_effect);
-          stack((yyval)).set(ID_statement, ID_statement_expression);
-          mto((yyval), (yyvsp[-1]));
+#line 436 "parser.y"
+        { 
+          yyval=yyvsp[-2];
+          set(yyval, ID_side_effect);
+          stack(yyval).set(ID_statement, ID_statement_expression);
+          mto(yyval, yyvsp[-1]);
         }
-#line 3716 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 3812 "ansi_c_y.tab.cpp"
     break;
 
   case 40:
-#line 447 "parser.y" /* yacc.c:1646  */
-    { binary((yyval), (yyvsp[-3]), (yyvsp[-2]), ID_index, (yyvsp[-1])); }
-#line 3722 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 447 "parser.y"
+        { binary(yyval, yyvsp[-3], yyvsp[-2], ID_index, yyvsp[-1]); }
+#line 3818 "ansi_c_y.tab.cpp"
     break;
 
   case 41:
-#line 449 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[-1]);
-          set((yyval), ID_side_effect);
-          stack((yyval)).set(ID_statement, ID_function_call);
-          stack((yyval)).operands().resize(2);
-          stack((yyval)).op0().swap(stack((yyvsp[-2])));
-          stack((yyval)).op1().clear();
-          stack((yyval)).op1().id(ID_arguments);
+#line 449 "parser.y"
+        { yyval=yyvsp[-1];
+          set(yyval, ID_side_effect);
+          stack(yyval).set(ID_statement, ID_function_call);
+          stack(yyval).operands().resize(2);
+          stack(yyval).op0().swap(stack(yyvsp[-2]));
+          stack(yyval).op1().clear();
+          stack(yyval).op1().id(ID_arguments);
         }
-#line 3735 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 3831 "ansi_c_y.tab.cpp"
     break;
 
   case 42:
-#line 458 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[-2]);
-          set((yyval), ID_side_effect);
-          stack((yyval)).set(ID_statement, ID_function_call);
-          stack((yyval)).operands().resize(2);
-          stack((yyval)).op0().swap(stack((yyvsp[-3])));
-          stack((yyval)).op1().swap(stack((yyvsp[-1])));
-          stack((yyval)).op1().id(ID_arguments);
+#line 458 "parser.y"
+        { yyval=yyvsp[-2];
+          set(yyval, ID_side_effect);
+          stack(yyval).set(ID_statement, ID_function_call);
+          stack(yyval).operands().resize(2);
+          stack(yyval).op0().swap(stack(yyvsp[-3]));
+          stack(yyval).op1().swap(stack(yyvsp[-1]));
+          stack(yyval).op1().id(ID_arguments);
         }
-#line 3748 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 3844 "ansi_c_y.tab.cpp"
     break;
 
   case 43:
-#line 467 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[-1]);
-          set((yyval), ID_member);
-          mto((yyval), (yyvsp[-2]));
-          stack((yyval)).set(ID_component_name, stack((yyvsp[0])).get(ID_C_base_name));
+#line 467 "parser.y"
+        { yyval=yyvsp[-1];
+          set(yyval, ID_member);
+          mto(yyval, yyvsp[-2]);
+          stack(yyval).set(ID_component_name, stack(yyvsp[0]).get(ID_C_base_name));
         }
-#line 3758 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 3854 "ansi_c_y.tab.cpp"
     break;
 
   case 44:
-#line 473 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[-1]);
-          set((yyval), ID_ptrmember);
-          mto((yyval), (yyvsp[-2]));
-          stack((yyval)).set(ID_component_name, stack((yyvsp[0])).get(ID_C_base_name));
+#line 473 "parser.y"
+        { yyval=yyvsp[-1];
+          set(yyval, ID_ptrmember);
+          mto(yyval, yyvsp[-2]);
+          stack(yyval).set(ID_component_name, stack(yyvsp[0]).get(ID_C_base_name));
         }
-#line 3768 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 3864 "ansi_c_y.tab.cpp"
     break;
 
   case 45:
-#line 479 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[0]);
-          set((yyval), ID_side_effect);
-          stack((yyval)).set(ID_statement, ID_postincrement);
-          mto((yyval), (yyvsp[-1]));
+#line 479 "parser.y"
+        { yyval=yyvsp[0];
+          set(yyval, ID_side_effect);
+          stack(yyval).set(ID_statement, ID_postincrement);
+          mto(yyval, yyvsp[-1]);
         }
-#line 3778 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 3874 "ansi_c_y.tab.cpp"
     break;
 
   case 46:
-#line 485 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[0]);
-          set((yyval), ID_side_effect);
-          stack((yyval)).set(ID_statement, ID_postdecrement);
-          mto((yyval), (yyvsp[-1]));
+#line 485 "parser.y"
+        { yyval=yyvsp[0];
+          set(yyval, ID_side_effect);
+          stack(yyval).set(ID_statement, ID_postdecrement);
+          mto(yyval, yyvsp[-1]);
         }
-#line 3788 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 3884 "ansi_c_y.tab.cpp"
     break;
 
   case 47:
-#line 492 "parser.y" /* yacc.c:1646  */
-    {
+#line 492 "parser.y"
+        {
           exprt tmp(ID_initializer_list);
-          tmp.add_source_location()=stack((yyvsp[-2])).source_location();
-          tmp.operands().swap(stack((yyvsp[-1])).operands());
-          (yyval)=(yyvsp[-5]);
-          set((yyval), ID_typecast);
-          stack((yyval)).move_to_operands(tmp);
-          stack((yyval)).type().swap(stack((yyvsp[-4])));
+          tmp.add_source_location()=stack(yyvsp[-2]).source_location();
+          tmp.operands().swap(stack(yyvsp[-1]).operands());
+          yyval=yyvsp[-5];
+          set(yyval, ID_typecast);
+          stack(yyval).move_to_operands(tmp);
+          stack(yyval).type().swap(stack(yyvsp[-4]));
         }
-#line 3802 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 3898 "ansi_c_y.tab.cpp"
     break;
 
   case 48:
-#line 502 "parser.y" /* yacc.c:1646  */
-    {
+#line 502 "parser.y"
+        {
           // same as above
           exprt tmp(ID_initializer_list);
-          tmp.add_source_location()=stack((yyvsp[-3])).source_location();
-          tmp.operands().swap(stack((yyvsp[-2])).operands());
-          (yyval)=(yyvsp[-6]);
-          set((yyval), ID_typecast);
-          stack((yyval)).move_to_operands(tmp);
-          stack((yyval)).type().swap(stack((yyvsp[-5])));
+          tmp.add_source_location()=stack(yyvsp[-3]).source_location();
+          tmp.operands().swap(stack(yyvsp[-2]).operands());
+          yyval=yyvsp[-6];
+          set(yyval, ID_typecast);
+          stack(yyval).move_to_operands(tmp);
+          stack(yyval).type().swap(stack(yyvsp[-5]));
         }
-#line 3817 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 3913 "ansi_c_y.tab.cpp"
     break;
 
   case 51:
-#line 521 "parser.y" /* yacc.c:1646  */
-    {
-          init((yyval), ID_expression_list);
-          mto((yyval), (yyvsp[0]));
+#line 521 "parser.y"
+        {
+          init(yyval, ID_expression_list);
+          mto(yyval, yyvsp[0]);
         }
-#line 3826 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 3922 "ansi_c_y.tab.cpp"
     break;
 
   case 52:
-#line 526 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-2]);
-          mto((yyval), (yyvsp[0]));
+#line 526 "parser.y"
+        {
+          yyval=yyvsp[-2];
+          mto(yyval, yyvsp[0]);
         }
-#line 3835 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 3931 "ansi_c_y.tab.cpp"
     break;
 
   case 54:
-#line 535 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[-1]);
-          set((yyval), ID_side_effect);
-          stack((yyval)).set(ID_statement, ID_preincrement);
-          mto((yyval), (yyvsp[0]));
+#line 535 "parser.y"
+        { yyval=yyvsp[-1];
+          set(yyval, ID_side_effect);
+          stack(yyval).set(ID_statement, ID_preincrement);
+          mto(yyval, yyvsp[0]);
         }
-#line 3845 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 3941 "ansi_c_y.tab.cpp"
     break;
 
   case 55:
-#line 541 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[-1]);
-          set((yyval), ID_side_effect);
-          stack((yyval)).set(ID_statement, ID_predecrement);
-          mto((yyval), (yyvsp[0]));
+#line 541 "parser.y"
+        { yyval=yyvsp[-1];
+          set(yyval, ID_side_effect);
+          stack(yyval).set(ID_statement, ID_predecrement);
+          mto(yyval, yyvsp[0]);
         }
-#line 3855 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 3951 "ansi_c_y.tab.cpp"
     break;
 
   case 56:
-#line 547 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[-1]);
-          set((yyval), ID_address_of);
-          mto((yyval), (yyvsp[0]));
+#line 547 "parser.y"
+        { yyval=yyvsp[-1];
+          set(yyval, ID_address_of);
+          mto(yyval, yyvsp[0]);
         }
-#line 3864 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 3960 "ansi_c_y.tab.cpp"
     break;
 
   case 57:
-#line 552 "parser.y" /* yacc.c:1646  */
-    { // this takes the address of a label (a gcc extension)
-          (yyval)=(yyvsp[-1]);
-          irep_idt identifier=PARSER.lookup_label(stack((yyvsp[0])).get(ID_C_base_name));
-          set((yyval), ID_address_of);
-          stack((yyval)).operands().resize(1);
-          stack((yyval)).op0()=stack((yyvsp[0]));
-          stack((yyval)).op0().id(ID_label);
-          stack((yyval)).op0().set(ID_identifier, identifier);
+#line 552 "parser.y"
+        { // this takes the address of a label (a gcc extension)
+          yyval=yyvsp[-1];
+          irep_idt identifier=PARSER.lookup_label(stack(yyvsp[0]).get(ID_C_base_name));
+          set(yyval, ID_address_of);
+          stack(yyval).operands().resize(1);
+          stack(yyval).op0()=stack(yyvsp[0]);
+          stack(yyval).op0().id(ID_label);
+          stack(yyval).op0().set(ID_identifier, identifier);
         }
-#line 3878 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 3974 "ansi_c_y.tab.cpp"
     break;
 
   case 58:
-#line 562 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[-1]);
-          set((yyval), ID_dereference);
-          mto((yyval), (yyvsp[0]));
+#line 562 "parser.y"
+        { yyval=yyvsp[-1];
+          set(yyval, ID_dereference);
+          mto(yyval, yyvsp[0]);
         }
-#line 3887 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 3983 "ansi_c_y.tab.cpp"
     break;
 
   case 59:
-#line 567 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[-1]);
-          set((yyval), ID_unary_plus);
-          mto((yyval), (yyvsp[0]));
+#line 567 "parser.y"
+        { yyval=yyvsp[-1];
+          set(yyval, ID_unary_plus);
+          mto(yyval, yyvsp[0]);
         }
-#line 3896 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 3992 "ansi_c_y.tab.cpp"
     break;
 
   case 60:
-#line 572 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[-1]);
-          set((yyval), ID_unary_minus);
-          mto((yyval), (yyvsp[0]));
+#line 572 "parser.y"
+        { yyval=yyvsp[-1];
+          set(yyval, ID_unary_minus);
+          mto(yyval, yyvsp[0]);
         }
-#line 3905 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4001 "ansi_c_y.tab.cpp"
     break;
 
   case 61:
-#line 577 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[-1]);
-          set((yyval), ID_bitnot);
-          mto((yyval), (yyvsp[0]));
+#line 577 "parser.y"
+        { yyval=yyvsp[-1];
+          set(yyval, ID_bitnot);
+          mto(yyval, yyvsp[0]);
         }
-#line 3914 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4010 "ansi_c_y.tab.cpp"
     break;
 
   case 62:
-#line 582 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[-1]);
-          set((yyval), ID_not);
-          mto((yyval), (yyvsp[0]));
+#line 582 "parser.y"
+        { yyval=yyvsp[-1];
+          set(yyval, ID_not);
+          mto(yyval, yyvsp[0]);
         }
-#line 3923 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4019 "ansi_c_y.tab.cpp"
     break;
 
   case 63:
-#line 587 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[-1]);
-          set((yyval), ID_sizeof);
-          mto((yyval), (yyvsp[0]));
+#line 587 "parser.y"
+        { yyval=yyvsp[-1];
+          set(yyval, ID_sizeof);
+          mto(yyval, yyvsp[0]);
         }
-#line 3932 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4028 "ansi_c_y.tab.cpp"
     break;
 
   case 64:
-#line 592 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[-3]);
-          set((yyval), ID_sizeof);
-          stack((yyval)).add(ID_type_arg).swap(stack((yyvsp[-1])));
+#line 592 "parser.y"
+        { yyval=yyvsp[-3];
+          set(yyval, ID_sizeof);
+          stack(yyval).add(ID_type_arg).swap(stack(yyvsp[-1]));
         }
-#line 3941 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4037 "ansi_c_y.tab.cpp"
     break;
 
   case 65:
-#line 597 "parser.y" /* yacc.c:1646  */
-    { // note no parentheses for expressions, just like sizeof
-          (yyval)=(yyvsp[-1]);
-          set((yyval), ID_alignof);
-          mto((yyval), (yyvsp[0]));
+#line 597 "parser.y"
+        { // note no parentheses for expressions, just like sizeof
+          yyval=yyvsp[-1];
+          set(yyval, ID_alignof);
+          mto(yyval, yyvsp[0]);
         }
-#line 3951 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4047 "ansi_c_y.tab.cpp"
     break;
 
   case 66:
-#line 603 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-3]);
-          stack((yyval)).id(ID_alignof);
-          stack((yyval)).add(ID_type_arg).swap(stack((yyvsp[-1])));
+#line 603 "parser.y"
+        {
+          yyval=yyvsp[-3];
+          stack(yyval).id(ID_alignof);
+          stack(yyval).add(ID_type_arg).swap(stack(yyvsp[-1]));
         }
-#line 3961 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4057 "ansi_c_y.tab.cpp"
     break;
 
   case 68:
-#line 613 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-3]);
-          set((yyval), ID_typecast);
-          mto((yyval), (yyvsp[0]));
-          stack((yyval)).type().swap(stack((yyvsp[-2])));
+#line 613 "parser.y"
+        {
+          yyval=yyvsp[-3];
+          set(yyval, ID_typecast);
+          mto(yyval, yyvsp[0]);
+          stack(yyval).type().swap(stack(yyvsp[-2]));
         }
-#line 3972 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4068 "ansi_c_y.tab.cpp"
     break;
 
   case 69:
-#line 620 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[-1]);
-          set((yyval), ID_complex_real);
-          mto((yyval), (yyvsp[0]));
+#line 620 "parser.y"
+        { yyval=yyvsp[-1];
+          set(yyval, ID_complex_real);
+          mto(yyval, yyvsp[0]);
         }
-#line 3981 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4077 "ansi_c_y.tab.cpp"
     break;
 
   case 70:
-#line 625 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[-1]);
-          set((yyval), ID_complex_imag);
-          mto((yyval), (yyvsp[0]));
+#line 625 "parser.y"
+        { yyval=yyvsp[-1];
+          set(yyval, ID_complex_imag);
+          mto(yyval, yyvsp[0]);
         }
-#line 3990 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4086 "ansi_c_y.tab.cpp"
     break;
 
   case 72:
-#line 634 "parser.y" /* yacc.c:1646  */
-    { binary((yyval), (yyvsp[-2]), (yyvsp[-1]), ID_mult, (yyvsp[0])); }
-#line 3996 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 634 "parser.y"
+        { binary(yyval, yyvsp[-2], yyvsp[-1], ID_mult, yyvsp[0]); }
+#line 4092 "ansi_c_y.tab.cpp"
     break;
 
   case 73:
-#line 636 "parser.y" /* yacc.c:1646  */
-    { binary((yyval), (yyvsp[-2]), (yyvsp[-1]), ID_div, (yyvsp[0])); }
-#line 4002 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 636 "parser.y"
+        { binary(yyval, yyvsp[-2], yyvsp[-1], ID_div, yyvsp[0]); }
+#line 4098 "ansi_c_y.tab.cpp"
     break;
 
   case 74:
-#line 638 "parser.y" /* yacc.c:1646  */
-    { binary((yyval), (yyvsp[-2]), (yyvsp[-1]), ID_mod, (yyvsp[0])); }
-#line 4008 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 638 "parser.y"
+        { binary(yyval, yyvsp[-2], yyvsp[-1], ID_mod, yyvsp[0]); }
+#line 4104 "ansi_c_y.tab.cpp"
     break;
 
   case 76:
-#line 644 "parser.y" /* yacc.c:1646  */
-    { binary((yyval), (yyvsp[-2]), (yyvsp[-1]), ID_plus, (yyvsp[0])); }
-#line 4014 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 644 "parser.y"
+        { binary(yyval, yyvsp[-2], yyvsp[-1], ID_plus, yyvsp[0]); }
+#line 4110 "ansi_c_y.tab.cpp"
     break;
 
   case 77:
-#line 646 "parser.y" /* yacc.c:1646  */
-    { binary((yyval), (yyvsp[-2]), (yyvsp[-1]), ID_minus, (yyvsp[0])); }
-#line 4020 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 646 "parser.y"
+        { binary(yyval, yyvsp[-2], yyvsp[-1], ID_minus, yyvsp[0]); }
+#line 4116 "ansi_c_y.tab.cpp"
     break;
 
   case 79:
-#line 652 "parser.y" /* yacc.c:1646  */
-    { binary((yyval), (yyvsp[-2]), (yyvsp[-1]), ID_shl, (yyvsp[0])); }
-#line 4026 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 652 "parser.y"
+        { binary(yyval, yyvsp[-2], yyvsp[-1], ID_shl, yyvsp[0]); }
+#line 4122 "ansi_c_y.tab.cpp"
     break;
 
   case 80:
-#line 654 "parser.y" /* yacc.c:1646  */
-    { binary((yyval), (yyvsp[-2]), (yyvsp[-1]), ID_shr, (yyvsp[0])); }
-#line 4032 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 654 "parser.y"
+        { binary(yyval, yyvsp[-2], yyvsp[-1], ID_shr, yyvsp[0]); }
+#line 4128 "ansi_c_y.tab.cpp"
     break;
 
   case 82:
-#line 660 "parser.y" /* yacc.c:1646  */
-    { binary((yyval), (yyvsp[-2]), (yyvsp[-1]), ID_lt, (yyvsp[0])); }
-#line 4038 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 660 "parser.y"
+        { binary(yyval, yyvsp[-2], yyvsp[-1], ID_lt, yyvsp[0]); }
+#line 4134 "ansi_c_y.tab.cpp"
     break;
 
   case 83:
-#line 662 "parser.y" /* yacc.c:1646  */
-    { binary((yyval), (yyvsp[-2]), (yyvsp[-1]), ID_gt, (yyvsp[0])); }
-#line 4044 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 662 "parser.y"
+        { binary(yyval, yyvsp[-2], yyvsp[-1], ID_gt, yyvsp[0]); }
+#line 4140 "ansi_c_y.tab.cpp"
     break;
 
   case 84:
-#line 664 "parser.y" /* yacc.c:1646  */
-    { binary((yyval), (yyvsp[-2]), (yyvsp[-1]), ID_le, (yyvsp[0])); }
-#line 4050 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 664 "parser.y"
+        { binary(yyval, yyvsp[-2], yyvsp[-1], ID_le, yyvsp[0]); }
+#line 4146 "ansi_c_y.tab.cpp"
     break;
 
   case 85:
-#line 666 "parser.y" /* yacc.c:1646  */
-    { binary((yyval), (yyvsp[-2]), (yyvsp[-1]), ID_ge, (yyvsp[0])); }
-#line 4056 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 666 "parser.y"
+        { binary(yyval, yyvsp[-2], yyvsp[-1], ID_ge, yyvsp[0]); }
+#line 4152 "ansi_c_y.tab.cpp"
     break;
 
   case 87:
-#line 672 "parser.y" /* yacc.c:1646  */
-    { binary((yyval), (yyvsp[-2]), (yyvsp[-1]), ID_equal, (yyvsp[0])); }
-#line 4062 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 672 "parser.y"
+        { binary(yyval, yyvsp[-2], yyvsp[-1], ID_equal, yyvsp[0]); }
+#line 4158 "ansi_c_y.tab.cpp"
     break;
 
   case 88:
-#line 674 "parser.y" /* yacc.c:1646  */
-    { binary((yyval), (yyvsp[-2]), (yyvsp[-1]), ID_notequal, (yyvsp[0])); }
-#line 4068 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 674 "parser.y"
+        { binary(yyval, yyvsp[-2], yyvsp[-1], ID_notequal, yyvsp[0]); }
+#line 4164 "ansi_c_y.tab.cpp"
     break;
 
   case 90:
-#line 680 "parser.y" /* yacc.c:1646  */
-    { binary((yyval), (yyvsp[-2]), (yyvsp[-1]), ID_bitand, (yyvsp[0])); }
-#line 4074 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 680 "parser.y"
+        { binary(yyval, yyvsp[-2], yyvsp[-1], ID_bitand, yyvsp[0]); }
+#line 4170 "ansi_c_y.tab.cpp"
     break;
 
   case 92:
-#line 686 "parser.y" /* yacc.c:1646  */
-    { binary((yyval), (yyvsp[-2]), (yyvsp[-1]), ID_bitxor, (yyvsp[0])); }
-#line 4080 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 686 "parser.y"
+        { binary(yyval, yyvsp[-2], yyvsp[-1], ID_bitxor, yyvsp[0]); }
+#line 4176 "ansi_c_y.tab.cpp"
     break;
 
   case 94:
-#line 692 "parser.y" /* yacc.c:1646  */
-    { binary((yyval), (yyvsp[-2]), (yyvsp[-1]), ID_bitor, (yyvsp[0])); }
-#line 4086 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 692 "parser.y"
+        { binary(yyval, yyvsp[-2], yyvsp[-1], ID_bitor, yyvsp[0]); }
+#line 4182 "ansi_c_y.tab.cpp"
     break;
 
   case 96:
-#line 698 "parser.y" /* yacc.c:1646  */
-    { binary((yyval), (yyvsp[-2]), (yyvsp[-1]), ID_and, (yyvsp[0])); }
-#line 4092 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 698 "parser.y"
+        { binary(yyval, yyvsp[-2], yyvsp[-1], ID_and, yyvsp[0]); }
+#line 4188 "ansi_c_y.tab.cpp"
     break;
 
   case 98:
-#line 704 "parser.y" /* yacc.c:1646  */
-    { binary((yyval), (yyvsp[-2]), (yyvsp[-1]), ID_or, (yyvsp[0])); }
-#line 4098 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 704 "parser.y"
+        { binary(yyval, yyvsp[-2], yyvsp[-1], ID_or, yyvsp[0]); }
+#line 4194 "ansi_c_y.tab.cpp"
     break;
 
   case 100:
-#line 713 "parser.y" /* yacc.c:1646  */
-    { binary((yyval), (yyvsp[-2]), (yyvsp[-1]), ID_implies, (yyvsp[0])); }
-#line 4104 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 713 "parser.y"
+        { binary(yyval, yyvsp[-2], yyvsp[-1], ID_implies, yyvsp[0]); }
+#line 4200 "ansi_c_y.tab.cpp"
     break;
 
   case 102:
-#line 722 "parser.y" /* yacc.c:1646  */
-    { binary((yyval), (yyvsp[-2]), (yyvsp[-1]), ID_equal, (yyvsp[0])); }
-#line 4110 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 722 "parser.y"
+        { binary(yyval, yyvsp[-2], yyvsp[-1], ID_equal, yyvsp[0]); }
+#line 4206 "ansi_c_y.tab.cpp"
     break;
 
   case 104:
-#line 728 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[-3]);
-          stack((yyval)).id(ID_if);
-          mto((yyval), (yyvsp[-4]));
-          mto((yyval), (yyvsp[-2]));
-          mto((yyval), (yyvsp[0]));
+#line 728 "parser.y"
+        { yyval=yyvsp[-3];
+          stack(yyval).id(ID_if);
+          mto(yyval, yyvsp[-4]);
+          mto(yyval, yyvsp[-2]);
+          mto(yyval, yyvsp[0]);
         }
-#line 4121 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4217 "ansi_c_y.tab.cpp"
     break;
 
   case 105:
-#line 735 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[-2]);
-          stack((yyval)).id(ID_side_effect);
-          stack((yyval)).set(ID_statement, ID_gcc_conditional_expression);
-          mto((yyval), (yyvsp[-3]));
-          mto((yyval), (yyvsp[0]));
+#line 735 "parser.y"
+        { yyval=yyvsp[-2];
+          stack(yyval).id(ID_side_effect);
+          stack(yyval).set(ID_statement, ID_gcc_conditional_expression);
+          mto(yyval, yyvsp[-3]);
+          mto(yyval, yyvsp[0]);
         }
-#line 4132 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4228 "ansi_c_y.tab.cpp"
     break;
 
   case 107:
-#line 746 "parser.y" /* yacc.c:1646  */
-    { binary((yyval), (yyvsp[-2]), (yyvsp[-1]), ID_side_effect, (yyvsp[0])); stack((yyval)).set(ID_statement, ID_assign); }
-#line 4138 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 746 "parser.y"
+        { binary(yyval, yyvsp[-2], yyvsp[-1], ID_side_effect, yyvsp[0]); stack(yyval).set(ID_statement, ID_assign); }
+#line 4234 "ansi_c_y.tab.cpp"
     break;
 
   case 108:
-#line 748 "parser.y" /* yacc.c:1646  */
-    { binary((yyval), (yyvsp[-2]), (yyvsp[-1]), ID_side_effect, (yyvsp[0])); stack((yyval)).set(ID_statement, ID_assign_mult); }
-#line 4144 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 748 "parser.y"
+        { binary(yyval, yyvsp[-2], yyvsp[-1], ID_side_effect, yyvsp[0]); stack(yyval).set(ID_statement, ID_assign_mult); }
+#line 4240 "ansi_c_y.tab.cpp"
     break;
 
   case 109:
-#line 750 "parser.y" /* yacc.c:1646  */
-    { binary((yyval), (yyvsp[-2]), (yyvsp[-1]), ID_side_effect, (yyvsp[0])); stack((yyval)).set(ID_statement, ID_assign_div); }
-#line 4150 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 750 "parser.y"
+        { binary(yyval, yyvsp[-2], yyvsp[-1], ID_side_effect, yyvsp[0]); stack(yyval).set(ID_statement, ID_assign_div); }
+#line 4246 "ansi_c_y.tab.cpp"
     break;
 
   case 110:
-#line 752 "parser.y" /* yacc.c:1646  */
-    { binary((yyval), (yyvsp[-2]), (yyvsp[-1]), ID_side_effect, (yyvsp[0])); stack((yyval)).set(ID_statement, ID_assign_mod); }
-#line 4156 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 752 "parser.y"
+        { binary(yyval, yyvsp[-2], yyvsp[-1], ID_side_effect, yyvsp[0]); stack(yyval).set(ID_statement, ID_assign_mod); }
+#line 4252 "ansi_c_y.tab.cpp"
     break;
 
   case 111:
-#line 754 "parser.y" /* yacc.c:1646  */
-    { binary((yyval), (yyvsp[-2]), (yyvsp[-1]), ID_side_effect, (yyvsp[0])); stack((yyval)).set(ID_statement, ID_assign_plus); }
-#line 4162 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 754 "parser.y"
+        { binary(yyval, yyvsp[-2], yyvsp[-1], ID_side_effect, yyvsp[0]); stack(yyval).set(ID_statement, ID_assign_plus); }
+#line 4258 "ansi_c_y.tab.cpp"
     break;
 
   case 112:
-#line 756 "parser.y" /* yacc.c:1646  */
-    { binary((yyval), (yyvsp[-2]), (yyvsp[-1]), ID_side_effect, (yyvsp[0])); stack((yyval)).set(ID_statement, ID_assign_minus); }
-#line 4168 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 756 "parser.y"
+        { binary(yyval, yyvsp[-2], yyvsp[-1], ID_side_effect, yyvsp[0]); stack(yyval).set(ID_statement, ID_assign_minus); }
+#line 4264 "ansi_c_y.tab.cpp"
     break;
 
   case 113:
-#line 758 "parser.y" /* yacc.c:1646  */
-    { binary((yyval), (yyvsp[-2]), (yyvsp[-1]), ID_side_effect, (yyvsp[0])); stack((yyval)).set(ID_statement, ID_assign_shl); }
-#line 4174 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 758 "parser.y"
+        { binary(yyval, yyvsp[-2], yyvsp[-1], ID_side_effect, yyvsp[0]); stack(yyval).set(ID_statement, ID_assign_shl); }
+#line 4270 "ansi_c_y.tab.cpp"
     break;
 
   case 114:
-#line 760 "parser.y" /* yacc.c:1646  */
-    { binary((yyval), (yyvsp[-2]), (yyvsp[-1]), ID_side_effect, (yyvsp[0])); stack((yyval)).set(ID_statement, ID_assign_shr); }
-#line 4180 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 760 "parser.y"
+        { binary(yyval, yyvsp[-2], yyvsp[-1], ID_side_effect, yyvsp[0]); stack(yyval).set(ID_statement, ID_assign_shr); }
+#line 4276 "ansi_c_y.tab.cpp"
     break;
 
   case 115:
-#line 762 "parser.y" /* yacc.c:1646  */
-    { binary((yyval), (yyvsp[-2]), (yyvsp[-1]), ID_side_effect, (yyvsp[0])); stack((yyval)).set(ID_statement, ID_assign_bitand); }
-#line 4186 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 762 "parser.y"
+        { binary(yyval, yyvsp[-2], yyvsp[-1], ID_side_effect, yyvsp[0]); stack(yyval).set(ID_statement, ID_assign_bitand); }
+#line 4282 "ansi_c_y.tab.cpp"
     break;
 
   case 116:
-#line 764 "parser.y" /* yacc.c:1646  */
-    { binary((yyval), (yyvsp[-2]), (yyvsp[-1]), ID_side_effect, (yyvsp[0])); stack((yyval)).set(ID_statement, ID_assign_bitxor); }
-#line 4192 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 764 "parser.y"
+        { binary(yyval, yyvsp[-2], yyvsp[-1], ID_side_effect, yyvsp[0]); stack(yyval).set(ID_statement, ID_assign_bitxor); }
+#line 4288 "ansi_c_y.tab.cpp"
     break;
 
   case 117:
-#line 766 "parser.y" /* yacc.c:1646  */
-    { binary((yyval), (yyvsp[-2]), (yyvsp[-1]), ID_side_effect, (yyvsp[0])); stack((yyval)).set(ID_statement, ID_assign_bitor); }
-#line 4198 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 766 "parser.y"
+        { binary(yyval, yyvsp[-2], yyvsp[-1], ID_side_effect, yyvsp[0]); stack(yyval).set(ID_statement, ID_assign_bitor); }
+#line 4294 "ansi_c_y.tab.cpp"
     break;
 
   case 119:
-#line 772 "parser.y" /* yacc.c:1646  */
-    { binary((yyval), (yyvsp[-2]), (yyvsp[-1]), ID_comma, (yyvsp[0])); }
-#line 4204 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 772 "parser.y"
+        { binary(yyval, yyvsp[-2], yyvsp[-1], ID_comma, yyvsp[0]); }
+#line 4300 "ansi_c_y.tab.cpp"
     break;
 
   case 121:
-#line 781 "parser.y" /* yacc.c:1646  */
-    { init((yyval)); stack((yyval)).make_nil(); }
-#line 4210 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 781 "parser.y"
+        { init(yyval); stack(yyval).make_nil(); }
+#line 4306 "ansi_c_y.tab.cpp"
     break;
 
   case 123:
-#line 789 "parser.y" /* yacc.c:1646  */
-    {
+#line 789 "parser.y"
+        {
           // type only, no declarator!
-          init((yyval), ID_declaration);
-          stack((yyval)).type().swap(stack((yyvsp[-1])));
+          init(yyval, ID_declaration);
+          stack(yyval).type().swap(stack(yyvsp[-1]));
         }
-#line 4220 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4316 "ansi_c_y.tab.cpp"
     break;
 
   case 124:
-#line 795 "parser.y" /* yacc.c:1646  */
-    {
+#line 795 "parser.y"
+        {
           // type only, no identifier!
-          init((yyval), ID_declaration);
-          stack((yyval)).type().swap(stack((yyvsp[-1])));
+          init(yyval, ID_declaration);
+          stack(yyval).type().swap(stack(yyvsp[-1]));
         }
-#line 4230 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4326 "ansi_c_y.tab.cpp"
     break;
 
   case 128:
-#line 807 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-5]);
-          set((yyval), ID_declaration);
-          to_ansi_c_declaration(stack((yyval))).set_is_static_assert(true);
-          mto((yyval), (yyvsp[-3]));
-          mto((yyval), (yyvsp[-1]));
+#line 807 "parser.y"
+        {
+          yyval=yyvsp[-5];
+          set(yyval, ID_declaration);
+          to_ansi_c_declaration(stack(yyval)).set_is_static_assert(true);
+          mto(yyval, yyvsp[-3]);
+          mto(yyval, yyvsp[-1]);
         }
-#line 4242 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4338 "ansi_c_y.tab.cpp"
     break;
 
   case 129:
-#line 818 "parser.y" /* yacc.c:1646  */
-    {
-            init((yyval), ID_declaration);
-            stack((yyval)).type().swap(stack((yyvsp[-1])));
-            PARSER.add_declarator(stack((yyval)), stack((yyvsp[0])));
+#line 818 "parser.y"
+          {
+            init(yyval, ID_declaration);
+            stack(yyval).type().swap(stack(yyvsp[-1]));
+            PARSER.add_declarator(stack(yyval), stack(yyvsp[0]));
           }
-#line 4252 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4348 "ansi_c_y.tab.cpp"
     break;
 
   case 130:
-#line 824 "parser.y" /* yacc.c:1646  */
-    {
+#line 824 "parser.y"
+        {
           // patch on the initializer
-          (yyval)=(yyvsp[-1]);
-          to_ansi_c_declaration(stack((yyval))).add_initializer(stack((yyvsp[0])));
+          yyval=yyvsp[-1];
+          to_ansi_c_declaration(stack(yyval)).add_initializer(stack(yyvsp[0]));
         }
-#line 4262 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4358 "ansi_c_y.tab.cpp"
     break;
 
   case 131:
-#line 830 "parser.y" /* yacc.c:1646  */
-    {
-            init((yyval), ID_declaration);
-            stack((yyval)).type().swap(stack((yyvsp[-1])));
-            PARSER.add_declarator(stack((yyval)), stack((yyvsp[0])));
+#line 830 "parser.y"
+          {
+            init(yyval, ID_declaration);
+            stack(yyval).type().swap(stack(yyvsp[-1]));
+            PARSER.add_declarator(stack(yyval), stack(yyvsp[0]));
           }
-#line 4272 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4368 "ansi_c_y.tab.cpp"
     break;
 
   case 132:
-#line 836 "parser.y" /* yacc.c:1646  */
-    {
+#line 836 "parser.y"
+        {
           // patch on the initializer
-          (yyval)=(yyvsp[-1]);
-          to_ansi_c_declaration(stack((yyval))).add_initializer(stack((yyvsp[0])));
+          yyval=yyvsp[-1];
+          to_ansi_c_declaration(stack(yyval)).add_initializer(stack(yyvsp[0]));
         }
-#line 4282 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4378 "ansi_c_y.tab.cpp"
     break;
 
   case 133:
-#line 842 "parser.y" /* yacc.c:1646  */
-    {
+#line 842 "parser.y"
+          {
             // just add the declarator
-            PARSER.add_declarator(stack((yyvsp[-2])), stack((yyvsp[0])));
+            PARSER.add_declarator(stack(yyvsp[-2]), stack(yyvsp[0]));
             // Needs to be done before initializer, as we want to see that identifier
             // already there!
           }
-#line 4293 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4389 "ansi_c_y.tab.cpp"
     break;
 
   case 134:
-#line 849 "parser.y" /* yacc.c:1646  */
-    {
+#line 849 "parser.y"
+        {
           // patch on the initializer
-          (yyval)=(yyvsp[-4]);
-          to_ansi_c_declaration(stack((yyval))).add_initializer(stack((yyvsp[0])));
+          yyval=yyvsp[-4];
+          to_ansi_c_declaration(stack(yyval)).add_initializer(stack(yyvsp[0]));
         }
-#line 4303 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4399 "ansi_c_y.tab.cpp"
     break;
 
   case 135:
-#line 858 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-4]);
-          stack((yyval)).id(ID_asm);
-          stack((yyval)).set(ID_flavor, ID_gcc);
-          stack((yyval)).operands().swap(stack((yyvsp[-1])).operands());
+#line 858 "parser.y"
+        {
+          yyval=yyvsp[-4];
+          stack(yyval).id(ID_asm);
+          stack(yyval).set(ID_flavor, ID_gcc);
+          stack(yyval).operands().swap(stack(yyvsp[-1]).operands());
         }
-#line 4314 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4410 "ansi_c_y.tab.cpp"
     break;
 
   case 137:
-#line 869 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=merge((yyvsp[-1]), (yyvsp[0]));
+#line 869 "parser.y"
+        {
+          yyval=merge(yyvsp[-1], yyvsp[0]);
         }
-#line 4322 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4418 "ansi_c_y.tab.cpp"
     break;
 
   case 139:
-#line 877 "parser.y" /* yacc.c:1646  */
-    {
-          init((yyval));
+#line 877 "parser.y"
+        {
+          init(yyval);
         }
-#line 4330 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4426 "ansi_c_y.tab.cpp"
     break;
 
   case 141:
-#line 886 "parser.y" /* yacc.c:1646  */
-    {
-            (yyvsp[-1])=merge((yyvsp[0]), (yyvsp[-1])); // type attribute
+#line 886 "parser.y"
+          {
+            yyvsp[-1]=merge(yyvsp[0], yyvsp[-1]); // type attribute
             
             // the symbol has to be visible during initialization
-            init((yyval), ID_declaration);
-            stack((yyval)).type().swap(stack((yyvsp[-2])));
-            PARSER.add_declarator(stack((yyval)), stack((yyvsp[-1])));
+            init(yyval, ID_declaration);
+            stack(yyval).type().swap(stack(yyvsp[-2]));
+            PARSER.add_declarator(stack(yyval), stack(yyvsp[-1]));
           }
-#line 4343 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4439 "ansi_c_y.tab.cpp"
     break;
 
   case 142:
-#line 895 "parser.y" /* yacc.c:1646  */
-    {
+#line 895 "parser.y"
+        {
           // add the initializer
-          (yyval)=(yyvsp[-1]);
-          to_ansi_c_declaration(stack((yyval))).add_initializer(stack((yyvsp[0])));
+          yyval=yyvsp[-1];
+          to_ansi_c_declaration(stack(yyval)).add_initializer(stack(yyvsp[0]));
         }
-#line 4353 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4449 "ansi_c_y.tab.cpp"
     break;
 
   case 143:
-#line 902 "parser.y" /* yacc.c:1646  */
-    {
-            (yyvsp[-1])=merge((yyvsp[0]), (yyvsp[-1]));
+#line 902 "parser.y"
+          {
+            yyvsp[-1]=merge(yyvsp[0], yyvsp[-1]);
             
             // the symbol has to be visible during initialization
-            init((yyval), ID_declaration);
-            stack((yyval)).type().swap(stack((yyvsp[-2])));
-            PARSER.add_declarator(stack((yyval)), stack((yyvsp[-1])));
+            init(yyval, ID_declaration);
+            stack(yyval).type().swap(stack(yyvsp[-2]));
+            PARSER.add_declarator(stack(yyval), stack(yyvsp[-1]));
           }
-#line 4366 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4462 "ansi_c_y.tab.cpp"
     break;
 
   case 144:
-#line 911 "parser.y" /* yacc.c:1646  */
-    {
+#line 911 "parser.y"
+        {
           // add the initializer
-          (yyval)=(yyvsp[-1]);
-          to_ansi_c_declaration(stack((yyval))).add_initializer(stack((yyvsp[0])));
+          yyval=yyvsp[-1];
+          to_ansi_c_declaration(stack(yyval)).add_initializer(stack(yyvsp[0]));
         }
-#line 4376 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4472 "ansi_c_y.tab.cpp"
     break;
 
   case 145:
-#line 918 "parser.y" /* yacc.c:1646  */
-    {
+#line 918 "parser.y"
+          {
             // type attribute goes into declarator
-            (yyvsp[-1])=merge((yyvsp[0]), (yyvsp[-1]));
-            PARSER.add_declarator(stack((yyvsp[-3])), stack((yyvsp[-1])));
+            yyvsp[-1]=merge(yyvsp[0], yyvsp[-1]);
+            PARSER.add_declarator(stack(yyvsp[-3]), stack(yyvsp[-1]));
           }
-#line 4386 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4482 "ansi_c_y.tab.cpp"
     break;
 
   case 146:
-#line 924 "parser.y" /* yacc.c:1646  */
-    {
+#line 924 "parser.y"
+        {
           // add in the initializer
-          (yyval)=(yyvsp[-5]);
-          to_ansi_c_declaration(stack((yyval))).add_initializer(stack((yyvsp[0])));
+          yyval=yyvsp[-5];
+          to_ansi_c_declaration(stack(yyval)).add_initializer(stack(yyvsp[0]));
         }
-#line 4396 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4492 "ansi_c_y.tab.cpp"
     break;
 
   case 158:
-#line 950 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=merge((yyvsp[-1]), (yyvsp[0]));
+#line 950 "parser.y"
+        {
+          yyval=merge(yyvsp[-1], yyvsp[0]);
         }
-#line 4404 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4500 "ansi_c_y.tab.cpp"
     break;
 
   case 160:
-#line 955 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=merge((yyvsp[-1]), (yyvsp[0]));
+#line 955 "parser.y"
+        {
+          yyval=merge(yyvsp[-1], yyvsp[0]);
         }
-#line 4412 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4508 "ansi_c_y.tab.cpp"
     break;
 
   case 161:
-#line 959 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=merge((yyvsp[-1]), (yyvsp[0]));
+#line 959 "parser.y"
+        {
+          yyval=merge(yyvsp[-1], yyvsp[0]);
         }
-#line 4420 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4516 "ansi_c_y.tab.cpp"
     break;
 
   case 163:
-#line 967 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=merge((yyvsp[-1]), (yyvsp[0]));
+#line 967 "parser.y"
+        {
+          yyval=merge(yyvsp[-1], yyvsp[0]);
         }
-#line 4428 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4524 "ansi_c_y.tab.cpp"
     break;
 
   case 164:
-#line 974 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=merge((yyvsp[-1]), (yyvsp[0]));
+#line 974 "parser.y"
+        {
+          yyval=merge(yyvsp[-1], yyvsp[0]);
         }
-#line 4436 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4532 "ansi_c_y.tab.cpp"
     break;
 
   case 166:
-#line 982 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=merge((yyvsp[-1]), (yyvsp[0]));
+#line 982 "parser.y"
+        {
+          yyval=merge(yyvsp[-1], yyvsp[0]);
         }
-#line 4444 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4540 "ansi_c_y.tab.cpp"
     break;
 
   case 169:
-#line 993 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[0]); set((yyval), ID_atomic); }
-#line 4450 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 993 "parser.y"
+                                    { yyval=yyvsp[0]; set(yyval, ID_atomic); }
+#line 4546 "ansi_c_y.tab.cpp"
     break;
 
   case 170:
-#line 994 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[0]); set((yyval), ID_const); }
-#line 4456 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 994 "parser.y"
+                                    { yyval=yyvsp[0]; set(yyval, ID_const); }
+#line 4552 "ansi_c_y.tab.cpp"
     break;
 
   case 171:
-#line 995 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[0]); set((yyval), ID_restrict); }
-#line 4462 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 995 "parser.y"
+                                    { yyval=yyvsp[0]; set(yyval, ID_restrict); }
+#line 4558 "ansi_c_y.tab.cpp"
     break;
 
   case 172:
-#line 996 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[0]); set((yyval), ID_volatile); }
-#line 4468 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 996 "parser.y"
+                                    { yyval=yyvsp[0]; set(yyval, ID_volatile); }
+#line 4564 "ansi_c_y.tab.cpp"
     break;
 
   case 173:
-#line 997 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[0]); set((yyval), ID_cprover_atomic); }
-#line 4474 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 997 "parser.y"
+                                    { yyval=yyvsp[0]; set(yyval, ID_cprover_atomic); }
+#line 4570 "ansi_c_y.tab.cpp"
     break;
 
   case 174:
-#line 998 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[0]); set((yyval), ID_ptr32); }
-#line 4480 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 998 "parser.y"
+                                    { yyval=yyvsp[0]; set(yyval, ID_ptr32); }
+#line 4576 "ansi_c_y.tab.cpp"
     break;
 
   case 175:
-#line 999 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[0]); set((yyval), ID_ptr64); }
-#line 4486 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 999 "parser.y"
+                                    { yyval=yyvsp[0]; set(yyval, ID_ptr64); }
+#line 4582 "ansi_c_y.tab.cpp"
     break;
 
   case 176:
-#line 1000 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[-3]); set((yyval), ID_msc_based); mto((yyval), (yyvsp[-1])); }
-#line 4492 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 1000 "parser.y"
+                                                 { yyval=yyvsp[-3]; set(yyval, ID_msc_based); mto(yyval, yyvsp[-1]); }
+#line 4588 "ansi_c_y.tab.cpp"
     break;
 
   case 183:
-#line 1017 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=merge((yyvsp[-1]), (yyvsp[0]));
+#line 1017 "parser.y"
+        {
+          yyval=merge(yyvsp[-1], yyvsp[0]);
         }
-#line 4500 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4596 "ansi_c_y.tab.cpp"
     break;
 
   case 184:
-#line 1024 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=merge((yyvsp[-2]), merge((yyvsp[-1]), (yyvsp[0])));
+#line 1024 "parser.y"
+        {
+          yyval=merge(yyvsp[-2], merge(yyvsp[-1], yyvsp[0]));
         }
-#line 4508 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4604 "ansi_c_y.tab.cpp"
     break;
 
   case 185:
-#line 1028 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=merge((yyvsp[-2]), merge((yyvsp[-1]), (yyvsp[0])));
+#line 1028 "parser.y"
+        {
+          yyval=merge(yyvsp[-2], merge(yyvsp[-1], yyvsp[0]));
         }
-#line 4516 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4612 "ansi_c_y.tab.cpp"
     break;
 
   case 186:
-#line 1032 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=merge((yyvsp[-2]), merge((yyvsp[-1]), (yyvsp[0])));
+#line 1032 "parser.y"
+        {
+          yyval=merge(yyvsp[-2], merge(yyvsp[-1], yyvsp[0]));
         }
-#line 4524 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4620 "ansi_c_y.tab.cpp"
     break;
 
   case 187:
-#line 1036 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=merge((yyvsp[-2]), merge((yyvsp[-1]), (yyvsp[0])));
+#line 1036 "parser.y"
+        {
+          yyval=merge(yyvsp[-2], merge(yyvsp[-1], yyvsp[0]));
         }
-#line 4532 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4628 "ansi_c_y.tab.cpp"
     break;
 
   case 188:
-#line 1043 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=merge((yyvsp[-1]), (yyvsp[0])); // type attribute
+#line 1043 "parser.y"
+        {
+          yyval=merge(yyvsp[-1], yyvsp[0]); // type attribute
         }
-#line 4540 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4636 "ansi_c_y.tab.cpp"
     break;
 
   case 189:
-#line 1047 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=merge((yyvsp[-2]), merge((yyvsp[-1]), (yyvsp[0])));
+#line 1047 "parser.y"
+        {
+          yyval=merge(yyvsp[-2], merge(yyvsp[-1], yyvsp[0]));
         }
-#line 4548 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4644 "ansi_c_y.tab.cpp"
     break;
 
   case 190:
-#line 1051 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=merge((yyvsp[-1]), (yyvsp[0]));
+#line 1051 "parser.y"
+        {
+          yyval=merge(yyvsp[-1], yyvsp[0]);
         }
-#line 4556 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4652 "ansi_c_y.tab.cpp"
     break;
 
   case 191:
-#line 1055 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=merge((yyvsp[-2]), merge((yyvsp[-1]), (yyvsp[0])));
+#line 1055 "parser.y"
+        {
+          yyval=merge(yyvsp[-2], merge(yyvsp[-1], yyvsp[0]));
         }
-#line 4564 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4660 "ansi_c_y.tab.cpp"
     break;
 
   case 192:
-#line 1063 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=merge((yyvsp[-1]), (yyvsp[0]));
+#line 1063 "parser.y"
+        {
+          yyval=merge(yyvsp[-1], yyvsp[0]);
         }
-#line 4572 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4668 "ansi_c_y.tab.cpp"
     break;
 
   case 193:
-#line 1067 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=merge((yyvsp[-1]), (yyvsp[0]));
+#line 1067 "parser.y"
+        {
+          yyval=merge(yyvsp[-1], yyvsp[0]);
         }
-#line 4580 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4676 "ansi_c_y.tab.cpp"
     break;
 
   case 194:
-#line 1071 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=merge((yyvsp[-1]), (yyvsp[0]));
+#line 1071 "parser.y"
+        {
+          yyval=merge(yyvsp[-1], yyvsp[0]);
         }
-#line 4588 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4684 "ansi_c_y.tab.cpp"
     break;
 
   case 196:
-#line 1080 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=merge((yyvsp[-1]), (yyvsp[0]));
+#line 1080 "parser.y"
+        {
+          yyval=merge(yyvsp[-1], yyvsp[0]);
         }
-#line 4596 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4692 "ansi_c_y.tab.cpp"
     break;
 
   case 197:
-#line 1084 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=merge((yyvsp[-1]), (yyvsp[0]));
+#line 1084 "parser.y"
+        {
+          yyval=merge(yyvsp[-1], yyvsp[0]);
         }
-#line 4604 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4700 "ansi_c_y.tab.cpp"
     break;
 
   case 198:
-#line 1091 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=merge((yyvsp[-2]), merge((yyvsp[-1]), (yyvsp[0])));
+#line 1091 "parser.y"
+        {
+          yyval=merge(yyvsp[-2], merge(yyvsp[-1], yyvsp[0]));
         }
-#line 4612 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4708 "ansi_c_y.tab.cpp"
     break;
 
   case 199:
-#line 1095 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=merge((yyvsp[-2]), merge((yyvsp[-1]), (yyvsp[0])));
+#line 1095 "parser.y"
+        {
+          yyval=merge(yyvsp[-2], merge(yyvsp[-1], yyvsp[0]));
         }
-#line 4620 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4716 "ansi_c_y.tab.cpp"
     break;
 
   case 200:
-#line 1099 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=merge((yyvsp[-2]), merge((yyvsp[-1]), (yyvsp[0])));
+#line 1099 "parser.y"
+        {
+          yyval=merge(yyvsp[-2], merge(yyvsp[-1], yyvsp[0]));
         }
-#line 4628 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4724 "ansi_c_y.tab.cpp"
     break;
 
   case 201:
-#line 1106 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=merge((yyvsp[-2]), merge((yyvsp[-1]), (yyvsp[0])));
+#line 1106 "parser.y"
+        {
+          yyval=merge(yyvsp[-2], merge(yyvsp[-1], yyvsp[0]));
         }
-#line 4636 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4732 "ansi_c_y.tab.cpp"
     break;
 
   case 202:
-#line 1110 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=merge((yyvsp[-2]), merge((yyvsp[-1]), (yyvsp[0])));
+#line 1110 "parser.y"
+        {
+          yyval=merge(yyvsp[-2], merge(yyvsp[-1], yyvsp[0]));
         }
-#line 4644 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4740 "ansi_c_y.tab.cpp"
     break;
 
   case 203:
-#line 1114 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=merge((yyvsp[-2]), merge((yyvsp[-1]), (yyvsp[0])));
+#line 1114 "parser.y"
+        {
+          yyval=merge(yyvsp[-2], merge(yyvsp[-1], yyvsp[0]));
         }
-#line 4652 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4748 "ansi_c_y.tab.cpp"
     break;
 
   case 204:
-#line 1121 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=merge((yyvsp[-2]), merge((yyvsp[-1]), (yyvsp[0])));
+#line 1121 "parser.y"
+        {
+          yyval=merge(yyvsp[-2], merge(yyvsp[-1], yyvsp[0]));
         }
-#line 4660 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4756 "ansi_c_y.tab.cpp"
     break;
 
   case 205:
-#line 1125 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=merge((yyvsp[-2]), merge((yyvsp[-1]), (yyvsp[0])));
+#line 1125 "parser.y"
+        {
+          yyval=merge(yyvsp[-2], merge(yyvsp[-1], yyvsp[0]));
         }
-#line 4668 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4764 "ansi_c_y.tab.cpp"
     break;
 
   case 206:
-#line 1129 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=merge((yyvsp[-2]), merge((yyvsp[-1]), (yyvsp[0])));
+#line 1129 "parser.y"
+        {
+          yyval=merge(yyvsp[-2], merge(yyvsp[-1], yyvsp[0]));
         }
-#line 4676 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4772 "ansi_c_y.tab.cpp"
     break;
 
   case 207:
-#line 1136 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=merge((yyvsp[-1]), (yyvsp[0]));
+#line 1136 "parser.y"
+        {
+          yyval=merge(yyvsp[-1], yyvsp[0]);
         }
-#line 4684 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4780 "ansi_c_y.tab.cpp"
     break;
 
   case 208:
-#line 1140 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=merge((yyvsp[-2]), merge((yyvsp[-1]), (yyvsp[0])));
+#line 1140 "parser.y"
+        {
+          yyval=merge(yyvsp[-2], merge(yyvsp[-1], yyvsp[0]));
         }
-#line 4692 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4788 "ansi_c_y.tab.cpp"
     break;
 
   case 209:
-#line 1144 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=merge((yyvsp[-2]), merge((yyvsp[-1]), (yyvsp[0])));
+#line 1144 "parser.y"
+        {
+          yyval=merge(yyvsp[-2], merge(yyvsp[-1], yyvsp[0]));
         }
-#line 4700 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4796 "ansi_c_y.tab.cpp"
     break;
 
   case 210:
-#line 1151 "parser.y" /* yacc.c:1646  */
-    { (yyval) = (yyvsp[-3]);
-          stack((yyval)).id(ID_typeof);
-          mto((yyval), (yyvsp[-1]));
+#line 1151 "parser.y"
+        { yyval = yyvsp[-3];
+          stack(yyval).id(ID_typeof);
+          mto(yyval, yyvsp[-1]);
         }
-#line 4709 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4805 "ansi_c_y.tab.cpp"
     break;
 
   case 211:
-#line 1156 "parser.y" /* yacc.c:1646  */
-    { (yyval) = (yyvsp[-3]);
-          stack((yyval)).id(ID_typeof);
-          stack((yyval)).set(ID_type_arg, stack((yyvsp[-1])));
+#line 1156 "parser.y"
+        { yyval = yyvsp[-3];
+          stack(yyval).id(ID_typeof);
+          stack(yyval).set(ID_type_arg, stack(yyvsp[-1]));
         }
-#line 4718 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4814 "ansi_c_y.tab.cpp"
     break;
 
   case 213:
-#line 1165 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=merge((yyvsp[-1]), (yyvsp[0]));
+#line 1165 "parser.y"
+        {
+          yyval=merge(yyvsp[-1], yyvsp[0]);
         }
-#line 4726 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4822 "ansi_c_y.tab.cpp"
     break;
 
   case 214:
-#line 1169 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=merge((yyvsp[-2]), merge((yyvsp[-1]), (yyvsp[0])));
+#line 1169 "parser.y"
+        {
+          yyval=merge(yyvsp[-2], merge(yyvsp[-1], yyvsp[0]));
         }
-#line 4734 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4830 "ansi_c_y.tab.cpp"
     break;
 
   case 215:
-#line 1173 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=merge((yyvsp[-1]), (yyvsp[0]));
+#line 1173 "parser.y"
+        {
+          yyval=merge(yyvsp[-1], yyvsp[0]);
         }
-#line 4742 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4838 "ansi_c_y.tab.cpp"
     break;
 
   case 216:
-#line 1180 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-3]);
-          stack((yyval)).id(ID_atomic_type_specifier);
-          stack_type((yyval)).subtype()=stack_type((yyvsp[-1]));
+#line 1180 "parser.y"
+        {
+          yyval=yyvsp[-3];
+          stack(yyval).id(ID_atomic_type_specifier);
+          stack_type(yyval).subtype()=stack_type(yyvsp[-1]);
         }
-#line 4752 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4848 "ansi_c_y.tab.cpp"
     break;
 
   case 218:
-#line 1190 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=merge((yyvsp[-1]), (yyvsp[0]));
+#line 1190 "parser.y"
+        {
+          yyval=merge(yyvsp[-1], yyvsp[0]);
         }
-#line 4760 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4856 "ansi_c_y.tab.cpp"
     break;
 
   case 219:
-#line 1194 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=merge((yyvsp[-2]), merge((yyvsp[-1]), (yyvsp[0])));
+#line 1194 "parser.y"
+        {
+          yyval=merge(yyvsp[-2], merge(yyvsp[-1], yyvsp[0]));
         }
-#line 4768 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4864 "ansi_c_y.tab.cpp"
     break;
 
   case 220:
-#line 1198 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=merge((yyvsp[-1]), (yyvsp[0]));
+#line 1198 "parser.y"
+        {
+          yyval=merge(yyvsp[-1], yyvsp[0]);
         }
-#line 4776 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4872 "ansi_c_y.tab.cpp"
     break;
 
   case 221:
-#line 1205 "parser.y" /* yacc.c:1646  */
-    {
-          stack((yyval)).id(stack((yyval)).get(ID_identifier));
+#line 1205 "parser.y"
+        {
+          stack(yyval).id(stack(yyval).get(ID_identifier));
         }
-#line 4784 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4880 "ansi_c_y.tab.cpp"
     break;
 
   case 222:
-#line 1209 "parser.y" /* yacc.c:1646  */
-    {
-          stack((yyval)).id(stack((yyval)).get(ID_identifier));
+#line 1209 "parser.y"
+        {
+          stack(yyval).id(stack(yyval).get(ID_identifier));
         }
-#line 4792 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4888 "ansi_c_y.tab.cpp"
     break;
 
   case 223:
-#line 1213 "parser.y" /* yacc.c:1646  */
-    {
-          stack((yyval)).id(ID_restrict);
+#line 1213 "parser.y"
+        {
+          stack(yyval).id(ID_restrict);
         }
-#line 4800 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4896 "ansi_c_y.tab.cpp"
     break;
 
   case 225:
-#line 1221 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-3]); mto((yyval), (yyvsp[-1]));
+#line 1221 "parser.y"
+        {
+          yyval=yyvsp[-3]; mto(yyval, yyvsp[-1]);
         }
-#line 4808 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4904 "ansi_c_y.tab.cpp"
     break;
 
   case 226:
-#line 1225 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-3]); mto((yyval), (yyvsp[-1]));
+#line 1225 "parser.y"
+        {
+          yyval=yyvsp[-3]; mto(yyval, yyvsp[-1]);
         }
-#line 4816 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4912 "ansi_c_y.tab.cpp"
     break;
 
   case 227:
-#line 1229 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-5]); mto((yyval), (yyvsp[-3])); mto((yyval), (yyvsp[-1]));
+#line 1229 "parser.y"
+        {
+          yyval=yyvsp[-5]; mto(yyval, yyvsp[-3]); mto(yyval, yyvsp[-1]);
         }
-#line 4824 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4920 "ansi_c_y.tab.cpp"
     break;
 
   case 228:
-#line 1233 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-9]); mto((yyval), (yyvsp[-7])); mto((yyval), (yyvsp[-5])); mto((yyval), (yyvsp[-3])); mto((yyval), (yyvsp[-1]));
+#line 1233 "parser.y"
+        {
+          yyval=yyvsp[-9]; mto(yyval, yyvsp[-7]); mto(yyval, yyvsp[-5]); mto(yyval, yyvsp[-3]); mto(yyval, yyvsp[-1]);
         }
-#line 4832 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4928 "ansi_c_y.tab.cpp"
     break;
 
   case 229:
-#line 1236 "parser.y" /* yacc.c:1646  */
-    { init((yyval), ID_nil); }
-#line 4838 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 1236 "parser.y"
+              { init(yyval, ID_nil); }
+#line 4934 "ansi_c_y.tab.cpp"
     break;
 
   case 230:
-#line 1241 "parser.y" /* yacc.c:1646  */
-    {
-          init((yyval)); mto((yyval), (yyvsp[0]));
+#line 1241 "parser.y"
+        {
+          init(yyval); mto(yyval, yyvsp[0]);
         }
-#line 4846 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4942 "ansi_c_y.tab.cpp"
     break;
 
   case 231:
-#line 1245 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-1]); mto((yyval), (yyvsp[0]));
+#line 1245 "parser.y"
+        {
+          yyval=yyvsp[-1]; mto(yyval, yyvsp[0]);
         }
-#line 4854 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4950 "ansi_c_y.tab.cpp"
     break;
 
   case 232:
-#line 1252 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-3]); set((yyval), ID_msc_declspec);
-          stack((yyval)).operands().swap(stack((yyvsp[-1])).operands());
+#line 1252 "parser.y"
+        {
+          yyval=yyvsp[-3]; set(yyval, ID_msc_declspec);
+          stack(yyval).operands().swap(stack(yyvsp[-1]).operands());
         }
-#line 4863 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4959 "ansi_c_y.tab.cpp"
     break;
 
   case 233:
-#line 1257 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-2]); set((yyval), ID_msc_declspec);
+#line 1257 "parser.y"
+        {
+          yyval=yyvsp[-2]; set(yyval, ID_msc_declspec);
         }
-#line 4871 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4967 "ansi_c_y.tab.cpp"
     break;
 
   case 234:
-#line 1264 "parser.y" /* yacc.c:1646  */
-    {
-          init((yyval), ID_nil);
+#line 1264 "parser.y"
+        {
+          init(yyval, ID_nil);
         }
-#line 4879 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 4975 "ansi_c_y.tab.cpp"
     break;
 
   case 236:
-#line 1271 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[0]); set((yyval), ID_typedef); }
-#line 4885 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 1271 "parser.y"
+                           { yyval=yyvsp[0]; set(yyval, ID_typedef); }
+#line 4981 "ansi_c_y.tab.cpp"
     break;
 
   case 237:
-#line 1272 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[0]); set((yyval), ID_extern); }
-#line 4891 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 1272 "parser.y"
+                           { yyval=yyvsp[0]; set(yyval, ID_extern); }
+#line 4987 "ansi_c_y.tab.cpp"
     break;
 
   case 238:
-#line 1273 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[0]); set((yyval), ID_static); }
-#line 4897 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 1273 "parser.y"
+                           { yyval=yyvsp[0]; set(yyval, ID_static); }
+#line 4993 "ansi_c_y.tab.cpp"
     break;
 
   case 239:
-#line 1274 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[0]); set((yyval), ID_auto); }
-#line 4903 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 1274 "parser.y"
+                           { yyval=yyvsp[0]; set(yyval, ID_auto); }
+#line 4999 "ansi_c_y.tab.cpp"
     break;
 
   case 240:
-#line 1275 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[0]); set((yyval), ID_register); }
-#line 4909 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 1275 "parser.y"
+                           { yyval=yyvsp[0]; set(yyval, ID_register); }
+#line 5005 "ansi_c_y.tab.cpp"
     break;
 
   case 241:
-#line 1276 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[0]); set((yyval), ID_inline); }
-#line 4915 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 1276 "parser.y"
+                           { yyval=yyvsp[0]; set(yyval, ID_inline); }
+#line 5011 "ansi_c_y.tab.cpp"
     break;
 
   case 242:
-#line 1277 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[0]); set((yyval), ID_thread_local); }
-#line 4921 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 1277 "parser.y"
+                           { yyval=yyvsp[0]; set(yyval, ID_thread_local); }
+#line 5017 "ansi_c_y.tab.cpp"
     break;
 
   case 243:
-#line 1278 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[0]); set((yyval), ID_asm); }
-#line 4927 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 1278 "parser.y"
+                           { yyval=yyvsp[0]; set(yyval, ID_asm); }
+#line 5023 "ansi_c_y.tab.cpp"
     break;
 
   case 244:
-#line 1279 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[0]); }
-#line 4933 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 1279 "parser.y"
+                           { yyval=yyvsp[0]; }
+#line 5029 "ansi_c_y.tab.cpp"
     break;
 
   case 245:
-#line 1283 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[0]); set((yyval), ID_int); }
-#line 4939 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 1283 "parser.y"
+                       { yyval=yyvsp[0]; set(yyval, ID_int); }
+#line 5035 "ansi_c_y.tab.cpp"
     break;
 
   case 246:
-#line 1284 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[0]); set((yyval), ID_int8); }
-#line 4945 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 1284 "parser.y"
+                       { yyval=yyvsp[0]; set(yyval, ID_int8); }
+#line 5041 "ansi_c_y.tab.cpp"
     break;
 
   case 247:
-#line 1285 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[0]); set((yyval), ID_int16); }
-#line 4951 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 1285 "parser.y"
+                       { yyval=yyvsp[0]; set(yyval, ID_int16); }
+#line 5047 "ansi_c_y.tab.cpp"
     break;
 
   case 248:
-#line 1286 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[0]); set((yyval), ID_int32); }
-#line 4957 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 1286 "parser.y"
+                       { yyval=yyvsp[0]; set(yyval, ID_int32); }
+#line 5053 "ansi_c_y.tab.cpp"
     break;
 
   case 249:
-#line 1287 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[0]); set((yyval), ID_int64); }
-#line 4963 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 1287 "parser.y"
+                       { yyval=yyvsp[0]; set(yyval, ID_int64); }
+#line 5059 "ansi_c_y.tab.cpp"
     break;
 
   case 250:
-#line 1288 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[0]); set((yyval), ID_char); }
-#line 4969 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 1288 "parser.y"
+                       { yyval=yyvsp[0]; set(yyval, ID_char); }
+#line 5065 "ansi_c_y.tab.cpp"
     break;
 
   case 251:
-#line 1289 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[0]); set((yyval), ID_short); }
-#line 4975 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 1289 "parser.y"
+                       { yyval=yyvsp[0]; set(yyval, ID_short); }
+#line 5071 "ansi_c_y.tab.cpp"
     break;
 
   case 252:
-#line 1290 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[0]); set((yyval), ID_long); }
-#line 4981 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 1290 "parser.y"
+                       { yyval=yyvsp[0]; set(yyval, ID_long); }
+#line 5077 "ansi_c_y.tab.cpp"
     break;
 
   case 253:
-#line 1291 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[0]); set((yyval), ID_float); }
-#line 4987 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 1291 "parser.y"
+                       { yyval=yyvsp[0]; set(yyval, ID_float); }
+#line 5083 "ansi_c_y.tab.cpp"
     break;
 
   case 254:
-#line 1292 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[0]); set((yyval), ID_gcc_float80); }
-#line 4993 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 1292 "parser.y"
+                          { yyval=yyvsp[0]; set(yyval, ID_gcc_float80); }
+#line 5089 "ansi_c_y.tab.cpp"
     break;
 
   case 255:
-#line 1293 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[0]); set((yyval), ID_gcc_float128); }
-#line 4999 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 1293 "parser.y"
+                           { yyval=yyvsp[0]; set(yyval, ID_gcc_float128); }
+#line 5095 "ansi_c_y.tab.cpp"
     break;
 
   case 256:
-#line 1294 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[0]); set((yyval), ID_gcc_int128); }
-#line 5005 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 1294 "parser.y"
+                         { yyval=yyvsp[0]; set(yyval, ID_gcc_int128); }
+#line 5101 "ansi_c_y.tab.cpp"
     break;
 
   case 257:
-#line 1295 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[0]); set((yyval), ID_gcc_decimal32); }
-#line 5011 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 1295 "parser.y"
+                            { yyval=yyvsp[0]; set(yyval, ID_gcc_decimal32); }
+#line 5107 "ansi_c_y.tab.cpp"
     break;
 
   case 258:
-#line 1296 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[0]); set((yyval), ID_gcc_decimal64); }
-#line 5017 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 1296 "parser.y"
+                            { yyval=yyvsp[0]; set(yyval, ID_gcc_decimal64); }
+#line 5113 "ansi_c_y.tab.cpp"
     break;
 
   case 259:
-#line 1297 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[0]); set((yyval), ID_gcc_decimal128); }
-#line 5023 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 1297 "parser.y"
+                             { yyval=yyvsp[0]; set(yyval, ID_gcc_decimal128); }
+#line 5119 "ansi_c_y.tab.cpp"
     break;
 
   case 260:
-#line 1298 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[0]); set((yyval), ID_double); }
-#line 5029 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 1298 "parser.y"
+                       { yyval=yyvsp[0]; set(yyval, ID_double); }
+#line 5125 "ansi_c_y.tab.cpp"
     break;
 
   case 261:
-#line 1299 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[0]); set((yyval), ID_signed); }
-#line 5035 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 1299 "parser.y"
+                       { yyval=yyvsp[0]; set(yyval, ID_signed); }
+#line 5131 "ansi_c_y.tab.cpp"
     break;
 
   case 262:
-#line 1300 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[0]); set((yyval), ID_unsigned); }
-#line 5041 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 1300 "parser.y"
+                       { yyval=yyvsp[0]; set(yyval, ID_unsigned); }
+#line 5137 "ansi_c_y.tab.cpp"
     break;
 
   case 263:
-#line 1301 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[0]); set((yyval), ID_void); }
-#line 5047 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 1301 "parser.y"
+                       { yyval=yyvsp[0]; set(yyval, ID_void); }
+#line 5143 "ansi_c_y.tab.cpp"
     break;
 
   case 264:
-#line 1302 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[0]); set((yyval), ID_c_bool); }
-#line 5053 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 1302 "parser.y"
+                       { yyval=yyvsp[0]; set(yyval, ID_c_bool); }
+#line 5149 "ansi_c_y.tab.cpp"
     break;
 
   case 265:
-#line 1303 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[0]); set((yyval), ID_complex); }
-#line 5059 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 1303 "parser.y"
+                       { yyval=yyvsp[0]; set(yyval, ID_complex); }
+#line 5155 "ansi_c_y.tab.cpp"
     break;
 
   case 266:
-#line 1305 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-3]);
-          set((yyval), ID_custom_bv);
-          stack((yyval)).add(ID_size).swap(stack((yyvsp[-1])));
+#line 1305 "parser.y"
+        {
+          yyval=yyvsp[-3];
+          set(yyval, ID_custom_bv);
+          stack(yyval).add(ID_size).swap(stack(yyvsp[-1]));
         }
-#line 5069 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5165 "ansi_c_y.tab.cpp"
     break;
 
   case 267:
-#line 1311 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-6]);
-          set((yyval), ID_custom_floatbv);
-          stack((yyval)).add(ID_size).swap(stack((yyvsp[-4])));
-          stack((yyval)).add(ID_f).swap(stack((yyvsp[-1])));
+#line 1311 "parser.y"
+        {
+          yyval=yyvsp[-6];
+          set(yyval, ID_custom_floatbv);
+          stack(yyval).add(ID_size).swap(stack(yyvsp[-4]));
+          stack(yyval).add(ID_f).swap(stack(yyvsp[-1]));
         }
-#line 5080 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5176 "ansi_c_y.tab.cpp"
     break;
 
   case 268:
-#line 1318 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-6]);
-          set((yyval), ID_custom_fixedbv);
-          stack((yyval)).add(ID_size).swap(stack((yyvsp[-4])));
-          stack((yyval)).add(ID_f).swap(stack((yyvsp[-1])));
+#line 1318 "parser.y"
+        {
+          yyval=yyvsp[-6];
+          set(yyval, ID_custom_fixedbv);
+          stack(yyval).add(ID_size).swap(stack(yyvsp[-4]));
+          stack(yyval).add(ID_f).swap(stack(yyvsp[-1]));
         }
-#line 5091 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5187 "ansi_c_y.tab.cpp"
     break;
 
   case 269:
-#line 1324 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[0]); set((yyval), ID_proper_bool); }
-#line 5097 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 1324 "parser.y"
+                           { yyval=yyvsp[0]; set(yyval, ID_proper_bool); }
+#line 5193 "ansi_c_y.tab.cpp"
     break;
 
   case 273:
-#line 1335 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[-3]); stack_type((yyval)).subtype().swap(stack((yyvsp[-2]))); }
-#line 5103 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 1335 "parser.y"
+        { yyval=yyvsp[-3]; stack_type(yyval).subtype().swap(stack(yyvsp[-2])); }
+#line 5199 "ansi_c_y.tab.cpp"
     break;
 
   case 274:
-#line 1339 "parser.y" /* yacc.c:1646  */
-    {
-          init((yyval));
+#line 1339 "parser.y"
+        {
+          init(yyval);
           if(!PARSER.pragma_pack.empty() &&
              PARSER.pragma_pack.back().is_one())
-            set((yyval), ID_packed);
+            set(yyval, ID_packed);
         }
-#line 5114 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5210 "ansi_c_y.tab.cpp"
     break;
 
   case 275:
-#line 1351 "parser.y" /* yacc.c:1646  */
-    {
+#line 1351 "parser.y"
+          {
             // an anon struct/union with body
           }
-#line 5122 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5218 "ansi_c_y.tab.cpp"
     break;
 
   case 276:
-#line 1357 "parser.y" /* yacc.c:1646  */
-    {
+#line 1357 "parser.y"
+        {
           // save the members
-          stack((yyvsp[-8])).add(ID_components).get_sub().swap(
-            (irept::subt &)stack((yyvsp[-3])).operands());
+          stack(yyvsp[-8]).add(ID_components).get_sub().swap(
+            (irept::subt &)stack(yyvsp[-3]).operands());
 
           // throw in the gcc attributes
-          (yyval)=merge((yyvsp[-8]), merge((yyvsp[-7]), merge((yyvsp[-1]), (yyvsp[0]))));
+          yyval=merge(yyvsp[-8], merge(yyvsp[-7], merge(yyvsp[-1], yyvsp[0])));
         }
-#line 5135 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5231 "ansi_c_y.tab.cpp"
     break;
 
   case 277:
-#line 1369 "parser.y" /* yacc.c:1646  */
-    {
+#line 1369 "parser.y"
+          {
             // A struct/union with tag and body.
-            PARSER.add_tag_with_body(stack((yyvsp[0])));
-            stack((yyvsp[-3])).set(ID_tag, stack((yyvsp[0])));
+            PARSER.add_tag_with_body(stack(yyvsp[0]));
+            stack(yyvsp[-3]).set(ID_tag, stack(yyvsp[0]));
           }
-#line 5145 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5241 "ansi_c_y.tab.cpp"
     break;
 
   case 278:
-#line 1377 "parser.y" /* yacc.c:1646  */
-    {
+#line 1377 "parser.y"
+        {
           // save the members
-          stack((yyvsp[-9])).add(ID_components).get_sub().swap(
-            (irept::subt &)stack((yyvsp[-3])).operands());
+          stack(yyvsp[-9]).add(ID_components).get_sub().swap(
+            (irept::subt &)stack(yyvsp[-3]).operands());
 
           // throw in the gcc attributes
-          (yyval)=merge((yyvsp[-9]), merge((yyvsp[-8]), merge((yyvsp[-1]), (yyvsp[0]))));
+          yyval=merge(yyvsp[-9], merge(yyvsp[-8], merge(yyvsp[-1], yyvsp[0])));
         }
-#line 5158 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5254 "ansi_c_y.tab.cpp"
     break;
 
   case 279:
-#line 1389 "parser.y" /* yacc.c:1646  */
-    {
+#line 1389 "parser.y"
+          {
             // a struct/union with tag but without body
-            stack((yyvsp[-3])).set(ID_tag, stack((yyvsp[0])));
+            stack(yyvsp[-3]).set(ID_tag, stack(yyvsp[0]));
           }
-#line 5167 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5263 "ansi_c_y.tab.cpp"
     break;
 
   case 280:
-#line 1394 "parser.y" /* yacc.c:1646  */
-    {
-          stack((yyvsp[-5])).set(ID_components, ID_nil);
+#line 1394 "parser.y"
+        {
+          stack(yyvsp[-5]).set(ID_components, ID_nil);
           // type attributes
-          (yyval)=merge((yyvsp[-5]), merge((yyvsp[-4]), (yyvsp[0])));
+          yyval=merge(yyvsp[-5], merge(yyvsp[-4], yyvsp[0]));
         }
-#line 5177 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5273 "ansi_c_y.tab.cpp"
     break;
 
   case 281:
-#line 1403 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[0]); set((yyval), ID_struct); }
-#line 5183 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 1403 "parser.y"
+        { yyval=yyvsp[0]; set(yyval, ID_struct); }
+#line 5279 "ansi_c_y.tab.cpp"
     break;
 
   case 282:
-#line 1405 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[0]); set((yyval), ID_union); }
-#line 5189 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 1405 "parser.y"
+        { yyval=yyvsp[0]; set(yyval, ID_union); }
+#line 5285 "ansi_c_y.tab.cpp"
     break;
 
   case 283:
-#line 1410 "parser.y" /* yacc.c:1646  */
-    {
-          init((yyval), ID_expression_list);
-          mto((yyval), (yyvsp[0]));
+#line 1410 "parser.y"
+        {
+          init(yyval, ID_expression_list);
+          mto(yyval, yyvsp[0]);
         }
-#line 5198 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5294 "ansi_c_y.tab.cpp"
     break;
 
   case 284:
-#line 1415 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-2]);
-          mto((yyval), (yyvsp[0]));
+#line 1415 "parser.y"
+        {
+          yyval=yyvsp[-2];
+          mto(yyval, yyvsp[0]);
         }
-#line 5207 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5303 "ansi_c_y.tab.cpp"
     break;
 
   case 285:
-#line 1423 "parser.y" /* yacc.c:1646  */
-    {
-          init((yyval), ID_expression_list);
+#line 1423 "parser.y"
+        {
+          init(yyval, ID_expression_list);
         }
-#line 5215 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5311 "ansi_c_y.tab.cpp"
     break;
 
   case 287:
-#line 1431 "parser.y" /* yacc.c:1646  */
-    {
-          init((yyval));
+#line 1431 "parser.y"
+        {
+          init(yyval);
         }
-#line 5223 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5319 "ansi_c_y.tab.cpp"
     break;
 
   case 288:
-#line 1435 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[0]);
-          stack((yyval)).id(ID_gcc_attribute);
-          stack((yyval)).set(ID_identifier, ID_const);
+#line 1435 "parser.y"
+        {
+          yyval=yyvsp[0];
+          stack(yyval).id(ID_gcc_attribute);
+          stack(yyval).set(ID_identifier, ID_const);
         }
-#line 5233 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5329 "ansi_c_y.tab.cpp"
     break;
 
   case 289:
-#line 1441 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[0]);
-          stack((yyval)).id(ID_gcc_attribute);
+#line 1441 "parser.y"
+        {
+          yyval=yyvsp[0];
+          stack(yyval).id(ID_gcc_attribute);
         }
-#line 5242 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5338 "ansi_c_y.tab.cpp"
     break;
 
   case 290:
-#line 1446 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-3]);
-          stack((yyval)).id(ID_gcc_attribute);
-          stack((yyval)).operands().swap(stack((yyvsp[-1])).operands());
+#line 1446 "parser.y"
+        {
+          yyval=yyvsp[-3];
+          stack(yyval).id(ID_gcc_attribute);
+          stack(yyval).operands().swap(stack(yyvsp[-1]).operands());
         }
-#line 5252 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5348 "ansi_c_y.tab.cpp"
     break;
 
   case 292:
-#line 1456 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=merge((yyvsp[-2]), (yyvsp[-1]));
+#line 1456 "parser.y"
+        {
+          yyval=merge(yyvsp[-2], yyvsp[-1]);
         }
-#line 5260 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5356 "ansi_c_y.tab.cpp"
     break;
 
   case 293:
-#line 1463 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[-2]); }
-#line 5266 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 1463 "parser.y"
+        { yyval=yyvsp[-2]; }
+#line 5362 "ansi_c_y.tab.cpp"
     break;
 
   case 294:
-#line 1468 "parser.y" /* yacc.c:1646  */
-    {
-          init((yyval));
+#line 1468 "parser.y"
+        {
+          init(yyval);
         }
-#line 5274 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5370 "ansi_c_y.tab.cpp"
     break;
 
   case 297:
-#line 1477 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=merge((yyvsp[-1]), (yyvsp[0]));
+#line 1477 "parser.y"
+        {
+          yyval=merge(yyvsp[-1], yyvsp[0]);
         }
-#line 5282 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5378 "ansi_c_y.tab.cpp"
     break;
 
   case 298:
-#line 1484 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[-1]); set((yyval), ID_packed); }
-#line 5288 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 1484 "parser.y"
+        { yyval=yyvsp[-1]; set(yyval, ID_packed); }
+#line 5384 "ansi_c_y.tab.cpp"
     break;
 
   case 299:
-#line 1486 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[-1]); set((yyval), ID_transparent_union); }
-#line 5294 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 1486 "parser.y"
+        { yyval=yyvsp[-1]; set(yyval, ID_transparent_union); }
+#line 5390 "ansi_c_y.tab.cpp"
     break;
 
   case 300:
-#line 1488 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[-4]); set((yyval), ID_vector); stack((yyval)).add(ID_size)=stack((yyvsp[-2])); }
-#line 5300 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 1488 "parser.y"
+        { yyval=yyvsp[-4]; set(yyval, ID_vector); stack(yyval).add(ID_size)=stack(yyvsp[-2]); }
+#line 5396 "ansi_c_y.tab.cpp"
     break;
 
   case 301:
-#line 1490 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[-1]); set((yyval), ID_aligned); }
-#line 5306 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 1490 "parser.y"
+        { yyval=yyvsp[-1]; set(yyval, ID_aligned); }
+#line 5402 "ansi_c_y.tab.cpp"
     break;
 
   case 302:
-#line 1492 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[-4]); set((yyval), ID_aligned); stack((yyval)).set(ID_size, stack((yyvsp[-2]))); }
-#line 5312 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 1492 "parser.y"
+        { yyval=yyvsp[-4]; set(yyval, ID_aligned); stack(yyval).set(ID_size, stack(yyvsp[-2])); }
+#line 5408 "ansi_c_y.tab.cpp"
     break;
 
   case 303:
-#line 1494 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[-4]); set((yyval), ID_gcc_attribute_mode); stack((yyval)).set(ID_size, stack((yyvsp[-2])).get(ID_identifier)); }
-#line 5318 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 1494 "parser.y"
+        { yyval=yyvsp[-4]; set(yyval, ID_gcc_attribute_mode); stack(yyval).set(ID_size, stack(yyvsp[-2]).get(ID_identifier)); }
+#line 5414 "ansi_c_y.tab.cpp"
     break;
 
   case 304:
-#line 1496 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[-1]); set((yyval), ID_static); }
-#line 5324 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 1496 "parser.y"
+        { yyval=yyvsp[-1]; set(yyval, ID_static); }
+#line 5420 "ansi_c_y.tab.cpp"
     break;
 
   case 306:
-#line 1502 "parser.y" /* yacc.c:1646  */
-    {
-          init((yyval), ID_declaration_list);
+#line 1502 "parser.y"
+        {
+          init(yyval, ID_declaration_list);
         }
-#line 5332 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5428 "ansi_c_y.tab.cpp"
     break;
 
   case 308:
-#line 1510 "parser.y" /* yacc.c:1646  */
-    {
-          init((yyval), ID_declaration_list);
-          mto((yyval), (yyvsp[0]));
+#line 1510 "parser.y"
+        {
+          init(yyval, ID_declaration_list);
+          mto(yyval, yyvsp[0]);
         }
-#line 5341 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5437 "ansi_c_y.tab.cpp"
     break;
 
   case 309:
-#line 1515 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-1]);
-          mto((yyval), (yyvsp[0]));
+#line 1515 "parser.y"
+        {
+          yyval=yyvsp[-1];
+          mto(yyval, yyvsp[0]);
         }
-#line 5350 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5446 "ansi_c_y.tab.cpp"
     break;
 
   case 312:
-#line 1525 "parser.y" /* yacc.c:1646  */
-    {
-          init((yyval), ID_declaration);
+#line 1525 "parser.y"
+        {
+          init(yyval, ID_declaration);
         }
-#line 5358 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5454 "ansi_c_y.tab.cpp"
     break;
 
   case 314:
-#line 1538 "parser.y" /* yacc.c:1646  */
-    {
-          (yyvsp[-1])=merge((yyvsp[-1]), (yyvsp[-2]));
+#line 1538 "parser.y"
+        {
+          yyvsp[-1]=merge(yyvsp[-1], yyvsp[-2]);
 
-          init((yyval), ID_declaration);
-          to_ansi_c_declaration(stack((yyval))).set_is_member(true);
-          stack((yyval)).type().swap(stack((yyvsp[-1])));
-          PARSER.add_declarator(stack((yyval)), stack((yyvsp[0])));
+          init(yyval, ID_declaration);
+          to_ansi_c_declaration(stack(yyval)).set_is_member(true);
+          stack(yyval).type().swap(stack(yyvsp[-1]));
+          PARSER.add_declarator(stack(yyval), stack(yyvsp[0]));
         }
-#line 5371 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5467 "ansi_c_y.tab.cpp"
     break;
 
   case 315:
-#line 1547 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-2]);
-          PARSER.add_declarator(stack((yyval)), stack((yyvsp[0])));
+#line 1547 "parser.y"
+        {
+          yyval=yyvsp[-2];
+          PARSER.add_declarator(stack(yyval), stack(yyvsp[0]));
         }
-#line 5380 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5476 "ansi_c_y.tab.cpp"
     break;
 
   case 316:
-#line 1557 "parser.y" /* yacc.c:1646  */
-    {
+#line 1557 "parser.y"
+        {
           if(!PARSER.pragma_pack.empty() &&
              !PARSER.pragma_pack.back().is_zero())
-            stack((yyvsp[-1])).set(ID_C_alignment, PARSER.pragma_pack.back());
+            stack(yyvsp[-1]).set(ID_C_alignment, PARSER.pragma_pack.back());
 
-          (yyvsp[-1])=merge((yyvsp[-1]), (yyvsp[-2]));
+          yyvsp[-1]=merge(yyvsp[-1], yyvsp[-2]);
 
-          init((yyval), ID_declaration);
-          to_ansi_c_declaration(stack((yyval))).set_is_member(true);
-          stack((yyval)).type().swap(stack((yyvsp[-1])));
-          PARSER.add_declarator(stack((yyval)), stack((yyvsp[0])));
+          init(yyval, ID_declaration);
+          to_ansi_c_declaration(stack(yyval)).set_is_member(true);
+          stack(yyval).type().swap(stack(yyvsp[-1]));
+          PARSER.add_declarator(stack(yyval), stack(yyvsp[0]));
         }
-#line 5397 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5493 "ansi_c_y.tab.cpp"
     break;
 
   case 317:
-#line 1570 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-2]);
-          PARSER.add_declarator(stack((yyval)), stack((yyvsp[0])));
+#line 1570 "parser.y"
+        {
+          yyval=yyvsp[-2];
+          PARSER.add_declarator(stack(yyval), stack(yyvsp[0]));
         }
-#line 5406 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5502 "ansi_c_y.tab.cpp"
     break;
 
   case 318:
-#line 1578 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-2]);
+#line 1578 "parser.y"
+        {
+          yyval=yyvsp[-2];
 
-          if(stack((yyvsp[-1])).is_not_nil())
-            make_subtype((yyval), (yyvsp[-1]));
+          if(stack(yyvsp[-1]).is_not_nil())
+            make_subtype(yyval, yyvsp[-1]);
 
-          if(stack((yyvsp[0])).is_not_nil()) // type attribute
-            (yyval)=merge((yyvsp[0]), (yyval));
+          if(stack(yyvsp[0]).is_not_nil()) // type attribute
+            yyval=merge(yyvsp[0], yyval);
         }
-#line 5420 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5516 "ansi_c_y.tab.cpp"
     break;
 
   case 319:
-#line 1588 "parser.y" /* yacc.c:1646  */
-    {
-          init((yyval), ID_abstract);
+#line 1588 "parser.y"
+        {
+          init(yyval, ID_abstract);
         }
-#line 5428 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5524 "ansi_c_y.tab.cpp"
     break;
 
   case 320:
-#line 1592 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-1]);
-          stack_type((yyval)).subtype()=typet(ID_abstract);
+#line 1592 "parser.y"
+        {
+          yyval=yyvsp[-1];
+          stack_type(yyval).subtype()=typet(ID_abstract);
 
-          if(stack((yyvsp[0])).is_not_nil()) // type attribute
-            (yyval)=merge((yyvsp[0]), (yyval));
+          if(stack(yyvsp[0]).is_not_nil()) // type attribute
+            yyval=merge(yyvsp[0], yyval);
         }
-#line 5440 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5536 "ansi_c_y.tab.cpp"
     break;
 
   case 321:
-#line 1603 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-2]);
-          if(stack((yyvsp[-1])).is_not_nil())
-            make_subtype((yyval), (yyvsp[-1]));
+#line 1603 "parser.y"
+        {
+          yyval=yyvsp[-2];
+          if(stack(yyvsp[-1]).is_not_nil())
+            make_subtype(yyval, yyvsp[-1]);
           
-          if(stack((yyvsp[0])).is_not_nil()) // type attribute
-            (yyval)=merge((yyvsp[0]), (yyval));
+          if(stack(yyvsp[0]).is_not_nil()) // type attribute
+            yyval=merge(yyvsp[0], yyval);
         }
-#line 5453 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5549 "ansi_c_y.tab.cpp"
     break;
 
   case 322:
-#line 1612 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-1]);
-          stack_type((yyval)).subtype()=typet(ID_abstract);
+#line 1612 "parser.y"
+        {
+          yyval=yyvsp[-1];
+          stack_type(yyval).subtype()=typet(ID_abstract);
 
-          if(stack((yyvsp[0])).is_not_nil()) // type attribute
-            (yyval)=merge((yyvsp[0]), (yyval));
+          if(stack(yyvsp[0]).is_not_nil()) // type attribute
+            yyval=merge(yyvsp[0], yyval);
         }
-#line 5465 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5561 "ansi_c_y.tab.cpp"
     break;
 
   case 323:
-#line 1623 "parser.y" /* yacc.c:1646  */
-    {
-          init((yyval), ID_nil);
+#line 1623 "parser.y"
+        {
+          init(yyval, ID_nil);
         }
-#line 5473 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5569 "ansi_c_y.tab.cpp"
     break;
 
   case 325:
-#line 1631 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-1]);
-          set((yyval), ID_c_bit_field);
-          stack_type((yyval)).set(ID_size, stack((yyvsp[0])));
-          stack_type((yyval)).subtype().id(ID_abstract);
+#line 1631 "parser.y"
+        {
+          yyval=yyvsp[-1];
+          set(yyval, ID_c_bit_field);
+          stack_type(yyval).set(ID_size, stack(yyvsp[0]));
+          stack_type(yyval).subtype().id(ID_abstract);
         }
-#line 5484 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5580 "ansi_c_y.tab.cpp"
     break;
 
   case 326:
-#line 1642 "parser.y" /* yacc.c:1646  */
-    {
+#line 1642 "parser.y"
+          {
             // an anon enum
           }
-#line 5492 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5588 "ansi_c_y.tab.cpp"
     break;
 
   case 327:
-#line 1647 "parser.y" /* yacc.c:1646  */
-    {
-          stack((yyvsp[-6])).operands().swap(stack((yyvsp[-2])).operands());
-          (yyval)=merge((yyvsp[-6]), merge((yyvsp[-5]), (yyvsp[0]))); // throw in the gcc attributes
+#line 1647 "parser.y"
+        {
+          stack(yyvsp[-6]).operands().swap(stack(yyvsp[-2]).operands());
+          yyval=merge(yyvsp[-6], merge(yyvsp[-5], yyvsp[0])); // throw in the gcc attributes
         }
-#line 5501 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5597 "ansi_c_y.tab.cpp"
     break;
 
   case 328:
-#line 1654 "parser.y" /* yacc.c:1646  */
-    {
+#line 1654 "parser.y"
+          {
             // an enum with tag
-            stack((yyvsp[-2])).set(ID_tag, stack((yyvsp[0])));
+            stack(yyvsp[-2]).set(ID_tag, stack(yyvsp[0]));
           }
-#line 5510 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5606 "ansi_c_y.tab.cpp"
     break;
 
   case 329:
-#line 1660 "parser.y" /* yacc.c:1646  */
-    {
-          stack((yyvsp[-7])).operands().swap(stack((yyvsp[-2])).operands());
-          (yyval)=merge((yyvsp[-7]), merge((yyvsp[-6]), (yyvsp[0]))); // throw in the gcc attributes
+#line 1660 "parser.y"
+        {
+          stack(yyvsp[-7]).operands().swap(stack(yyvsp[-2]).operands());
+          yyval=merge(yyvsp[-7], merge(yyvsp[-6], yyvsp[0])); // throw in the gcc attributes
         }
-#line 5519 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5615 "ansi_c_y.tab.cpp"
     break;
 
   case 330:
-#line 1668 "parser.y" /* yacc.c:1646  */
-    {
-          stack((yyvsp[-3])).id(ID_c_enum_tag); // tag only
-          stack((yyvsp[-3])).set(ID_tag, stack((yyvsp[-1])));
-          (yyval)=merge((yyvsp[-3]), merge((yyvsp[-2]), (yyvsp[0]))); // throw in the gcc attributes
+#line 1668 "parser.y"
+        {
+          stack(yyvsp[-3]).id(ID_c_enum_tag); // tag only
+          stack(yyvsp[-3]).set(ID_tag, stack(yyvsp[-1]));
+          yyval=merge(yyvsp[-3], merge(yyvsp[-2], yyvsp[0])); // throw in the gcc attributes
         }
-#line 5529 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5625 "ansi_c_y.tab.cpp"
     break;
 
   case 331:
-#line 1676 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[0]);
-          set((yyval), ID_c_enum);
+#line 1676 "parser.y"
+        {
+          yyval=yyvsp[0];
+          set(yyval, ID_c_enum);
         }
-#line 5538 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5634 "ansi_c_y.tab.cpp"
     break;
 
   case 332:
-#line 1684 "parser.y" /* yacc.c:1646  */
-    {
-          init((yyval), ID_declaration_list);
+#line 1684 "parser.y"
+        {
+          init(yyval, ID_declaration_list);
         }
-#line 5546 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5642 "ansi_c_y.tab.cpp"
     break;
 
   case 334:
-#line 1692 "parser.y" /* yacc.c:1646  */
-    {
-          init((yyval), ID_declaration_list);
-          mto((yyval), (yyvsp[0]));
+#line 1692 "parser.y"
+        {
+          init(yyval, ID_declaration_list);
+          mto(yyval, yyvsp[0]);
         }
-#line 5555 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5651 "ansi_c_y.tab.cpp"
     break;
 
   case 335:
-#line 1697 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-2]);
-          mto((yyval), (yyvsp[0]));
+#line 1697 "parser.y"
+        {
+          yyval=yyvsp[-2];
+          mto(yyval, yyvsp[0]);
         }
-#line 5564 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5660 "ansi_c_y.tab.cpp"
     break;
 
   case 336:
-#line 1702 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-1]);
+#line 1702 "parser.y"
+        {
+          yyval=yyvsp[-1];
         }
-#line 5572 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5668 "ansi_c_y.tab.cpp"
     break;
 
   case 337:
-#line 1709 "parser.y" /* yacc.c:1646  */
-    {
-          init((yyval), ID_declaration);
-          to_ansi_c_declaration(stack((yyval))).set_is_enum_constant(true);
-          PARSER.add_declarator(stack((yyval)), stack((yyvsp[-2])));
-          to_ansi_c_declaration(stack((yyval))).add_initializer(stack((yyvsp[0])));
+#line 1709 "parser.y"
+        {
+          init(yyval, ID_declaration);
+          to_ansi_c_declaration(stack(yyval)).set_is_enum_constant(true);
+          PARSER.add_declarator(stack(yyval), stack(yyvsp[-2]));
+          to_ansi_c_declaration(stack(yyval)).add_initializer(stack(yyvsp[0]));
         }
-#line 5583 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5679 "ansi_c_y.tab.cpp"
     break;
 
   case 338:
-#line 1719 "parser.y" /* yacc.c:1646  */
-    {
-          init((yyval));
-          stack((yyval)).make_nil();
+#line 1719 "parser.y"
+        {
+          init(yyval);
+          stack(yyval).make_nil();
         }
-#line 5592 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5688 "ansi_c_y.tab.cpp"
     break;
 
   case 339:
-#line 1724 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[0]);
+#line 1724 "parser.y"
+        {
+          yyval=yyvsp[0];
         }
-#line 5600 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5696 "ansi_c_y.tab.cpp"
     break;
 
   case 341:
-#line 1732 "parser.y" /* yacc.c:1646  */
-    {
+#line 1732 "parser.y"
+        {
           typet tmp(ID_ellipsis);
-          (yyval)=(yyvsp[-2]);
-          stack_type((yyval)).move_to_subtypes(tmp);
+          yyval=yyvsp[-2];
+          stack_type(yyval).move_to_subtypes(tmp);
         }
-#line 5610 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5706 "ansi_c_y.tab.cpp"
     break;
 
   case 342:
-#line 1741 "parser.y" /* yacc.c:1646  */
-    {
-          init((yyval), ID_parameters);
-          mts((yyval), (yyvsp[0]));
+#line 1741 "parser.y"
+        {
+          init(yyval, ID_parameters);
+          mts(yyval, yyvsp[0]);
         }
-#line 5619 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5715 "ansi_c_y.tab.cpp"
     break;
 
   case 343:
-#line 1746 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-2]);
-          mts((yyval), (yyvsp[0]));
+#line 1746 "parser.y"
+        {
+          yyval=yyvsp[-2];
+          mts(yyval, yyvsp[0]);
         }
-#line 5628 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5724 "ansi_c_y.tab.cpp"
     break;
 
   case 344:
-#line 1753 "parser.y" /* yacc.c:1646  */
-    {
-          init((yyval), ID_declaration);
-          stack((yyval)).type()=typet(ID_KnR);
-          PARSER.add_declarator(stack((yyval)), stack((yyvsp[0])));
+#line 1753 "parser.y"
+        {
+          init(yyval, ID_declaration);
+          stack(yyval).type()=typet(ID_KnR);
+          PARSER.add_declarator(stack(yyval), stack(yyvsp[0]));
         }
-#line 5638 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5734 "ansi_c_y.tab.cpp"
     break;
 
   case 345:
-#line 1762 "parser.y" /* yacc.c:1646  */
-    {
-          init((yyval), ID_parameters);
-          mts((yyval), (yyvsp[0]));
+#line 1762 "parser.y"
+        {
+          init(yyval, ID_parameters);
+          mts(yyval, yyvsp[0]);
         }
-#line 5647 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5743 "ansi_c_y.tab.cpp"
     break;
 
   case 346:
-#line 1767 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-2]);
-          mts((yyval), (yyvsp[0]));
+#line 1767 "parser.y"
+        {
+          yyval=yyvsp[-2];
+          mts(yyval, yyvsp[0]);
         }
-#line 5656 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5752 "ansi_c_y.tab.cpp"
     break;
 
   case 347:
-#line 1775 "parser.y" /* yacc.c:1646  */
-    {
-          init((yyval), ID_declaration);
-          to_ansi_c_declaration(stack((yyval))).set_is_parameter(true);
-          to_ansi_c_declaration(stack((yyval))).type().swap(stack((yyvsp[0])));
+#line 1775 "parser.y"
+        {
+          init(yyval, ID_declaration);
+          to_ansi_c_declaration(stack(yyval)).set_is_parameter(true);
+          to_ansi_c_declaration(stack(yyval)).type().swap(stack(yyvsp[0]));
           exprt declarator=exprt(ID_abstract);
-          PARSER.add_declarator(stack((yyval)), declarator);
+          PARSER.add_declarator(stack(yyval), declarator);
         }
-#line 5668 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5764 "ansi_c_y.tab.cpp"
     break;
 
   case 348:
-#line 1783 "parser.y" /* yacc.c:1646  */
-    {
-          init((yyval), ID_declaration);
-          to_ansi_c_declaration(stack((yyval))).set_is_parameter(true);
-          to_ansi_c_declaration(stack((yyval))).type().swap(stack((yyvsp[-1])));
-          PARSER.add_declarator(stack((yyval)), stack((yyvsp[0])));
+#line 1783 "parser.y"
+        {
+          init(yyval, ID_declaration);
+          to_ansi_c_declaration(stack(yyval)).set_is_parameter(true);
+          to_ansi_c_declaration(stack(yyval)).type().swap(stack(yyvsp[-1]));
+          PARSER.add_declarator(stack(yyval), stack(yyvsp[0]));
         }
-#line 5679 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5775 "ansi_c_y.tab.cpp"
     break;
 
   case 349:
-#line 1790 "parser.y" /* yacc.c:1646  */
-    {
-          (yyvsp[-1])=merge((yyvsp[0]), (yyvsp[-1])); // type attribute to go into declarator
-          init((yyval), ID_declaration);
-          to_ansi_c_declaration(stack((yyval))).set_is_parameter(true);
-          to_ansi_c_declaration(stack((yyval))).type().swap(stack((yyvsp[-2])));
-          PARSER.add_declarator(stack((yyval)), stack((yyvsp[-1])));
+#line 1790 "parser.y"
+        {
+          yyvsp[-1]=merge(yyvsp[0], yyvsp[-1]); // type attribute to go into declarator
+          init(yyval, ID_declaration);
+          to_ansi_c_declaration(stack(yyval)).set_is_parameter(true);
+          to_ansi_c_declaration(stack(yyval)).type().swap(stack(yyvsp[-2]));
+          PARSER.add_declarator(stack(yyval), stack(yyvsp[-1]));
         }
-#line 5691 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5787 "ansi_c_y.tab.cpp"
     break;
 
   case 350:
-#line 1798 "parser.y" /* yacc.c:1646  */
-    {
+#line 1798 "parser.y"
+        {
           // the second tree is really the declarator -- not part
           // of the type!
-          init((yyval), ID_declaration);
-          to_ansi_c_declaration(stack((yyval))).set_is_parameter(true);
-          to_ansi_c_declaration(stack((yyval))).type().swap(stack((yyvsp[-1])));
-          PARSER.add_declarator(stack((yyval)), stack((yyvsp[0])));
+          init(yyval, ID_declaration);
+          to_ansi_c_declaration(stack(yyval)).set_is_parameter(true);
+          to_ansi_c_declaration(stack(yyval)).type().swap(stack(yyvsp[-1]));
+          PARSER.add_declarator(stack(yyval), stack(yyvsp[0]));
         }
-#line 5704 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5800 "ansi_c_y.tab.cpp"
     break;
 
   case 351:
-#line 1807 "parser.y" /* yacc.c:1646  */
-    {
-          init((yyval), ID_declaration);
-          to_ansi_c_declaration(stack((yyval))).set_is_parameter(true);
-          to_ansi_c_declaration(stack((yyval))).type().swap(stack((yyvsp[0])));
+#line 1807 "parser.y"
+        {
+          init(yyval, ID_declaration);
+          to_ansi_c_declaration(stack(yyval)).set_is_parameter(true);
+          to_ansi_c_declaration(stack(yyval)).type().swap(stack(yyvsp[0]));
           exprt declarator=exprt(ID_abstract);
-          PARSER.add_declarator(stack((yyval)), declarator);
+          PARSER.add_declarator(stack(yyval), declarator);
         }
-#line 5716 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5812 "ansi_c_y.tab.cpp"
     break;
 
   case 352:
-#line 1815 "parser.y" /* yacc.c:1646  */
-    {
-          init((yyval), ID_declaration);
-          to_ansi_c_declaration(stack((yyval))).set_is_parameter(true);
-          to_ansi_c_declaration(stack((yyval))).type().swap(stack((yyvsp[-1])));
-          PARSER.add_declarator(stack((yyval)), stack((yyvsp[0])));
+#line 1815 "parser.y"
+        {
+          init(yyval, ID_declaration);
+          to_ansi_c_declaration(stack(yyval)).set_is_parameter(true);
+          to_ansi_c_declaration(stack(yyval)).type().swap(stack(yyvsp[-1]));
+          PARSER.add_declarator(stack(yyval), stack(yyvsp[0]));
         }
-#line 5727 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5823 "ansi_c_y.tab.cpp"
     break;
 
   case 353:
-#line 1822 "parser.y" /* yacc.c:1646  */
-    {
-          (yyvsp[-1])=merge((yyvsp[0]), (yyvsp[-1])); // type attribute to go into declarator
-          init((yyval), ID_declaration);
-          to_ansi_c_declaration(stack((yyval))).set_is_parameter(true);
-          to_ansi_c_declaration(stack((yyval))).type().swap(stack((yyvsp[-2])));
-          PARSER.add_declarator(stack((yyval)), stack((yyvsp[-1])));
+#line 1822 "parser.y"
+        {
+          yyvsp[-1]=merge(yyvsp[0], yyvsp[-1]); // type attribute to go into declarator
+          init(yyval, ID_declaration);
+          to_ansi_c_declaration(stack(yyval)).set_is_parameter(true);
+          to_ansi_c_declaration(stack(yyval)).type().swap(stack(yyvsp[-2]));
+          PARSER.add_declarator(stack(yyval), stack(yyvsp[-1]));
         }
-#line 5739 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5835 "ansi_c_y.tab.cpp"
     break;
 
   case 354:
-#line 1830 "parser.y" /* yacc.c:1646  */
-    {
-          init((yyval), ID_declaration);
-          to_ansi_c_declaration(stack((yyval))).set_is_parameter(true);
-          to_ansi_c_declaration(stack((yyval))).type().swap(stack((yyvsp[0])));
+#line 1830 "parser.y"
+        {
+          init(yyval, ID_declaration);
+          to_ansi_c_declaration(stack(yyval)).set_is_parameter(true);
+          to_ansi_c_declaration(stack(yyval)).type().swap(stack(yyvsp[0]));
           exprt declarator=exprt(ID_abstract);
-          PARSER.add_declarator(stack((yyval)), declarator);
+          PARSER.add_declarator(stack(yyval), declarator);
         }
-#line 5751 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5847 "ansi_c_y.tab.cpp"
     break;
 
   case 355:
-#line 1838 "parser.y" /* yacc.c:1646  */
-    {
-          init((yyval), ID_declaration);
-          to_ansi_c_declaration(stack((yyval))).set_is_parameter(true);
-          to_ansi_c_declaration(stack((yyval))).type().swap(stack((yyvsp[-1])));
-          PARSER.add_declarator(stack((yyval)), stack((yyvsp[0])));
+#line 1838 "parser.y"
+        {
+          init(yyval, ID_declaration);
+          to_ansi_c_declaration(stack(yyval)).set_is_parameter(true);
+          to_ansi_c_declaration(stack(yyval)).type().swap(stack(yyvsp[-1]));
+          PARSER.add_declarator(stack(yyval), stack(yyvsp[0]));
         }
-#line 5762 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5858 "ansi_c_y.tab.cpp"
     break;
 
   case 356:
-#line 1845 "parser.y" /* yacc.c:1646  */
-    {
-          (yyvsp[-1])=merge((yyvsp[0]), (yyvsp[-1])); // type attribute to go into declarator
-          init((yyval), ID_declaration);
-          to_ansi_c_declaration(stack((yyval))).set_is_parameter(true);
-          to_ansi_c_declaration(stack((yyval))).type().swap(stack((yyvsp[-2])));
-          PARSER.add_declarator(stack((yyval)), stack((yyvsp[-1])));
+#line 1845 "parser.y"
+        {
+          yyvsp[-1]=merge(yyvsp[0], yyvsp[-1]); // type attribute to go into declarator
+          init(yyval, ID_declaration);
+          to_ansi_c_declaration(stack(yyval)).set_is_parameter(true);
+          to_ansi_c_declaration(stack(yyval)).type().swap(stack(yyvsp[-2]));
+          PARSER.add_declarator(stack(yyval), stack(yyvsp[-1]));
         }
-#line 5774 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5870 "ansi_c_y.tab.cpp"
     break;
 
   case 357:
-#line 1853 "parser.y" /* yacc.c:1646  */
-    {
+#line 1853 "parser.y"
+        {
           // the second tree is really the declarator -- not part of the type!
-          init((yyval), ID_declaration);
-          to_ansi_c_declaration(stack((yyval))).set_is_parameter(true);
-          to_ansi_c_declaration(stack((yyval))).type().swap(stack((yyvsp[-1])));
-          PARSER.add_declarator(stack((yyval)), stack((yyvsp[0])));
+          init(yyval, ID_declaration);
+          to_ansi_c_declaration(stack(yyval)).set_is_parameter(true);
+          to_ansi_c_declaration(stack(yyval)).type().swap(stack(yyvsp[-1]));
+          PARSER.add_declarator(stack(yyval), stack(yyvsp[0]));
         }
-#line 5786 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5882 "ansi_c_y.tab.cpp"
     break;
 
   case 358:
-#line 1861 "parser.y" /* yacc.c:1646  */
-    {
-          init((yyval), ID_declaration);
-          to_ansi_c_declaration(stack((yyval))).set_is_parameter(true);
-          to_ansi_c_declaration(stack((yyval))).type().swap(stack((yyvsp[0])));
+#line 1861 "parser.y"
+        {
+          init(yyval, ID_declaration);
+          to_ansi_c_declaration(stack(yyval)).set_is_parameter(true);
+          to_ansi_c_declaration(stack(yyval)).type().swap(stack(yyvsp[0]));
           exprt declarator=exprt(ID_abstract);
-          PARSER.add_declarator(stack((yyval)), declarator);
+          PARSER.add_declarator(stack(yyval), declarator);
         }
-#line 5798 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5894 "ansi_c_y.tab.cpp"
     break;
 
   case 359:
-#line 1869 "parser.y" /* yacc.c:1646  */
-    {
-          init((yyval), ID_declaration);
-          to_ansi_c_declaration(stack((yyval))).set_is_parameter(true);
-          to_ansi_c_declaration(stack((yyval))).type().swap(stack((yyvsp[-1])));
-          PARSER.add_declarator(stack((yyval)), stack((yyvsp[0])));
+#line 1869 "parser.y"
+        {
+          init(yyval, ID_declaration);
+          to_ansi_c_declaration(stack(yyval)).set_is_parameter(true);
+          to_ansi_c_declaration(stack(yyval)).type().swap(stack(yyvsp[-1]));
+          PARSER.add_declarator(stack(yyval), stack(yyvsp[0]));
         }
-#line 5809 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5905 "ansi_c_y.tab.cpp"
     break;
 
   case 360:
-#line 1876 "parser.y" /* yacc.c:1646  */
-    {
-          (yyvsp[-1])=merge((yyvsp[0]), (yyvsp[-1])); // type attribute to go into declarator
-          init((yyval), ID_declaration);
-          to_ansi_c_declaration(stack((yyval))).set_is_parameter(true);
-          to_ansi_c_declaration(stack((yyval))).type().swap(stack((yyvsp[-2])));
-          PARSER.add_declarator(stack((yyval)), stack((yyvsp[-1])));
+#line 1876 "parser.y"
+        {
+          yyvsp[-1]=merge(yyvsp[0], yyvsp[-1]); // type attribute to go into declarator
+          init(yyval, ID_declaration);
+          to_ansi_c_declaration(stack(yyval)).set_is_parameter(true);
+          to_ansi_c_declaration(stack(yyval)).type().swap(stack(yyvsp[-2]));
+          PARSER.add_declarator(stack(yyval), stack(yyvsp[-1]));
         }
-#line 5821 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5917 "ansi_c_y.tab.cpp"
     break;
 
   case 363:
-#line 1892 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=merge((yyvsp[0]), (yyvsp[-1]));
+#line 1892 "parser.y"
+        {
+          yyval=merge(yyvsp[0], yyvsp[-1]);
         }
-#line 5829 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5925 "ansi_c_y.tab.cpp"
     break;
 
   case 364:
-#line 1896 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=merge((yyvsp[-1]), (yyvsp[-2]));
-          make_subtype((yyval), (yyvsp[0]));
+#line 1896 "parser.y"
+        {
+          yyval=merge(yyvsp[-1], yyvsp[-2]);
+          make_subtype(yyval, yyvsp[0]);
         }
-#line 5838 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5934 "ansi_c_y.tab.cpp"
     break;
 
   case 365:
-#line 1901 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=merge((yyvsp[0]), (yyvsp[-1]));
+#line 1901 "parser.y"
+        {
+          yyval=merge(yyvsp[0], yyvsp[-1]);
         }
-#line 5846 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5942 "ansi_c_y.tab.cpp"
     break;
 
   case 366:
-#line 1905 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=merge((yyvsp[-1]), (yyvsp[-2]));
-          make_subtype((yyval), (yyvsp[0]));
+#line 1905 "parser.y"
+        {
+          yyval=merge(yyvsp[-1], yyvsp[-2]);
+          make_subtype(yyval, yyvsp[0]);
         }
-#line 5855 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5951 "ansi_c_y.tab.cpp"
     break;
 
   case 367:
-#line 1913 "parser.y" /* yacc.c:1646  */
-    {
-          newstack((yyval));
-          stack((yyval)).make_nil();
+#line 1913 "parser.y"
+        {
+          newstack(yyval);
+          stack(yyval).make_nil();
         }
-#line 5864 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5960 "ansi_c_y.tab.cpp"
     break;
 
   case 368:
-#line 1918 "parser.y" /* yacc.c:1646  */
-    { (yyval) = (yyvsp[0]); }
-#line 5870 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 1918 "parser.y"
+        { yyval = yyvsp[0]; }
+#line 5966 "ansi_c_y.tab.cpp"
     break;
 
   case 370:
-#line 1929 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-2]);
-          set((yyval), ID_initializer_list);
-          stack((yyval)).operands().swap(stack((yyvsp[-1])).operands());
+#line 1929 "parser.y"
+        {
+          yyval=yyvsp[-2];
+          set(yyval, ID_initializer_list);
+          stack(yyval).operands().swap(stack(yyvsp[-1]).operands());
         }
-#line 5880 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5976 "ansi_c_y.tab.cpp"
     break;
 
   case 371:
-#line 1935 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-3]);
-          set((yyval), ID_initializer_list);
-          stack((yyval)).operands().swap(stack((yyvsp[-2])).operands());
+#line 1935 "parser.y"
+        {
+          yyval=yyvsp[-3];
+          set(yyval, ID_initializer_list);
+          stack(yyval).operands().swap(stack(yyvsp[-2]).operands());
         }
-#line 5890 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5986 "ansi_c_y.tab.cpp"
     break;
 
   case 372:
-#line 1944 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[0]);
+#line 1944 "parser.y"
+        {
+          yyval=yyvsp[0];
           exprt tmp;
-          tmp.swap(stack((yyval)));
-          stack((yyval)).clear();
-          stack((yyval)).move_to_operands(tmp);
+          tmp.swap(stack(yyval));
+          stack(yyval).clear();
+          stack(yyval).move_to_operands(tmp);
         }
-#line 5902 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 5998 "ansi_c_y.tab.cpp"
     break;
 
   case 373:
-#line 1952 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-2]);
-          mto((yyval), (yyvsp[0]));
+#line 1952 "parser.y"
+        {
+          yyval=yyvsp[-2];
+          mto(yyval, yyvsp[0]);
         }
-#line 5911 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6007 "ansi_c_y.tab.cpp"
     break;
 
   case 375:
-#line 1961 "parser.y" /* yacc.c:1646  */
-    {
-          init((yyval));
-          set((yyval), ID_initializer_list);
-          stack((yyval)).operands().clear();
+#line 1961 "parser.y"
+        {
+          init(yyval);
+          set(yyval, ID_initializer_list);
+          stack(yyval).operands().clear();
         }
-#line 5921 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6017 "ansi_c_y.tab.cpp"
     break;
 
   case 377:
-#line 1971 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-1]);
-          stack((yyval)).id(ID_designated_initializer);
-          stack((yyval)).add(ID_designator).swap(stack((yyvsp[-2])));
-          mto((yyval), (yyvsp[0]));
+#line 1971 "parser.y"
+        {
+          yyval=yyvsp[-1];
+          stack(yyval).id(ID_designated_initializer);
+          stack(yyval).add(ID_designator).swap(stack(yyvsp[-2]));
+          mto(yyval, yyvsp[0]);
         }
-#line 5932 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6028 "ansi_c_y.tab.cpp"
     break;
 
   case 378:
-#line 1979 "parser.y" /* yacc.c:1646  */
-    {
-          init((yyval), ID_designated_initializer);
-          stack((yyval)).add(ID_designator).swap(stack((yyvsp[-1])));
-          mto((yyval), (yyvsp[0]));
+#line 1979 "parser.y"
+        {
+          init(yyval, ID_designated_initializer);
+          stack(yyval).add(ID_designator).swap(stack(yyvsp[-1]));
+          mto(yyval, yyvsp[0]);
         }
-#line 5942 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6038 "ansi_c_y.tab.cpp"
     break;
 
   case 379:
-#line 1985 "parser.y" /* yacc.c:1646  */
-    {
+#line 1985 "parser.y"
+        {
           // yet another GCC speciality
-          (yyval)=(yyvsp[-1]);
-          stack((yyval)).id(ID_designated_initializer);
+          yyval=yyvsp[-1];
+          stack(yyval).id(ID_designated_initializer);
           exprt designator;
           exprt member(ID_member);
-          member.set(ID_component_name, stack((yyvsp[-2])).get(ID_C_base_name));
+          member.set(ID_component_name, stack(yyvsp[-2]).get(ID_C_base_name));
           designator.move_to_operands(member);
-          stack((yyval)).add(ID_designator).swap(designator);
-          mto((yyval), (yyvsp[0]));
+          stack(yyval).add(ID_designator).swap(designator);
+          mto(yyval, yyvsp[0]);
         }
-#line 5958 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6054 "ansi_c_y.tab.cpp"
     break;
 
   case 380:
-#line 2000 "parser.y" /* yacc.c:1646  */
-    {
-          init((yyval));
-          stack((yyvsp[-1])).id(ID_member);
-          stack((yyvsp[-1])).set(ID_component_name, stack((yyvsp[0])).get(ID_C_base_name));
-          mto((yyval), (yyvsp[-1]));
+#line 2000 "parser.y"
+        {
+          init(yyval);
+          stack(yyvsp[-1]).id(ID_member);
+          stack(yyvsp[-1]).set(ID_component_name, stack(yyvsp[0]).get(ID_C_base_name));
+          mto(yyval, yyvsp[-1]);
         }
-#line 5969 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6065 "ansi_c_y.tab.cpp"
     break;
 
   case 381:
-#line 2007 "parser.y" /* yacc.c:1646  */
-    {
-          init((yyval));
-          stack((yyvsp[-2])).id(ID_index);
-          mto((yyvsp[-2]), (yyvsp[-1]));
-          mto((yyval), (yyvsp[-2]));
+#line 2007 "parser.y"
+        {
+          init(yyval);
+          stack(yyvsp[-2]).id(ID_index);
+          mto(yyvsp[-2], yyvsp[-1]);
+          mto(yyval, yyvsp[-2]);
         }
-#line 5980 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6076 "ansi_c_y.tab.cpp"
     break;
 
   case 382:
-#line 2014 "parser.y" /* yacc.c:1646  */
-    {
+#line 2014 "parser.y"
+        {
           // TODO
-          init((yyval));
-          stack((yyvsp[-4])).id(ID_index);
-          mto((yyvsp[-4]), (yyvsp[-3]));
-          mto((yyval), (yyvsp[-4]));
+          init(yyval);
+          stack(yyvsp[-4]).id(ID_index);
+          mto(yyvsp[-4], yyvsp[-3]);
+          mto(yyval, yyvsp[-4]);
         }
-#line 5992 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6088 "ansi_c_y.tab.cpp"
     break;
 
   case 383:
-#line 2022 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-3]);
-          stack((yyvsp[-2])).id(ID_index);
-          mto((yyvsp[-2]), (yyvsp[-1]));
-          mto((yyval), (yyvsp[-2]));
+#line 2022 "parser.y"
+        {
+          yyval=yyvsp[-3];
+          stack(yyvsp[-2]).id(ID_index);
+          mto(yyvsp[-2], yyvsp[-1]);
+          mto(yyval, yyvsp[-2]);
         }
-#line 6003 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6099 "ansi_c_y.tab.cpp"
     break;
 
   case 384:
-#line 2029 "parser.y" /* yacc.c:1646  */
-    {
+#line 2029 "parser.y"
+        {
           // TODO
-          (yyval)=(yyvsp[-5]);
-          stack((yyvsp[-4])).id(ID_index);
-          mto((yyvsp[-4]), (yyvsp[-3]));
-          mto((yyval), (yyvsp[-4]));
+          yyval=yyvsp[-5];
+          stack(yyvsp[-4]).id(ID_index);
+          mto(yyvsp[-4], yyvsp[-3]);
+          mto(yyval, yyvsp[-4]);
         }
-#line 6015 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6111 "ansi_c_y.tab.cpp"
     break;
 
   case 385:
-#line 2037 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-2]);
-          stack((yyvsp[-1])).id(ID_member);
-          stack((yyvsp[-1])).set(ID_component_name, stack((yyvsp[0])).get(ID_C_base_name));
-          mto((yyval), (yyvsp[-1]));
+#line 2037 "parser.y"
+        {
+          yyval=yyvsp[-2];
+          stack(yyvsp[-1]).id(ID_member);
+          stack(yyvsp[-1]).set(ID_component_name, stack(yyvsp[0]).get(ID_C_base_name));
+          mto(yyval, yyvsp[-1]);
         }
-#line 6026 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6122 "ansi_c_y.tab.cpp"
     break;
 
   case 398:
-#line 2064 "parser.y" /* yacc.c:1646  */
-    {
-          init((yyval));
-          statement((yyval), ID_decl);
-          mto((yyval), (yyvsp[0]));
+#line 2064 "parser.y"
+        {
+          init(yyval);
+          statement(yyval, ID_decl);
+          mto(yyval, yyvsp[0]);
         }
-#line 6036 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6132 "ansi_c_y.tab.cpp"
     break;
 
   case 399:
-#line 2073 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-1]);
-          statement((yyval), ID_label);
-          irep_idt identifier=PARSER.lookup_label(stack((yyvsp[-2])).get(ID_C_base_name));
-          stack((yyval)).set(ID_label, identifier);
-          mto((yyval), (yyvsp[0]));
+#line 2073 "parser.y"
+        {
+          yyval=yyvsp[-1];
+          statement(yyval, ID_label);
+          irep_idt identifier=PARSER.lookup_label(stack(yyvsp[-2]).get(ID_C_base_name));
+          stack(yyval).set(ID_label, identifier);
+          mto(yyval, yyvsp[0]);
         }
-#line 6048 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6144 "ansi_c_y.tab.cpp"
     break;
 
   case 400:
-#line 2081 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-3]);
-          statement((yyval), ID_switch_case);
-          mto((yyval), (yyvsp[-2]));
-          mto((yyval), (yyvsp[0]));
+#line 2081 "parser.y"
+        {
+          yyval=yyvsp[-3];
+          statement(yyval, ID_switch_case);
+          mto(yyval, yyvsp[-2]);
+          mto(yyval, yyvsp[0]);
         }
-#line 6059 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6155 "ansi_c_y.tab.cpp"
     break;
 
   case 401:
-#line 2088 "parser.y" /* yacc.c:1646  */
-    {
+#line 2088 "parser.y"
+        {
           // this is a GCC extension
-          (yyval)=(yyvsp[-5]);
-          statement((yyval), ID_gcc_switch_case_range);
-          mto((yyval), (yyvsp[-4]));
-          mto((yyval), (yyvsp[-2]));
-          mto((yyval), (yyvsp[0]));
+          yyval=yyvsp[-5];
+          statement(yyval, ID_gcc_switch_case_range);
+          mto(yyval, yyvsp[-4]);
+          mto(yyval, yyvsp[-2]);
+          mto(yyval, yyvsp[0]);
         }
-#line 6072 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6168 "ansi_c_y.tab.cpp"
     break;
 
   case 402:
-#line 2097 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-2]);
-          statement((yyval), ID_switch_case);
-          stack((yyval)).operands().push_back(nil_exprt());
-          mto((yyval), (yyvsp[0]));
-          stack((yyval)).set(ID_default, true);
+#line 2097 "parser.y"
+        {
+          yyval=yyvsp[-2];
+          statement(yyval, ID_switch_case);
+          stack(yyval).operands().push_back(nil_exprt());
+          mto(yyval, yyvsp[0]);
+          stack(yyval).set(ID_default, true);
         }
-#line 6084 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6180 "ansi_c_y.tab.cpp"
     break;
 
   case 403:
-#line 2108 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-1]);
-          statement((yyval), ID_block);
-          stack((yyval)).set(ID_C_end_location, stack((yyvsp[0])).source_location());
+#line 2108 "parser.y"
+        {
+          yyval=yyvsp[-1];
+          statement(yyval, ID_block);
+          stack(yyval).set(ID_C_end_location, stack(yyvsp[0]).source_location());
           PARSER.pop_scope();
         }
-#line 6095 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6191 "ansi_c_y.tab.cpp"
     break;
 
   case 404:
-#line 2115 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-2]);
-          statement((yyval), ID_block);
-          stack((yyval)).set(ID_C_end_location, stack((yyvsp[0])).source_location());
-          stack((yyval)).operands().swap(stack((yyvsp[-1])).operands());
+#line 2115 "parser.y"
+        {
+          yyval=yyvsp[-2];
+          statement(yyval, ID_block);
+          stack(yyval).set(ID_C_end_location, stack(yyvsp[0]).source_location());
+          stack(yyval).operands().swap(stack(yyvsp[-1]).operands());
           PARSER.pop_scope();
         }
-#line 6107 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6203 "ansi_c_y.tab.cpp"
     break;
 
   case 405:
-#line 2123 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-2]);
-          statement((yyval), ID_asm);
-          stack((yyval)).set(ID_C_end_location, stack((yyvsp[0])).source_location());
-          mto((yyval), (yyvsp[-1]));
+#line 2123 "parser.y"
+        {
+          yyval=yyvsp[-2];
+          statement(yyval, ID_asm);
+          stack(yyval).set(ID_C_end_location, stack(yyvsp[0]).source_location());
+          mto(yyval, yyvsp[-1]);
           PARSER.pop_scope();
         }
-#line 6119 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6215 "ansi_c_y.tab.cpp"
     break;
 
   case 406:
-#line 2134 "parser.y" /* yacc.c:1646  */
-    {
+#line 2134 "parser.y"
+        {
           unsigned prefix=++PARSER.current_scope().compound_counter;
           PARSER.new_scope(i2string(prefix)+"::");
         }
-#line 6128 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6224 "ansi_c_y.tab.cpp"
     break;
 
   case 407:
-#line 2142 "parser.y" /* yacc.c:1646  */
-    {
-          init((yyval));
-          mto((yyval), (yyvsp[0]));
+#line 2142 "parser.y"
+        {
+          init(yyval);
+          mto(yyval, yyvsp[0]);
         }
-#line 6137 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6233 "ansi_c_y.tab.cpp"
     break;
 
   case 408:
-#line 2147 "parser.y" /* yacc.c:1646  */
-    {
-          mto((yyval), (yyvsp[0]));
+#line 2147 "parser.y"
+        {
+          mto(yyval, yyvsp[0]);
         }
-#line 6145 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6241 "ansi_c_y.tab.cpp"
     break;
 
   case 409:
-#line 2154 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[0]);
+#line 2154 "parser.y"
+        {
+          yyval=yyvsp[0];
 
-          if(stack((yyvsp[-1])).is_nil())
-            statement((yyval), ID_skip);
+          if(stack(yyvsp[-1]).is_nil())
+            statement(yyval, ID_skip);
           else
           {
-            statement((yyval), ID_expression);
-            mto((yyval), (yyvsp[-1]));
+            statement(yyval, ID_expression);
+            mto(yyval, yyvsp[-1]);
           }
         }
-#line 6161 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6257 "ansi_c_y.tab.cpp"
     break;
 
   case 410:
-#line 2169 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-4]);
-          statement((yyval), ID_ifthenelse);
-          stack((yyval)).operands().reserve(3);
-          mto((yyval), (yyvsp[-2]));
-          mto((yyval), (yyvsp[0]));
-          stack((yyval)).copy_to_operands(nil_exprt());
+#line 2169 "parser.y"
+        {
+          yyval=yyvsp[-4];
+          statement(yyval, ID_ifthenelse);
+          stack(yyval).operands().reserve(3);
+          mto(yyval, yyvsp[-2]);
+          mto(yyval, yyvsp[0]);
+          stack(yyval).copy_to_operands(nil_exprt());
         }
-#line 6174 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6270 "ansi_c_y.tab.cpp"
     break;
 
   case 411:
-#line 2178 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-6]);
-          statement((yyval), ID_ifthenelse);
-          stack((yyval)).operands().reserve(3);
-          mto((yyval), (yyvsp[-4]));
-          mto((yyval), (yyvsp[-2]));
-          mto((yyval), (yyvsp[0]));
+#line 2178 "parser.y"
+        {
+          yyval=yyvsp[-6];
+          statement(yyval, ID_ifthenelse);
+          stack(yyval).operands().reserve(3);
+          mto(yyval, yyvsp[-4]);
+          mto(yyval, yyvsp[-2]);
+          mto(yyval, yyvsp[0]);
         }
-#line 6187 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6283 "ansi_c_y.tab.cpp"
     break;
 
   case 412:
-#line 2187 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-4]);
-          statement((yyval), ID_switch);
-          stack((yyval)).operands().reserve(2);
-          mto((yyval), (yyvsp[-2]));
-          mto((yyval), (yyvsp[0]));
+#line 2187 "parser.y"
+        {
+          yyval=yyvsp[-4];
+          statement(yyval, ID_switch);
+          stack(yyval).operands().reserve(2);
+          mto(yyval, yyvsp[-2]);
+          mto(yyval, yyvsp[0]);
         }
-#line 6199 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6295 "ansi_c_y.tab.cpp"
     break;
 
   case 415:
-#line 2203 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-4]);
-          statement((yyval), ID_while);
-          stack((yyval)).operands().reserve(2);
-          mto((yyval), (yyvsp[-2]));
-          mto((yyval), (yyvsp[0]));
+#line 2203 "parser.y"
+        {
+          yyval=yyvsp[-4];
+          statement(yyval, ID_while);
+          stack(yyval).operands().reserve(2);
+          mto(yyval, yyvsp[-2]);
+          mto(yyval, yyvsp[0]);
         }
-#line 6211 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6307 "ansi_c_y.tab.cpp"
     break;
 
   case 416:
-#line 2211 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-6]);
-          statement((yyval), ID_dowhile);
-          stack((yyval)).operands().reserve(2);
-          mto((yyval), (yyvsp[-2]));
-          mto((yyval), (yyvsp[-5]));
+#line 2211 "parser.y"
+        {
+          yyval=yyvsp[-6];
+          statement(yyval, ID_dowhile);
+          stack(yyval).operands().reserve(2);
+          mto(yyval, yyvsp[-2]);
+          mto(yyval, yyvsp[-5]);
         }
-#line 6223 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6319 "ansi_c_y.tab.cpp"
     break;
 
   case 417:
-#line 2219 "parser.y" /* yacc.c:1646  */
-    {
+#line 2219 "parser.y"
+          {
             // In C99 and upwards, for(;;) has a scope
             if(PARSER.for_has_scope)
             {
@@ -6232,90 +6328,90 @@ yyreduce:
               PARSER.new_scope(i2string(prefix)+"::");
             }
           }
-#line 6236 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6332 "ansi_c_y.tab.cpp"
     break;
 
   case 418:
-#line 2231 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-8]);
-          statement((yyval), ID_for);
-          stack((yyval)).operands().reserve(4);
-          mto((yyval), (yyvsp[-5]));
-          mto((yyval), (yyvsp[-4]));
-          mto((yyval), (yyvsp[-2]));
-          mto((yyval), (yyvsp[0]));
+#line 2231 "parser.y"
+        {
+          yyval=yyvsp[-8];
+          statement(yyval, ID_for);
+          stack(yyval).operands().reserve(4);
+          mto(yyval, yyvsp[-5]);
+          mto(yyval, yyvsp[-4]);
+          mto(yyval, yyvsp[-2]);
+          mto(yyval, yyvsp[0]);
 
           if(PARSER.for_has_scope)
             PARSER.pop_scope(); // remove the C99 for-scope
         }
-#line 6253 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6349 "ansi_c_y.tab.cpp"
     break;
 
   case 419:
-#line 2247 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-2]);
-          if(stack((yyvsp[-1])).id()==ID_symbol)
+#line 2247 "parser.y"
+        {
+          yyval=yyvsp[-2];
+          if(stack(yyvsp[-1]).id()==ID_symbol)
           {
-            statement((yyval), ID_goto);
-            irep_idt identifier=PARSER.lookup_label(stack((yyvsp[-1])).get(ID_C_base_name));
-            stack((yyval)).set(ID_destination, identifier);
+            statement(yyval, ID_goto);
+            irep_idt identifier=PARSER.lookup_label(stack(yyvsp[-1]).get(ID_C_base_name));
+            stack(yyval).set(ID_destination, identifier);
           }
           else
           {
             // this is a gcc extension.
             // the original grammar uses identifier_or_typedef_name
-            statement((yyval), ID_gcc_computed_goto);
-            mto((yyval), (yyvsp[-1]));
+            statement(yyval, ID_gcc_computed_goto);
+            mto(yyval, yyvsp[-1]);
           }
         }
-#line 6274 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6370 "ansi_c_y.tab.cpp"
     break;
 
   case 420:
-#line 2264 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-2]);
-          statement((yyval), ID_goto);
-          irep_idt identifier=PARSER.lookup_label(stack((yyvsp[-1])).get(ID_C_base_name));
-          stack((yyval)).set(ID_destination, identifier);
+#line 2264 "parser.y"
+        {
+          yyval=yyvsp[-2];
+          statement(yyval, ID_goto);
+          irep_idt identifier=PARSER.lookup_label(stack(yyvsp[-1]).get(ID_C_base_name));
+          stack(yyval).set(ID_destination, identifier);
         }
-#line 6285 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6381 "ansi_c_y.tab.cpp"
     break;
 
   case 421:
-#line 2271 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[-1]); statement((yyval), ID_continue); }
-#line 6291 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 2271 "parser.y"
+        { yyval=yyvsp[-1]; statement(yyval, ID_continue); }
+#line 6387 "ansi_c_y.tab.cpp"
     break;
 
   case 422:
-#line 2273 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[-1]); statement((yyval), ID_break); }
-#line 6297 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 2273 "parser.y"
+        { yyval=yyvsp[-1]; statement(yyval, ID_break); }
+#line 6393 "ansi_c_y.tab.cpp"
     break;
 
   case 423:
-#line 2275 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[-1]); statement((yyval), ID_return); }
-#line 6303 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 2275 "parser.y"
+        { yyval=yyvsp[-1]; statement(yyval, ID_return); }
+#line 6399 "ansi_c_y.tab.cpp"
     break;
 
   case 424:
-#line 2277 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[-2]); statement((yyval), ID_return); mto((yyval), (yyvsp[-1])); }
-#line 6309 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 2277 "parser.y"
+        { yyval=yyvsp[-2]; statement(yyval, ID_return); mto(yyval, yyvsp[-1]); }
+#line 6405 "ansi_c_y.tab.cpp"
     break;
 
   case 425:
-#line 2282 "parser.y" /* yacc.c:1646  */
-    { 
-          (yyval)=(yyvsp[-2]);
-          statement((yyval), ID_gcc_local_label);
+#line 2282 "parser.y"
+        { 
+          yyval=yyvsp[-2];
+          statement(yyval, ID_gcc_local_label);
           
           // put these into the scope
-          forall_operands(it, stack((yyvsp[-1])))
+          forall_operands(it, stack(yyvsp[-1]))
           {
             // labels have a separate name space
             irep_idt base_name=it->get(ID_identifier);
@@ -6325,394 +6421,394 @@ yyreduce:
             i.base_name=base_name;
           }
 
-          stack((yyval)).add(ID_label).get_sub().swap((irept::subt&)stack((yyvsp[-1])).operands());
+          stack(yyval).add(ID_label).get_sub().swap((irept::subt&)stack(yyvsp[-1]).operands());
         }
-#line 6331 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6427 "ansi_c_y.tab.cpp"
     break;
 
   case 426:
-#line 2303 "parser.y" /* yacc.c:1646  */
-    {
-          init((yyval));
-          mto((yyval), (yyvsp[0]));
+#line 2303 "parser.y"
+        {
+          init(yyval);
+          mto(yyval, yyvsp[0]);
         }
-#line 6340 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6436 "ansi_c_y.tab.cpp"
     break;
 
   case 427:
-#line 2308 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-2]);
-          mto((yyval), (yyvsp[0]));
+#line 2308 "parser.y"
+        {
+          yyval=yyvsp[-2];
+          mto(yyval, yyvsp[0]);
         }
-#line 6349 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6445 "ansi_c_y.tab.cpp"
     break;
 
   case 429:
-#line 2319 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[-5]);
-          statement((yyval), ID_asm);
-          stack((yyval)).set(ID_flavor, ID_gcc);
-          stack((yyval)).operands().swap(stack((yyvsp[-2])).operands());
+#line 2319 "parser.y"
+        { yyval=yyvsp[-5];
+          statement(yyval, ID_asm);
+          stack(yyval).set(ID_flavor, ID_gcc);
+          stack(yyval).operands().swap(stack(yyvsp[-2]).operands());
         }
-#line 6359 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6455 "ansi_c_y.tab.cpp"
     break;
 
   case 430:
-#line 2325 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-4]);
-          statement((yyval), ID_asm);
-          stack((yyval)).set(ID_flavor, ID_gcc);
-          stack((yyval)).operands().resize(5);
-          stack((yyval)).op0()=stack((yyvsp[-1]));
+#line 2325 "parser.y"
+        {
+          yyval=yyvsp[-4];
+          statement(yyval, ID_asm);
+          stack(yyval).set(ID_flavor, ID_gcc);
+          stack(yyval).operands().resize(5);
+          stack(yyval).op0()=stack(yyvsp[-1]);
         }
-#line 6371 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6467 "ansi_c_y.tab.cpp"
     break;
 
   case 431:
-#line 2336 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[-3]);
-          statement((yyval), ID_asm);
-          stack((yyval)).set(ID_flavor, ID_msc);
-          mto((yyval), (yyvsp[-1]));
+#line 2336 "parser.y"
+        { yyval=yyvsp[-3];
+          statement(yyval, ID_asm);
+          stack(yyval).set(ID_flavor, ID_msc);
+          mto(yyval, yyvsp[-1]);
         }
-#line 6381 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6477 "ansi_c_y.tab.cpp"
     break;
 
   case 432:
-#line 2342 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[-1]);
-          statement((yyval), ID_asm);
-          stack((yyval)).set(ID_flavor, ID_msc);
-          mto((yyval), (yyvsp[0]));
+#line 2342 "parser.y"
+        { yyval=yyvsp[-1];
+          statement(yyval, ID_asm);
+          stack(yyval).set(ID_flavor, ID_msc);
+          mto(yyval, yyvsp[0]);
         }
-#line 6391 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6487 "ansi_c_y.tab.cpp"
     break;
 
   case 433:
-#line 2352 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-6]);
-          statement((yyval), ID_msc_try_except);
-          mto((yyval), (yyvsp[-5]));
-          mto((yyval), (yyvsp[-2]));
-          mto((yyval), (yyvsp[0]));
+#line 2352 "parser.y"
+        {
+          yyval=yyvsp[-6];
+          statement(yyval, ID_msc_try_except);
+          mto(yyval, yyvsp[-5]);
+          mto(yyval, yyvsp[-2]);
+          mto(yyval, yyvsp[0]);
         }
-#line 6403 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6499 "ansi_c_y.tab.cpp"
     break;
 
   case 434:
-#line 2361 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-3]);
-          statement((yyval), ID_msc_try_finally);
-          mto((yyval), (yyvsp[-2]));
-          mto((yyval), (yyvsp[0]));
+#line 2361 "parser.y"
+        {
+          yyval=yyvsp[-3];
+          statement(yyval, ID_msc_try_finally);
+          mto(yyval, yyvsp[-2]);
+          mto(yyval, yyvsp[0]);
         }
-#line 6414 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6510 "ansi_c_y.tab.cpp"
     break;
 
   case 435:
-#line 2368 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[0]);
-          statement((yyval), ID_msc_leave);
+#line 2368 "parser.y"
+        {
+          yyval=yyvsp[0];
+          statement(yyval, ID_msc_leave);
         }
-#line 6423 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6519 "ansi_c_y.tab.cpp"
     break;
 
   case 436:
-#line 2376 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-1]);
-          statement((yyval), ID_CPROVER_throw);
+#line 2376 "parser.y"
+        {
+          yyval=yyvsp[-1];
+          statement(yyval, ID_CPROVER_throw);
         }
-#line 6432 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6528 "ansi_c_y.tab.cpp"
     break;
 
   case 437:
-#line 2382 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-3]);
-          statement((yyval), ID_CPROVER_try_catch);
-          mto((yyval), (yyvsp[-2]));
-          mto((yyval), (yyvsp[0]));
+#line 2382 "parser.y"
+        {
+          yyval=yyvsp[-3];
+          statement(yyval, ID_CPROVER_try_catch);
+          mto(yyval, yyvsp[-2]);
+          mto(yyval, yyvsp[0]);
         }
-#line 6443 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6539 "ansi_c_y.tab.cpp"
     break;
 
   case 438:
-#line 2390 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-3]);
-          statement((yyval), ID_CPROVER_try_finally);
-          mto((yyval), (yyvsp[-2]));
-          mto((yyval), (yyvsp[0]));
+#line 2390 "parser.y"
+        {
+          yyval=yyvsp[-3];
+          statement(yyval, ID_CPROVER_try_finally);
+          mto(yyval, yyvsp[-2]);
+          mto(yyval, yyvsp[0]);
         }
-#line 6454 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6550 "ansi_c_y.tab.cpp"
     break;
 
   case 444:
-#line 2416 "parser.y" /* yacc.c:1646  */
-    {
-          init((yyval));
-          stack((yyval)).operands().resize(5);
-          stack((yyval)).operands()[0]=stack((yyvsp[0]));
+#line 2416 "parser.y"
+        {
+          init(yyval);
+          stack(yyval).operands().resize(5);
+          stack(yyval).operands()[0]=stack(yyvsp[0]);
         }
-#line 6464 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6560 "ansi_c_y.tab.cpp"
     break;
 
   case 445:
-#line 2422 "parser.y" /* yacc.c:1646  */
-    {
-          init((yyval));
-          stack((yyval)).operands().resize(5);
-          stack((yyval)).operands()[0]=stack((yyvsp[-1]));
-          stack((yyval)).operands()[1]=stack((yyvsp[0]));
+#line 2422 "parser.y"
+        {
+          init(yyval);
+          stack(yyval).operands().resize(5);
+          stack(yyval).operands()[0]=stack(yyvsp[-1]);
+          stack(yyval).operands()[1]=stack(yyvsp[0]);
         }
-#line 6475 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6571 "ansi_c_y.tab.cpp"
     break;
 
   case 446:
-#line 2429 "parser.y" /* yacc.c:1646  */
-    {
-          init((yyval));
-          stack((yyval)).operands().resize(5);
-          stack((yyval)).operands()[0]=stack((yyvsp[-2]));
-          stack((yyval)).operands()[1]=stack((yyvsp[-1]));
-          stack((yyval)).operands()[2]=stack((yyvsp[0]));
+#line 2429 "parser.y"
+        {
+          init(yyval);
+          stack(yyval).operands().resize(5);
+          stack(yyval).operands()[0]=stack(yyvsp[-2]);
+          stack(yyval).operands()[1]=stack(yyvsp[-1]);
+          stack(yyval).operands()[2]=stack(yyvsp[0]);
         }
-#line 6487 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6583 "ansi_c_y.tab.cpp"
     break;
 
   case 447:
-#line 2437 "parser.y" /* yacc.c:1646  */
-    {
-          init((yyval));
-          stack((yyval)).operands().resize(5);
-          stack((yyval)).operands()[0]=stack((yyvsp[-3]));
-          stack((yyval)).operands()[1]=stack((yyvsp[-2]));
-          stack((yyval)).operands()[2]=stack((yyvsp[-1]));
-          stack((yyval)).operands()[3]=stack((yyvsp[0]));
+#line 2437 "parser.y"
+        {
+          init(yyval);
+          stack(yyval).operands().resize(5);
+          stack(yyval).operands()[0]=stack(yyvsp[-3]);
+          stack(yyval).operands()[1]=stack(yyvsp[-2]);
+          stack(yyval).operands()[2]=stack(yyvsp[-1]);
+          stack(yyval).operands()[3]=stack(yyvsp[0]);
         }
-#line 6500 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6596 "ansi_c_y.tab.cpp"
     break;
 
   case 448:
-#line 2446 "parser.y" /* yacc.c:1646  */
-    {
-          init((yyval));
-          stack((yyval)).operands().resize(5);
-          stack((yyval)).operands()[0]=stack((yyvsp[-4]));
-          stack((yyval)).operands()[1]=stack((yyvsp[-3]));
-          stack((yyval)).operands()[2]=stack((yyvsp[-2]));
-          stack((yyval)).operands()[3]=stack((yyvsp[-1]));
-          stack((yyval)).operands()[4]=stack((yyvsp[0]));
+#line 2446 "parser.y"
+        {
+          init(yyval);
+          stack(yyval).operands().resize(5);
+          stack(yyval).operands()[0]=stack(yyvsp[-4]);
+          stack(yyval).operands()[1]=stack(yyvsp[-3]);
+          stack(yyval).operands()[2]=stack(yyvsp[-2]);
+          stack(yyval).operands()[3]=stack(yyvsp[-1]);
+          stack(yyval).operands()[4]=stack(yyvsp[0]);
         }
-#line 6514 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6610 "ansi_c_y.tab.cpp"
     break;
 
   case 450:
-#line 2462 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[0]);
+#line 2462 "parser.y"
+        {
+          yyval=yyvsp[0];
         }
-#line 6522 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6618 "ansi_c_y.tab.cpp"
     break;
 
   case 452:
-#line 2470 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-2]);
-          stack((yyval)).id(ID_gcc_asm_output);
-          stack((yyval)).move_to_operands(stack((yyvsp[-3])), stack((yyvsp[-1]))); 
+#line 2470 "parser.y"
+        {
+          yyval=yyvsp[-2];
+          stack(yyval).id(ID_gcc_asm_output);
+          stack(yyval).move_to_operands(stack(yyvsp[-3]), stack(yyvsp[-1])); 
         }
-#line 6532 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6628 "ansi_c_y.tab.cpp"
     break;
 
   case 453:
-#line 2477 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-2]);
-          stack((yyval)).id(ID_gcc_asm_output);
-          stack((yyval)).move_to_operands(stack((yyvsp[-3])), stack((yyvsp[-1]))); 
+#line 2477 "parser.y"
+        {
+          yyval=yyvsp[-2];
+          stack(yyval).id(ID_gcc_asm_output);
+          stack(yyval).move_to_operands(stack(yyvsp[-3]), stack(yyvsp[-1])); 
         }
-#line 6542 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6638 "ansi_c_y.tab.cpp"
     break;
 
   case 454:
-#line 2486 "parser.y" /* yacc.c:1646  */
-    {
-          init((yyval), irep_idt());
-          mto((yyval), (yyvsp[0]));
+#line 2486 "parser.y"
+        {
+          init(yyval, irep_idt());
+          mto(yyval, yyvsp[0]);
         }
-#line 6551 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6647 "ansi_c_y.tab.cpp"
     break;
 
   case 455:
-#line 2491 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-2]);
-          mto((yyval), (yyvsp[0]));
+#line 2491 "parser.y"
+        {
+          yyval=yyvsp[-2];
+          mto(yyval, yyvsp[0]);
         }
-#line 6560 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6656 "ansi_c_y.tab.cpp"
     break;
 
   case 456:
-#line 2499 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[0]);
+#line 2499 "parser.y"
+        {
+          yyval=yyvsp[0];
         }
-#line 6568 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6664 "ansi_c_y.tab.cpp"
     break;
 
   case 458:
-#line 2507 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-2]);
-          stack((yyval)).id(ID_gcc_asm_input);
-          stack((yyval)).move_to_operands(stack((yyvsp[-3])), stack((yyvsp[-1]))); 
+#line 2507 "parser.y"
+        {
+          yyval=yyvsp[-2];
+          stack(yyval).id(ID_gcc_asm_input);
+          stack(yyval).move_to_operands(stack(yyvsp[-3]), stack(yyvsp[-1])); 
         }
-#line 6578 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6674 "ansi_c_y.tab.cpp"
     break;
 
   case 459:
-#line 2514 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-2]);
-          stack((yyval)).id(ID_gcc_asm_input);
-          stack((yyval)).move_to_operands(stack((yyvsp[-3])), stack((yyvsp[-1]))); 
+#line 2514 "parser.y"
+        {
+          yyval=yyvsp[-2];
+          stack(yyval).id(ID_gcc_asm_input);
+          stack(yyval).move_to_operands(stack(yyvsp[-3]), stack(yyvsp[-1])); 
         }
-#line 6588 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6684 "ansi_c_y.tab.cpp"
     break;
 
   case 460:
-#line 2523 "parser.y" /* yacc.c:1646  */
-    {
-          init((yyval), irep_idt());
-          mto((yyval), (yyvsp[0]));
+#line 2523 "parser.y"
+        {
+          init(yyval, irep_idt());
+          mto(yyval, yyvsp[0]);
         }
-#line 6597 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6693 "ansi_c_y.tab.cpp"
     break;
 
   case 461:
-#line 2528 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-2]);
-          mto((yyval), (yyvsp[0]));
+#line 2528 "parser.y"
+        {
+          yyval=yyvsp[-2];
+          mto(yyval, yyvsp[0]);
         }
-#line 6606 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6702 "ansi_c_y.tab.cpp"
     break;
 
   case 462:
-#line 2536 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[0]);
+#line 2536 "parser.y"
+        {
+          yyval=yyvsp[0];
         }
-#line 6614 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6710 "ansi_c_y.tab.cpp"
     break;
 
   case 464:
-#line 2544 "parser.y" /* yacc.c:1646  */
-    {
-          init((yyval), ID_gcc_asm_clobbered_register);
-          mto((yyval), (yyvsp[0]));
+#line 2544 "parser.y"
+        {
+          init(yyval, ID_gcc_asm_clobbered_register);
+          mto(yyval, yyvsp[0]);
         }
-#line 6623 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6719 "ansi_c_y.tab.cpp"
     break;
 
   case 465:
-#line 2552 "parser.y" /* yacc.c:1646  */
-    {
-          init((yyval), irep_idt());
-          mto((yyval), (yyvsp[0]));
+#line 2552 "parser.y"
+        {
+          init(yyval, irep_idt());
+          mto(yyval, yyvsp[0]);
         }
-#line 6632 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6728 "ansi_c_y.tab.cpp"
     break;
 
   case 466:
-#line 2557 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-2]);
-          mto((yyval), (yyvsp[0]));
+#line 2557 "parser.y"
+        {
+          yyval=yyvsp[-2];
+          mto(yyval, yyvsp[0]);
         }
-#line 6641 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6737 "ansi_c_y.tab.cpp"
     break;
 
   case 467:
-#line 2565 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[0]);
+#line 2565 "parser.y"
+        {
+          yyval=yyvsp[0];
         }
-#line 6649 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6745 "ansi_c_y.tab.cpp"
     break;
 
   case 469:
-#line 2573 "parser.y" /* yacc.c:1646  */
-    {
-          init((yyval));
-          mto((yyval), (yyvsp[0]));
+#line 2573 "parser.y"
+        {
+          init(yyval);
+          mto(yyval, yyvsp[0]);
         }
-#line 6658 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6754 "ansi_c_y.tab.cpp"
     break;
 
   case 470:
-#line 2578 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-2]);
-          mto((yyval), (yyvsp[0]));
+#line 2578 "parser.y"
+        {
+          yyval=yyvsp[-2];
+          mto(yyval, yyvsp[0]);
         }
-#line 6667 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6763 "ansi_c_y.tab.cpp"
     break;
 
   case 471:
-#line 2586 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[0]);
-          irep_idt identifier=PARSER.lookup_label(stack((yyval)).get(ID_C_base_name));
-          stack((yyval)).id(ID_label);
-          stack((yyval)).set(ID_identifier, identifier);
+#line 2586 "parser.y"
+        {
+          yyval=yyvsp[0];
+          irep_idt identifier=PARSER.lookup_label(stack(yyval).get(ID_C_base_name));
+          stack(yyval).id(ID_label);
+          stack(yyval).set(ID_identifier, identifier);
         }
-#line 6678 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6774 "ansi_c_y.tab.cpp"
     break;
 
   case 476:
-#line 2605 "parser.y" /* yacc.c:1646  */
-    {
+#line 2605 "parser.y"
+        {
           // put into global list of items
-          PARSER.copy_item(to_ansi_c_declaration(stack((yyvsp[0]))));
+          PARSER.copy_item(to_ansi_c_declaration(stack(yyvsp[0])));
         }
-#line 6687 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6783 "ansi_c_y.tab.cpp"
     break;
 
   case 477:
-#line 2610 "parser.y" /* yacc.c:1646  */
-    {
-          PARSER.copy_item(to_ansi_c_declaration(stack((yyvsp[0]))));
+#line 2610 "parser.y"
+        {
+          PARSER.copy_item(to_ansi_c_declaration(stack(yyvsp[0])));
         }
-#line 6695 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6791 "ansi_c_y.tab.cpp"
     break;
 
   case 480:
-#line 2619 "parser.y" /* yacc.c:1646  */
-    {
+#line 2619 "parser.y"
+        {
           // Not obvious what to do with this.
         }
-#line 6703 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6799 "ansi_c_y.tab.cpp"
     break;
 
   case 481:
-#line 2627 "parser.y" /* yacc.c:1646  */
-    {
+#line 2627 "parser.y"
+        {
           // The head is a declaration with one declarator,
           // and the body becomes the 'value'.
-          (yyval)=(yyvsp[-1]);
+          yyval=yyvsp[-1];
           ansi_c_declarationt &ansi_c_declaration=
-            to_ansi_c_declaration(stack((yyval)));
+            to_ansi_c_declaration(stack(yyval));
             
           assert(ansi_c_declaration.declarators().size()==1);
-          ansi_c_declaration.add_initializer(stack((yyvsp[0])));
+          ansi_c_declaration.add_initializer(stack(yyvsp[0]));
           
           // Kill the scope that 'function_head' creates.
           PARSER.pop_scope();
@@ -6720,739 +6816,740 @@ yyreduce:
           // We are no longer in any function.
           PARSER.set_function(irep_idt());
         }
-#line 6724 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6820 "ansi_c_y.tab.cpp"
     break;
 
   case 483:
-#line 2651 "parser.y" /* yacc.c:1646  */
-    {
-          init((yyval));
+#line 2651 "parser.y"
+        {
+          init(yyval);
         }
-#line 6732 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6828 "ansi_c_y.tab.cpp"
     break;
 
   case 485:
-#line 2659 "parser.y" /* yacc.c:1646  */
-    {
-          init((yyval), ID_decl_block);
-          mto((yyval), (yyvsp[0]));
+#line 2659 "parser.y"
+        {
+          init(yyval, ID_decl_block);
+          mto(yyval, yyvsp[0]);
         }
-#line 6741 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6837 "ansi_c_y.tab.cpp"
     break;
 
   case 486:
-#line 2664 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-1]);
-          mto((yyval), (yyvsp[0]));
+#line 2664 "parser.y"
+        {
+          yyval=yyvsp[-1];
+          mto(yyval, yyvsp[0]);
         }
-#line 6750 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6846 "ansi_c_y.tab.cpp"
     break;
 
   case 489:
-#line 2678 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=merge((yyvsp[0]), (yyvsp[-1]));
+#line 2678 "parser.y"
+        {
+          yyval=merge(yyvsp[0], yyvsp[-1]);
         }
-#line 6758 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6854 "ansi_c_y.tab.cpp"
     break;
 
   case 490:
-#line 2682 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=merge((yyvsp[0]), (yyvsp[-1]));
+#line 2682 "parser.y"
+        {
+          yyval=merge(yyvsp[0], yyvsp[-1]);
         }
-#line 6766 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6862 "ansi_c_y.tab.cpp"
     break;
 
   case 491:
-#line 2689 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=merge((yyvsp[-2]), merge((yyvsp[-1]), (yyvsp[0])));
+#line 2689 "parser.y"
+        {
+          yyval=merge(yyvsp[-2], merge(yyvsp[-1], yyvsp[0]));
         }
-#line 6774 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6870 "ansi_c_y.tab.cpp"
     break;
 
   case 492:
-#line 2693 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=merge((yyvsp[-2]), merge((yyvsp[-1]), (yyvsp[0])));
+#line 2693 "parser.y"
+        {
+          yyval=merge(yyvsp[-2], merge(yyvsp[-1], yyvsp[0]));
         }
-#line 6782 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6878 "ansi_c_y.tab.cpp"
     break;
 
   case 493:
-#line 2697 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=merge((yyvsp[-2]), merge((yyvsp[-1]), (yyvsp[0])));
+#line 2697 "parser.y"
+        {
+          yyval=merge(yyvsp[-2], merge(yyvsp[-1], yyvsp[0]));
         }
-#line 6790 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6886 "ansi_c_y.tab.cpp"
     break;
 
   case 494:
-#line 2701 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=merge((yyvsp[-2]), merge((yyvsp[-1]), (yyvsp[0])));
+#line 2701 "parser.y"
+        {
+          yyval=merge(yyvsp[-2], merge(yyvsp[-1], yyvsp[0]));
         }
-#line 6798 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6894 "ansi_c_y.tab.cpp"
     break;
 
   case 495:
-#line 2709 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=merge((yyvsp[-2]), merge((yyvsp[-1]), (yyvsp[0])));
+#line 2709 "parser.y"
+        {
+          yyval=merge(yyvsp[-2], merge(yyvsp[-1], yyvsp[0]));
         }
-#line 6806 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6902 "ansi_c_y.tab.cpp"
     break;
 
   case 496:
-#line 2713 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=merge((yyvsp[-2]), merge((yyvsp[-1]), (yyvsp[0])));
+#line 2713 "parser.y"
+        {
+          yyval=merge(yyvsp[-2], merge(yyvsp[-1], yyvsp[0]));
         }
-#line 6814 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6910 "ansi_c_y.tab.cpp"
     break;
 
   case 497:
-#line 2717 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=merge((yyvsp[-2]), merge((yyvsp[-1]), (yyvsp[0])));
+#line 2717 "parser.y"
+        {
+          yyval=merge(yyvsp[-2], merge(yyvsp[-1], yyvsp[0]));
         }
-#line 6822 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6918 "ansi_c_y.tab.cpp"
     break;
 
   case 498:
-#line 2725 "parser.y" /* yacc.c:1646  */
-    {
-          stack((yyvsp[-2])).set(ID_tag, stack((yyvsp[-1])));
-          (yyval)=merge((yyvsp[-3]), merge((yyvsp[-2]), (yyvsp[0])));
+#line 2725 "parser.y"
+        {
+          stack(yyvsp[-2]).set(ID_tag, stack(yyvsp[-1]));
+          yyval=merge(yyvsp[-3], merge(yyvsp[-2], yyvsp[0]));
         }
-#line 6831 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6927 "ansi_c_y.tab.cpp"
     break;
 
   case 499:
-#line 2730 "parser.y" /* yacc.c:1646  */
-    {
-          stack((yyvsp[-2])).id(ID_c_enum_tag);
-          stack((yyvsp[-2])).set(ID_tag, stack((yyvsp[-1])));
-          (yyval)=merge((yyvsp[-3]), merge((yyvsp[-2]), (yyvsp[0])));
+#line 2730 "parser.y"
+        {
+          stack(yyvsp[-2]).id(ID_c_enum_tag);
+          stack(yyvsp[-2]).set(ID_tag, stack(yyvsp[-1]));
+          yyval=merge(yyvsp[-3], merge(yyvsp[-2], yyvsp[0]));
         }
-#line 6841 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6937 "ansi_c_y.tab.cpp"
     break;
 
   case 503:
-#line 2746 "parser.y" /* yacc.c:1646  */
-    {
-          init((yyval), ID_declaration);
-          stack((yyval)).type().swap(stack((yyvsp[-1])));
-          PARSER.add_declarator(stack((yyval)), stack((yyvsp[0])));
+#line 2746 "parser.y"
+        {
+          init(yyval, ID_declaration);
+          stack(yyval).type().swap(stack(yyvsp[-1]));
+          PARSER.add_declarator(stack(yyval), stack(yyvsp[0]));
         }
-#line 6851 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6947 "ansi_c_y.tab.cpp"
     break;
 
   case 504:
-#line 2752 "parser.y" /* yacc.c:1646  */
-    {
-          init((yyval), ID_declaration);
-          stack((yyval)).type().swap(stack((yyvsp[-1])));
-          PARSER.add_declarator(stack((yyval)), stack((yyvsp[0])));
+#line 2752 "parser.y"
+        {
+          init(yyval, ID_declaration);
+          stack(yyval).type().swap(stack(yyvsp[-1]));
+          PARSER.add_declarator(stack(yyval), stack(yyvsp[0]));
         }
-#line 6861 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6957 "ansi_c_y.tab.cpp"
     break;
 
   case 505:
-#line 2758 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-2]);
-          PARSER.add_declarator(stack((yyval)), stack((yyvsp[0])));
+#line 2758 "parser.y"
+        {
+          yyval=yyvsp[-2];
+          PARSER.add_declarator(stack(yyval), stack(yyvsp[0]));
         }
-#line 6870 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6966 "ansi_c_y.tab.cpp"
     break;
 
   case 506:
-#line 2766 "parser.y" /* yacc.c:1646  */
-    {
-          init((yyval), ID_declaration);
+#line 2766 "parser.y"
+        {
+          init(yyval, ID_declaration);
           irept return_type(ID_int);
-          stack((yyval)).type().swap(return_type);
-          PARSER.add_declarator(stack((yyval)), stack((yyvsp[0])));
-          create_function_scope((yyval));
+          stack(yyval).type().swap(return_type);
+          PARSER.add_declarator(stack(yyval), stack(yyvsp[0]));
+          create_function_scope(yyval);
         }
-#line 6882 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6978 "ansi_c_y.tab.cpp"
     break;
 
   case 507:
-#line 2774 "parser.y" /* yacc.c:1646  */
-    {
-          init((yyval), ID_declaration);
-          stack((yyval)).type().swap(stack((yyvsp[-1])));
-          PARSER.add_declarator(stack((yyval)), stack((yyvsp[0])));
-          create_function_scope((yyval));
+#line 2774 "parser.y"
+        {
+          init(yyval, ID_declaration);
+          stack(yyval).type().swap(stack(yyvsp[-1]));
+          PARSER.add_declarator(stack(yyval), stack(yyvsp[0]));
+          create_function_scope(yyval);
         }
-#line 6893 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 6989 "ansi_c_y.tab.cpp"
     break;
 
   case 508:
-#line 2781 "parser.y" /* yacc.c:1646  */
-    {
-          init((yyval), ID_declaration);
-          stack((yyval)).type().swap(stack((yyvsp[-1])));
-          PARSER.add_declarator(stack((yyval)), stack((yyvsp[0])));
-          create_function_scope((yyval));
+#line 2781 "parser.y"
+        {
+          init(yyval, ID_declaration);
+          stack(yyval).type().swap(stack(yyvsp[-1]));
+          PARSER.add_declarator(stack(yyval), stack(yyvsp[0]));
+          create_function_scope(yyval);
         }
-#line 6904 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 7000 "ansi_c_y.tab.cpp"
     break;
 
   case 509:
-#line 2788 "parser.y" /* yacc.c:1646  */
-    {
-          init((yyval), ID_declaration);
-          stack((yyval)).type().swap(stack((yyvsp[-1])));
-          PARSER.add_declarator(stack((yyval)), stack((yyvsp[0])));
-          create_function_scope((yyval));
+#line 2788 "parser.y"
+        {
+          init(yyval, ID_declaration);
+          stack(yyval).type().swap(stack(yyvsp[-1]));
+          PARSER.add_declarator(stack(yyval), stack(yyvsp[0]));
+          create_function_scope(yyval);
         }
-#line 6915 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 7011 "ansi_c_y.tab.cpp"
     break;
 
   case 510:
-#line 2795 "parser.y" /* yacc.c:1646  */
-    {
-          init((yyval), ID_declaration);
-          stack((yyval)).type().swap(stack((yyvsp[-1])));
-          PARSER.add_declarator(stack((yyval)), stack((yyvsp[0])));
-          create_function_scope((yyval));
+#line 2795 "parser.y"
+        {
+          init(yyval, ID_declaration);
+          stack(yyval).type().swap(stack(yyvsp[-1]));
+          PARSER.add_declarator(stack(yyval), stack(yyvsp[0]));
+          create_function_scope(yyval);
         }
-#line 6926 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 7022 "ansi_c_y.tab.cpp"
     break;
 
   case 516:
-#line 2816 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-1]);
-          make_subtype((yyval), (yyvsp[0]));
+#line 2816 "parser.y"
+        {
+          yyval=yyvsp[-1];
+          make_subtype(yyval, yyvsp[0]);
         }
-#line 6935 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 7031 "ansi_c_y.tab.cpp"
     break;
 
   case 519:
-#line 2826 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[0]);
-          do_pointer((yyvsp[-1]), (yyvsp[0]));
+#line 2826 "parser.y"
+        {
+          yyval=yyvsp[0];
+          do_pointer(yyvsp[-1], yyvsp[0]);
         }
-#line 6944 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 7040 "ansi_c_y.tab.cpp"
     break;
 
   case 520:
-#line 2831 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=merge((yyvsp[-1]), (yyvsp[0]));
-          do_pointer((yyvsp[-2]), (yyvsp[-1]));
+#line 2831 "parser.y"
+        {
+          yyval=merge(yyvsp[-1], yyvsp[0]);
+          do_pointer(yyvsp[-2], yyvsp[-1]);
         }
-#line 6953 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 7049 "ansi_c_y.tab.cpp"
     break;
 
   case 521:
-#line 2839 "parser.y" /* yacc.c:1646  */
-    { (yyval) = (yyvsp[-1]); }
-#line 6959 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 2839 "parser.y"
+        { yyval = yyvsp[-1]; }
+#line 7055 "ansi_c_y.tab.cpp"
     break;
 
   case 522:
-#line 2841 "parser.y" /* yacc.c:1646  */
-    {
+#line 2841 "parser.y"
+        {
           /* note: this is a pointer ($2) to a function ($4) */
           /* or an array ($4)! */
-          (yyval)=(yyvsp[-2]);
-          make_subtype((yyval), (yyvsp[0]));
+          yyval=yyvsp[-2];
+          make_subtype(yyval, yyvsp[0]);
         }
-#line 6970 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 7066 "ansi_c_y.tab.cpp"
     break;
 
   case 524:
-#line 2852 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-1]);
-          do_pointer((yyvsp[-3]), (yyvsp[-1]));
+#line 2852 "parser.y"
+        {
+          yyval=yyvsp[-1];
+          do_pointer(yyvsp[-3], yyvsp[-1]);
         }
-#line 6979 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 7075 "ansi_c_y.tab.cpp"
     break;
 
   case 525:
-#line 2857 "parser.y" /* yacc.c:1646  */
-    {
+#line 2857 "parser.y"
+        {
           // not sure where the type qualifiers belong
-          (yyval)=merge((yyvsp[-3]), (yyvsp[-1]));
-          do_pointer((yyvsp[-4]), (yyvsp[-3]));
+          yyval=merge(yyvsp[-3], yyvsp[-1]);
+          do_pointer(yyvsp[-4], yyvsp[-3]);
         }
-#line 6989 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 7085 "ansi_c_y.tab.cpp"
     break;
 
   case 526:
-#line 2863 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[0]);
-          do_pointer((yyvsp[-1]), (yyvsp[0]));
+#line 2863 "parser.y"
+        {
+          yyval=yyvsp[0];
+          do_pointer(yyvsp[-1], yyvsp[0]);
         }
-#line 6998 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 7094 "ansi_c_y.tab.cpp"
     break;
 
   case 527:
-#line 2868 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=merge((yyvsp[-1]), (yyvsp[0]));
-          do_pointer((yyvsp[-2]), (yyvsp[-1]));
+#line 2868 "parser.y"
+        {
+          yyval=merge(yyvsp[-1], yyvsp[0]);
+          do_pointer(yyvsp[-2], yyvsp[-1]);
         }
-#line 7007 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 7103 "ansi_c_y.tab.cpp"
     break;
 
   case 528:
-#line 2876 "parser.y" /* yacc.c:1646  */
-    { (yyval) = (yyvsp[-1]); }
-#line 7013 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 2876 "parser.y"
+        { yyval = yyvsp[-1]; }
+#line 7109 "ansi_c_y.tab.cpp"
     break;
 
   case 529:
-#line 2878 "parser.y" /* yacc.c:1646  */
-    {        /* note: this is a function ($3) with a typedef name ($2) */
-          (yyval)=(yyvsp[-2]);
-          make_subtype((yyval), (yyvsp[-1]));
+#line 2878 "parser.y"
+        {        /* note: this is a function ($3) with a typedef name ($2) */
+          yyval=yyvsp[-2];
+          make_subtype(yyval, yyvsp[-1]);
         }
-#line 7022 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 7118 "ansi_c_y.tab.cpp"
     break;
 
   case 530:
-#line 2883 "parser.y" /* yacc.c:1646  */
-    {
+#line 2883 "parser.y"
+        {
           /* note: this is a pointer ($2) to a function ($4) */
           /* or an array ($4)! */
-          (yyval)=(yyvsp[-2]);
-          make_subtype((yyval), (yyvsp[0]));
+          yyval=yyvsp[-2];
+          make_subtype(yyval, yyvsp[0]);
         }
-#line 7033 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 7129 "ansi_c_y.tab.cpp"
     break;
 
   case 532:
-#line 2894 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[-1]); }
-#line 7039 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 2894 "parser.y"
+        { yyval=yyvsp[-1]; }
+#line 7135 "ansi_c_y.tab.cpp"
     break;
 
   case 536:
-#line 2905 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[0]);
-          do_pointer((yyvsp[-1]), (yyvsp[0]));
+#line 2905 "parser.y"
+        {
+          yyval=yyvsp[0];
+          do_pointer(yyvsp[-1], yyvsp[0]);
         }
-#line 7048 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 7144 "ansi_c_y.tab.cpp"
     break;
 
   case 537:
-#line 2910 "parser.y" /* yacc.c:1646  */
-    {
+#line 2910 "parser.y"
+        {
           // This is an Apple extension to C/C++/Objective C.
           // http://en.wikipedia.org/wiki/Blocks_(C_language_extension)
-          (yyval)=(yyvsp[0]);
-          do_pointer((yyvsp[-1]), (yyvsp[0]));
+          yyval=yyvsp[0];
+          do_pointer(yyvsp[-1], yyvsp[0]);
         }
-#line 7059 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 7155 "ansi_c_y.tab.cpp"
     break;
 
   case 538:
-#line 2917 "parser.y" /* yacc.c:1646  */
-    {
+#line 2917 "parser.y"
+        {
           // the type_qualifier_list is for the pointer,
           // and not the identifier_declarator
-          stack_type((yyvsp[-2])).id(ID_pointer);
-          stack_type((yyvsp[-2])).subtype()=typet(ID_abstract);
-          (yyvsp[-1])=merge((yyvsp[-1]), (yyvsp[-2])); // dest=$2
-          make_subtype((yyvsp[0]), (yyvsp[-1])); // dest=$3
-          (yyval)=(yyvsp[0]);
+          stack_type(yyvsp[-2]).id(ID_pointer);
+          stack_type(yyvsp[-2]).subtype()=typet(ID_abstract);
+          yyvsp[-1]=merge(yyvsp[-1], yyvsp[-2]); // dest=$2
+          make_subtype(yyvsp[0], yyvsp[-1]); // dest=$3
+          yyval=yyvsp[0];
         }
-#line 7073 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 7169 "ansi_c_y.tab.cpp"
     break;
 
   case 539:
-#line 2930 "parser.y" /* yacc.c:1646  */
-    {
+#line 2930 "parser.y"
+        {
           /* note: this is a function or array ($2) with name ($1) */
-          (yyval)=(yyvsp[-1]);
-          make_subtype((yyval), (yyvsp[0]));
+          yyval=yyvsp[-1];
+          make_subtype(yyval, yyvsp[0]);
         }
-#line 7083 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 7179 "ansi_c_y.tab.cpp"
     break;
 
   case 540:
-#line 2936 "parser.y" /* yacc.c:1646  */
-    { (yyval) = (yyvsp[-1]); }
-#line 7089 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 2936 "parser.y"
+        { yyval = yyvsp[-1]; }
+#line 7185 "ansi_c_y.tab.cpp"
     break;
 
   case 541:
-#line 2938 "parser.y" /* yacc.c:1646  */
-    {
+#line 2938 "parser.y"
+        {
           /* note: this is a pointer ($2) to a function ($4) */
           /* or an array ($4)! */
-          (yyval)=(yyvsp[-2]);
-          make_subtype((yyval), (yyvsp[0]));
+          yyval=yyvsp[-2];
+          make_subtype(yyval, yyvsp[0]);
         }
-#line 7100 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 7196 "ansi_c_y.tab.cpp"
     break;
 
   case 542:
-#line 2948 "parser.y" /* yacc.c:1646  */
-    {
+#line 2948 "parser.y"
+        {
           // We remember the last declarator for the benefit
           // of function argument scoping.
           PARSER.current_scope().last_declarator=
-            stack((yyvsp[0])).get(ID_identifier);
+            stack(yyvsp[0]).get(ID_identifier);
         }
-#line 7111 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 7207 "ansi_c_y.tab.cpp"
     break;
 
   case 543:
-#line 2955 "parser.y" /* yacc.c:1646  */
-    { (yyval)=(yyvsp[-1]); }
-#line 7117 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 2955 "parser.y"
+        { yyval=yyvsp[-1]; }
+#line 7213 "ansi_c_y.tab.cpp"
     break;
 
   case 550:
-#line 2975 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-2]);
-          set((yyval), ID_code);
-          stack_type((yyval)).subtype()=typet(ID_abstract);
-          stack_type((yyval)).add(ID_parameters);
-          stack_type((yyval)).set(ID_C_KnR, true);
+#line 2975 "parser.y"
+        {
+          yyval=yyvsp[-2];
+          set(yyval, ID_code);
+          stack_type(yyval).subtype()=typet(ID_abstract);
+          stack_type(yyval).add(ID_parameters);
+          stack_type(yyval).set(ID_C_KnR, true);
         }
-#line 7129 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 7225 "ansi_c_y.tab.cpp"
     break;
 
   case 551:
-#line 2983 "parser.y" /* yacc.c:1646  */
-    {
+#line 2983 "parser.y"
+          {
             // Use last declarator (i.e., function name) to name
             // the scope.
             PARSER.new_scope(
               id2string(PARSER.current_scope().last_declarator)+"::");
           }
-#line 7140 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 7236 "ansi_c_y.tab.cpp"
     break;
 
   case 552:
-#line 2992 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-4]);
-          set((yyval), ID_code);
-          stack_type((yyval)).subtype()=typet(ID_abstract);
-          stack_type((yyval)).add(ID_parameters).get_sub().
-            swap((irept::subt &)(stack_type((yyvsp[-2])).subtypes()));
+#line 2992 "parser.y"
+        {
+          yyval=yyvsp[-4];
+          set(yyval, ID_code);
+          stack_type(yyval).subtype()=typet(ID_abstract);
+          stack_type(yyval).add(ID_parameters).get_sub().
+            swap((irept::subt &)(stack_type(yyvsp[-2]).subtypes()));
           PARSER.pop_scope();
-          adjust_KnR_parameters(stack((yyval)).add(ID_parameters), stack((yyvsp[0])));
-          stack((yyval)).set(ID_C_KnR, true);
+          adjust_KnR_parameters(stack(yyval).add(ID_parameters), stack(yyvsp[0]));
+          stack(yyval).set(ID_C_KnR, true);
         }
-#line 7155 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 7251 "ansi_c_y.tab.cpp"
     break;
 
   case 554:
-#line 3007 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-1]);
-          set((yyval), ID_code);
-          stack_type((yyval)).add(ID_parameters);
-          stack_type((yyval)).subtype()=typet(ID_abstract);
+#line 3007 "parser.y"
+        {
+          yyval=yyvsp[-1];
+          set(yyval, ID_code);
+          stack_type(yyval).add(ID_parameters);
+          stack_type(yyval).subtype()=typet(ID_abstract);
         }
-#line 7166 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 7262 "ansi_c_y.tab.cpp"
     break;
 
   case 555:
-#line 3014 "parser.y" /* yacc.c:1646  */
-    {
+#line 3014 "parser.y"
+          {
             // Use last declarator (i.e., function name) to name
             // the scope.
             PARSER.new_scope(
               id2string(PARSER.current_scope().last_declarator)+"::");
           }
-#line 7177 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 7273 "ansi_c_y.tab.cpp"
     break;
 
   case 556:
-#line 3022 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-3]);
-          set((yyval), ID_code);
-          stack_type((yyval)).subtype()=typet(ID_abstract);
-          stack_type((yyval)).add(ID_parameters).get_sub().
-            swap((irept::subt &)(stack_type((yyvsp[-1])).subtypes()));
+#line 3022 "parser.y"
+        {
+          yyval=yyvsp[-3];
+          set(yyval, ID_code);
+          stack_type(yyval).subtype()=typet(ID_abstract);
+          stack_type(yyval).add(ID_parameters).get_sub().
+            swap((irept::subt &)(stack_type(yyvsp[-1]).subtypes()));
           PARSER.pop_scope();
         }
-#line 7190 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 7286 "ansi_c_y.tab.cpp"
     break;
 
   case 557:
-#line 3034 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-1]);
-          set((yyval), ID_array);
-          stack_type((yyval)).subtype()=typet(ID_abstract);
-          stack_type((yyval)).add(ID_size).make_nil();
+#line 3034 "parser.y"
+        {
+          yyval=yyvsp[-1];
+          set(yyval, ID_array);
+          stack_type(yyval).subtype()=typet(ID_abstract);
+          stack_type(yyval).add(ID_size).make_nil();
         }
-#line 7201 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 7297 "ansi_c_y.tab.cpp"
     break;
 
   case 558:
-#line 3041 "parser.y" /* yacc.c:1646  */
-    {
+#line 3041 "parser.y"
+        {
           // this is C99: e.g., restrict, const, etc
           // The type qualifier belongs to the array, not the
           // contents of the array, nor the size.
-          set((yyvsp[-2]), ID_array);
-          stack_type((yyvsp[-2])).subtype()=typet(ID_abstract);
-          stack_type((yyvsp[-2])).add(ID_size).make_nil();
-          (yyval)=merge((yyvsp[-1]), (yyvsp[-2]));
+          set(yyvsp[-2], ID_array);
+          stack_type(yyvsp[-2]).subtype()=typet(ID_abstract);
+          stack_type(yyvsp[-2]).add(ID_size).make_nil();
+          yyval=merge(yyvsp[-1], yyvsp[-2]);
         }
-#line 7215 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 7311 "ansi_c_y.tab.cpp"
     break;
 
   case 559:
-#line 3051 "parser.y" /* yacc.c:1646  */
-    {
+#line 3051 "parser.y"
+        {
           // these should be allowed in prototypes only
-          (yyval)=(yyvsp[-2]);
-          set((yyval), ID_array);
-          stack_type((yyval)).subtype()=typet(ID_abstract);
-          stack_type((yyval)).add(ID_size).make_nil();
+          yyval=yyvsp[-2];
+          set(yyval, ID_array);
+          stack_type(yyval).subtype()=typet(ID_abstract);
+          stack_type(yyval).add(ID_size).make_nil();
         }
-#line 7227 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 7323 "ansi_c_y.tab.cpp"
     break;
 
   case 560:
-#line 3059 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[-2]);
-          set((yyval), ID_array);
-          stack_type((yyval)).add(ID_size).swap(stack((yyvsp[-1])));
-          stack_type((yyval)).subtype()=typet(ID_abstract);
+#line 3059 "parser.y"
+        {
+          yyval=yyvsp[-2];
+          set(yyval, ID_array);
+          stack_type(yyval).add(ID_size).swap(stack(yyvsp[-1]));
+          stack_type(yyval).subtype()=typet(ID_abstract);
         }
-#line 7238 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 7334 "ansi_c_y.tab.cpp"
     break;
 
   case 561:
-#line 3066 "parser.y" /* yacc.c:1646  */
-    {
+#line 3066 "parser.y"
+        {
           // The type qualifier belongs to the array, not the
           // contents of the array, nor the size.
-          set((yyvsp[-3]), ID_array);
-          stack_type((yyvsp[-3])).add(ID_size).swap(stack((yyvsp[-1])));
-          stack_type((yyvsp[-3])).subtype()=typet(ID_abstract);
-          (yyval)=merge((yyvsp[-2]), (yyvsp[-3])); // dest=$2
+          set(yyvsp[-3], ID_array);
+          stack_type(yyvsp[-3]).add(ID_size).swap(stack(yyvsp[-1]));
+          stack_type(yyvsp[-3]).subtype()=typet(ID_abstract);
+          yyval=merge(yyvsp[-2], yyvsp[-3]); // dest=$2
         }
-#line 7251 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 7347 "ansi_c_y.tab.cpp"
     break;
 
   case 562:
-#line 3075 "parser.y" /* yacc.c:1646  */
-    {
+#line 3075 "parser.y"
+        {
           // we need to push this down
-          (yyval)=(yyvsp[-3]);
-          set((yyvsp[-2]), ID_array);
-          stack_type((yyvsp[-2])).add(ID_size).swap(stack((yyvsp[-1])));
-          stack_type((yyvsp[-2])).subtype()=typet(ID_abstract);
-          make_subtype((yyvsp[-3]), (yyvsp[-2]));
+          yyval=yyvsp[-3];
+          set(yyvsp[-2], ID_array);
+          stack_type(yyvsp[-2]).add(ID_size).swap(stack(yyvsp[-1]));
+          stack_type(yyvsp[-2]).subtype()=typet(ID_abstract);
+          make_subtype(yyvsp[-3], yyvsp[-2]);
         }
-#line 7264 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 7360 "ansi_c_y.tab.cpp"
     break;
 
   case 563:
-#line 3084 "parser.y" /* yacc.c:1646  */
-    {
+#line 3084 "parser.y"
+        {
           // these should be allowed in prototypes only
           // we need to push this down
-          (yyval)=(yyvsp[-3]);
-          set((yyvsp[-2]), ID_array);
-          stack_type((yyvsp[-2])).add(ID_size).make_nil();
-          stack_type((yyvsp[-2])).subtype()=typet(ID_abstract);
-          make_subtype((yyvsp[-3]), (yyvsp[-2]));
+          yyval=yyvsp[-3];
+          set(yyvsp[-2], ID_array);
+          stack_type(yyvsp[-2]).add(ID_size).make_nil();
+          stack_type(yyvsp[-2]).subtype()=typet(ID_abstract);
+          make_subtype(yyvsp[-3], yyvsp[-2]);
         }
-#line 7278 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 7374 "ansi_c_y.tab.cpp"
     break;
 
   case 564:
-#line 3097 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[0]);
-          set((yyval), ID_pointer);
-          stack_type((yyval)).subtype()=typet(ID_abstract);
+#line 3097 "parser.y"
+        {
+          yyval=yyvsp[0];
+          set(yyval, ID_pointer);
+          stack_type(yyval).subtype()=typet(ID_abstract);
         }
-#line 7288 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 7384 "ansi_c_y.tab.cpp"
     break;
 
   case 565:
-#line 3103 "parser.y" /* yacc.c:1646  */
-    {
+#line 3103 "parser.y"
+        {
           // The type_qualifier_list belongs to the pointer,
           // not to the (missing) abstract declarator.
-          set((yyvsp[-1]), ID_pointer);
-          stack_type((yyvsp[-1])).subtype()=typet(ID_abstract);
-          (yyval)=merge((yyvsp[0]), (yyvsp[-1]));
+          set(yyvsp[-1], ID_pointer);
+          stack_type(yyvsp[-1]).subtype()=typet(ID_abstract);
+          yyval=merge(yyvsp[0], yyvsp[-1]);
         }
-#line 7300 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 7396 "ansi_c_y.tab.cpp"
     break;
 
   case 566:
-#line 3111 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[0]);
-          do_pointer((yyvsp[-1]), (yyvsp[0]));
+#line 3111 "parser.y"
+        {
+          yyval=yyvsp[0];
+          do_pointer(yyvsp[-1], yyvsp[0]);
         }
-#line 7309 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 7405 "ansi_c_y.tab.cpp"
     break;
 
   case 567:
-#line 3116 "parser.y" /* yacc.c:1646  */
-    {
+#line 3116 "parser.y"
+        {
           // The type_qualifier_list belongs to the pointer,
           // not to the abstract declarator.
-          stack_type((yyvsp[-2])).id(ID_pointer);
-          stack_type((yyvsp[-2])).subtype()=typet(ID_abstract);
-          (yyvsp[-1])=merge((yyvsp[-1]), (yyvsp[-2])); // dest=$2
-          make_subtype((yyvsp[0]), (yyvsp[-1])); // dest=$3
-          (yyval)=(yyvsp[0]);
+          stack_type(yyvsp[-2]).id(ID_pointer);
+          stack_type(yyvsp[-2]).subtype()=typet(ID_abstract);
+          yyvsp[-1]=merge(yyvsp[-1], yyvsp[-2]); // dest=$2
+          make_subtype(yyvsp[0], yyvsp[-1]); // dest=$3
+          yyval=yyvsp[0];
         }
-#line 7323 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 7419 "ansi_c_y.tab.cpp"
     break;
 
   case 568:
-#line 3126 "parser.y" /* yacc.c:1646  */
-    {
+#line 3126 "parser.y"
+        {
           // This is an Apple extension to C/C++/Objective C.
           // http://en.wikipedia.org/wiki/Blocks_(C_language_extension)
-          (yyval)=(yyvsp[0]);
-          set((yyval), ID_block_pointer);
-          stack_type((yyval)).subtype()=typet(ID_abstract);
+          yyval=yyvsp[0];
+          set(yyval, ID_block_pointer);
+          stack_type(yyval).subtype()=typet(ID_abstract);
         }
-#line 7335 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 7431 "ansi_c_y.tab.cpp"
     break;
 
   case 569:
-#line 3137 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[0]);
-          set((yyval), ID_pointer);
-          stack_type((yyval)).subtype()=typet(ID_abstract);
+#line 3137 "parser.y"
+        {
+          yyval=yyvsp[0];
+          set(yyval, ID_pointer);
+          stack_type(yyval).subtype()=typet(ID_abstract);
         }
-#line 7345 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 7441 "ansi_c_y.tab.cpp"
     break;
 
   case 570:
-#line 3143 "parser.y" /* yacc.c:1646  */
-    {
+#line 3143 "parser.y"
+        {
           // The type_qualifier_list belongs to the pointer,
           // not to the (missing) abstract declarator.
-          set((yyvsp[-1]), ID_pointer);
-          stack_type((yyvsp[-1])).subtype()=typet(ID_abstract);
-          (yyval)=merge((yyvsp[0]), (yyvsp[-1]));
+          set(yyvsp[-1], ID_pointer);
+          stack_type(yyvsp[-1]).subtype()=typet(ID_abstract);
+          yyval=merge(yyvsp[0], yyvsp[-1]);
         }
-#line 7357 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 7453 "ansi_c_y.tab.cpp"
     break;
 
   case 571:
-#line 3151 "parser.y" /* yacc.c:1646  */
-    {
-          (yyval)=(yyvsp[0]);
-          do_pointer((yyvsp[-1]), (yyvsp[0]));
+#line 3151 "parser.y"
+        {
+          yyval=yyvsp[0];
+          do_pointer(yyvsp[-1], yyvsp[0]);
         }
-#line 7366 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 7462 "ansi_c_y.tab.cpp"
     break;
 
   case 572:
-#line 3156 "parser.y" /* yacc.c:1646  */
-    {
+#line 3156 "parser.y"
+        {
           // The type_qualifier_list belongs to the pointer,
           // not to the (missing) abstract declarator.
-          stack((yyvsp[-2])).id(ID_pointer);
-          stack_type((yyvsp[-2])).subtype()=typet(ID_abstract);
-          (yyvsp[-1])=merge((yyvsp[-1]), (yyvsp[-2])); // dest=$2
-          make_subtype((yyvsp[0]), (yyvsp[-1])); // dest=$3
-          (yyval)=(yyvsp[0]);
+          stack(yyvsp[-2]).id(ID_pointer);
+          stack_type(yyvsp[-2]).subtype()=typet(ID_abstract);
+          yyvsp[-1]=merge(yyvsp[-1], yyvsp[-2]); // dest=$2
+          make_subtype(yyvsp[0], yyvsp[-1]); // dest=$3
+          yyval=yyvsp[0];
         }
-#line 7380 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 7476 "ansi_c_y.tab.cpp"
     break;
 
   case 573:
-#line 3166 "parser.y" /* yacc.c:1646  */
-    {
+#line 3166 "parser.y"
+        {
           // This is an Apple extension to C/C++/Objective C.
           // http://en.wikipedia.org/wiki/Blocks_(C_language_extension)
-          (yyval)=(yyvsp[0]);
-          set((yyval), ID_block_pointer);
-          stack_type((yyval)).subtype()=typet(ID_abstract);
+          yyval=yyvsp[0];
+          set(yyval, ID_block_pointer);
+          stack_type(yyval).subtype()=typet(ID_abstract);
         }
-#line 7392 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 7488 "ansi_c_y.tab.cpp"
     break;
 
   case 574:
-#line 3177 "parser.y" /* yacc.c:1646  */
-    { (yyval) = (yyvsp[-1]); }
-#line 7398 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 3177 "parser.y"
+        { yyval = yyvsp[-1]; }
+#line 7494 "ansi_c_y.tab.cpp"
     break;
 
   case 575:
-#line 3179 "parser.y" /* yacc.c:1646  */
-    { (yyval) = (yyvsp[-1]); }
-#line 7404 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 3179 "parser.y"
+        { yyval = yyvsp[-1]; }
+#line 7500 "ansi_c_y.tab.cpp"
     break;
 
   case 576:
-#line 3181 "parser.y" /* yacc.c:1646  */
-    { (yyval) = (yyvsp[-1]); }
-#line 7410 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 3181 "parser.y"
+        { yyval = yyvsp[-1]; }
+#line 7506 "ansi_c_y.tab.cpp"
     break;
 
   case 577:
-#line 3183 "parser.y" /* yacc.c:1646  */
-    {
+#line 3183 "parser.y"
+        {
           /* note: this is a pointer ($2) to a function or array ($4) */
-          (yyval)=(yyvsp[-2]);
-          make_subtype((yyval), (yyvsp[0]));
+          yyval=yyvsp[-2];
+          make_subtype(yyval, yyvsp[0]);
         }
-#line 7420 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 7516 "ansi_c_y.tab.cpp"
     break;
 
   case 578:
-#line 3189 "parser.y" /* yacc.c:1646  */
-    {
+#line 3189 "parser.y"
+        {
           /* note: this is a pointer ($2) to a function or array ($4) */
-          (yyval)=(yyvsp[-2]);
-          make_subtype((yyval), (yyvsp[0]));
+          yyval=yyvsp[-2];
+          make_subtype(yyval, yyvsp[0]);
         }
-#line 7430 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 7526 "ansi_c_y.tab.cpp"
     break;
 
   case 579:
-#line 3198 "parser.y" /* yacc.c:1646  */
-    { (yyval) = (yyvsp[-1]); }
-#line 7436 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 3198 "parser.y"
+        { yyval = yyvsp[-1]; }
+#line 7532 "ansi_c_y.tab.cpp"
     break;
 
   case 580:
-#line 3200 "parser.y" /* yacc.c:1646  */
-    { (yyval) = (yyvsp[-1]); }
-#line 7442 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 3200 "parser.y"
+        { yyval = yyvsp[-1]; }
+#line 7538 "ansi_c_y.tab.cpp"
     break;
 
   case 582:
-#line 3203 "parser.y" /* yacc.c:1646  */
-    {
+#line 3203 "parser.y"
+        {
           /* note: this is a pointer ($2) to a function ($4) */
-          (yyval)=(yyvsp[-2]);
-          make_subtype((yyval), (yyvsp[0]));
+          yyval=yyvsp[-2];
+          make_subtype(yyval, yyvsp[0]);
         }
-#line 7452 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 7548 "ansi_c_y.tab.cpp"
     break;
 
 
-#line 7456 "ansi_c_y.tab.cpp" /* yacc.c:1646  */
+#line 7552 "ansi_c_y.tab.cpp"
+
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -7477,14 +7574,13 @@ yyreduce:
   /* Now 'shift' the result of the reduction.  Determine what state
      that goes to, based on the state we popped back to and the rule
      number reduced by.  */
-
-  yyn = yyr1[yyn];
-
-  yystate = yypgoto[yyn - YYNTOKENS] + *yyssp;
-  if (0 <= yystate && yystate <= YYLAST && yycheck[yystate] == *yyssp)
-    yystate = yytable[yystate];
-  else
-    yystate = yydefgoto[yyn - YYNTOKENS];
+  {
+    const int yylhs = yyr1[yyn] - YYNTOKENS;
+    const int yyi = yypgoto[yylhs] + *yyssp;
+    yystate = (0 <= yyi && yyi <= YYLAST && yycheck[yyi] == *yyssp
+               ? yytable[yyi]
+               : yydefgoto[yylhs]);
+  }
 
   goto yynewstate;
 
@@ -7516,7 +7612,7 @@ yyerrlab:
           {
             if (yymsg != yymsgbuf)
               YYSTACK_FREE (yymsg);
-            yymsg = (char *) YYSTACK_ALLOC (yymsg_alloc);
+            yymsg = YY_CAST (char *, YYSTACK_ALLOC (YY_CAST (YYSIZE_T, yymsg_alloc)));
             if (!yymsg)
               {
                 yymsg = yymsgbuf;
@@ -7567,12 +7663,10 @@ yyerrlab:
 | yyerrorlab -- error raised explicitly by YYERROR.  |
 `---------------------------------------------------*/
 yyerrorlab:
-
-  /* Pacify compilers like GCC when the user code never invokes
-     YYERROR and the label yyerrorlab therefore never appears in user
-     code.  */
-  if (/*CONSTCOND*/ 0)
-     goto yyerrorlab;
+  /* Pacify compilers when the user code never invokes YYERROR and the
+     label yyerrorlab therefore never appears in user code.  */
+  if (0)
+    YYERROR;
 
   /* Do not reclaim the symbols of the rule whose action triggered
      this YYERROR.  */
@@ -7634,12 +7728,14 @@ yyacceptlab:
   yyresult = 0;
   goto yyreturn;
 
+
 /*-----------------------------------.
 | yyabortlab -- YYABORT comes here.  |
 `-----------------------------------*/
 yyabortlab:
   yyresult = 1;
   goto yyreturn;
+
 
 #if !defined yyoverflow || YYERROR_VERBOSE
 /*-------------------------------------------------.
@@ -7651,6 +7747,10 @@ yyexhaustedlab:
   /* Fall through.  */
 #endif
 
+
+/*-----------------------------------------------------.
+| yyreturn -- parsing is finished, return the result.  |
+`-----------------------------------------------------*/
 yyreturn:
   if (yychar != YYEMPTY)
     {
@@ -7667,7 +7767,7 @@ yyreturn:
   while (yyssp != yyss)
     {
       yydestruct ("Cleanup: popping",
-                  yystos[*yyssp], yyvsp);
+                  yystos[+*yyssp], yyvsp);
       YYPOPSTACK (1);
     }
 #ifndef yyoverflow
@@ -7680,5 +7780,5 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 3210 "parser.y" /* yacc.c:1906  */
+#line 3210 "parser.y"
 
