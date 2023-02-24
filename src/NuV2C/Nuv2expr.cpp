@@ -482,7 +482,7 @@ bool verilog_exprt::do_conversion(code_blockt &code_verilogblock, const symbolt 
                 }
                 if (nondet == "clk")
                     continue;
-                nondet = nondet + " = nondet_" + typeString + "();\n";
+                nondet = nondet + " = __VERIFIER_nondet_" + typeString + "();\n";
                 if (symbol.base_name != top_name && sequential)
                     str_print << "    " << nondet;
                 else str_print << "  " << nondet;
