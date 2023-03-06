@@ -926,17 +926,17 @@ verilog_exprt::convert_expr(exprt &expression, unsigned char &saved_diff, dstrin
                 // find the size of the symbol
                 mp_integer width = pointer_offset_bits(rhs.type(), ns);
                 assert(width > 0);
-                if (rhs.id() != ID_constant && width > 1 && width != 8 && width != 16 && width != 32 && width != 128) {
-                    constant_exprt constant = from_integer(power(2, diff + 1) - 1, integer_typet());
-                    bitand_exprt andexpr(shlsym, constant);
-                    expr_concat.push_back(andexpr);
-                } else {
+//                if (rhs.id() != ID_constant && width > 1 && width != 8 && width != 16 && width != 32 && width != 128) {
+//                    constant_exprt constant = from_integer(power(2, diff + 1) - 1, integer_typet());
+//                    bitand_exprt andexpr(shlsym, constant);
+//                    expr_concat.push_back(andexpr);
+//                } else {
 //                    可能要删除常量0的位移? 其它地方也要改
 //                    if (rhs.id() == ID_constant && rhs.get_int(ID_value) == 0)
 //                        expr_concat.push_back(rhs);
 //                    else
                     expr_concat.push_back(shlsym);
-                }
+//                }
                 saved_diff = saved_diff + integer2unsigned(width);
             }
         } // end for
@@ -998,17 +998,17 @@ verilog_exprt::convert_expr(exprt &expression, unsigned char &saved_diff, dstrin
                 *it = convert_expr(*it, saved_diff);
             }
         }
-        if (expression.id() == ID_symbol) { //处理普通变量
-            if (expression.type().id() == ID_unsignedbv) {
-                int width = expression.type().get_int(ID_width);
-                if (width > 0 && width != 1 && width != 8 && width != 16 && width != 32 && width != 64 &&
-                    width != 128) {
-                    bitand_exprt band(expression,
-                                      from_integer(power(2, width) - 1, integer_typet()));
-                    expression = band;
-                }
-            }
-        }
+//        if (expression.id() == ID_symbol) { //处理普通变量
+//            if (expression.type().id() == ID_unsignedbv) {
+//                int width = expression.type().get_int(ID_width);
+//                if (width > 0 && width != 1 && width != 8 && width != 16 && width != 32 && width != 64 &&
+//                    width != 128) {
+//                    bitand_exprt band(expression,
+//                                      from_integer(power(2, width) - 1, integer_typet()));
+//                    expression = band;
+//                }
+//            }
+//        }
     }
     return expression;
 }
@@ -1099,17 +1099,17 @@ verilog_exprt::convert_expr_nb(exprt &expression, unsigned char &saved_diff, dst
                 // find the size of the symbol
                 mp_integer width = pointer_offset_bits(rhs.type(), ns);
                 assert(width > 0);
-                if (rhs.id() != ID_constant && width > 1 && width != 8 && width != 16 && width != 32 && width != 128) {
-                    constant_exprt constant = from_integer(power(2, diff + 1) - 1, integer_typet());
-                    bitand_exprt andexpr(shlsym, constant);
-                    expr_concat.push_back(andexpr);
-                } else {
+//                if (rhs.id() != ID_constant && width > 1 && width != 8 && width != 16 && width != 32 && width != 128) {
+//                    constant_exprt constant = from_integer(power(2, diff + 1) - 1, integer_typet());
+//                    bitand_exprt andexpr(shlsym, constant);
+//                    expr_concat.push_back(andexpr);
+//                } else {
 //                    可能要删除常量0的位移? 其它地方也要改
 //                    if (rhs.id() == ID_constant && rhs.get_int(ID_value) == 0)
 //                        expr_concat.push_back(rhs);
 //                    else
                     expr_concat.push_back(shlsym);
-                }
+//                }
                 saved_diff = saved_diff + integer2unsigned(width);
             }
         } // end for
@@ -1170,17 +1170,17 @@ verilog_exprt::convert_expr_nb(exprt &expression, unsigned char &saved_diff, dst
             expression = symbol_exprt(id2string(expression.op0().get(ID_identifier)).substr(id2string(current_module).size() + 1) + "_" +
                                                   id2string(expression.op1().get(ID_identifier)).substr(id2string(current_module).size() + 1) + "_old", expression.type());
         }
-        if (expression.id() == ID_symbol) {
-            if (expression.type().id() == ID_unsignedbv) {
-                int width = expression.type().get_int(ID_width);
-                if (width > 0 && width != 1 && width != 8 && width != 16 && width != 32 && width != 64 &&
-                    width != 128) {
-                    bitand_exprt band(expression,
-                                      from_integer(power(2, width) - 1, integer_typet()));
-                    expression = band;
-                }
-            }
-        }
+//        if (expression.id() == ID_symbol) {
+//            if (expression.type().id() == ID_unsignedbv) {
+//                int width = expression.type().get_int(ID_width);
+//                if (width > 0 && width != 1 && width != 8 && width != 16 && width != 32 && width != 64 &&
+//                    width != 128) {
+//                    bitand_exprt band(expression,
+//                                      from_integer(power(2, width) - 1, integer_typet()));
+//                    expression = band;
+//                }
+//            }
+//        }
     }
     return expression;
 }
@@ -1208,13 +1208,13 @@ void verilog_exprt::add_bitand(exprt &expression) {
             }
     } else if (expression.id() == ID_symbol) {
         if (expression.type().id() == ID_unsignedbv) { //数组索引也符合条件,数组名不符合
-            int width = expression.type().get_int(ID_width);
-            if (width > 0 && width != 1 && width != 8 && width != 16 && width != 32 && width != 64 &&
-                width != 128) {
-                bitand_exprt band(expression,
-                                  from_integer(power(2, width) - 1, integer_typet()));
-                expression = band;
-            }
+//            int width = expression.type().get_int(ID_width);
+//            if (width > 0 && width != 1 && width != 8 && width != 16 && width != 32 && width != 64 &&
+//                width != 128) {
+//                bitand_exprt band(expression,
+//                                  from_integer(power(2, width) - 1, integer_typet()));
+//                expression = band;
+//            }
         }
     } else if (expression.id() == ID_index && expression.op0().id() == ID_symbol &&
                expression.op1().id() == ID_symbol) {//增加数组索引位与
@@ -1441,6 +1441,15 @@ codet verilog_exprt::convert_continuous_assign(
                 unsigned char saved_diff = 0;
                 convert_expr(rhs, saved_diff);
                 code_assignv.rhs() = rhs;
+                if (lhs.id() == ID_symbol && lhs.type().id() == ID_unsignedbv) {
+                    int width = lhs.type().get_int(ID_width);
+                    if (width > 0 && width != 1 && width != 8 && width != 16 && width != 32 && width != 64 &&
+                    width != 128) {
+                        bitand_exprt band(rhs,
+                                          from_integer(power(2, width) - 1, integer_typet()));
+                        code_assignv.rhs() = band;
+                    }
+                }
             }// end of normal case
         } // end for
 
@@ -1977,6 +1986,15 @@ codet verilog_exprt::translate_block_assign(
         unsigned char saved_diff = 0;
         convert_expr(rhs, saved_diff);
         code_block_assignv.rhs() = rhs;
+        if (lhs.id() == ID_symbol && lhs.type().id() == ID_unsignedbv) {
+            int width = lhs.type().get_int(ID_width);
+            if (width > 0 && width != 1 && width != 8 && width != 16 && width != 32 && width != 64 &&
+                width != 128) {
+                bitand_exprt band(rhs,
+                                  from_integer(power(2, width) - 1, integer_typet()));
+                code_block_assignv.rhs() = band;
+            }
+        }
     }// end of normal case
 
     // replace all register-type variables by member accesses (RHS only)
@@ -2224,6 +2242,15 @@ codet verilog_exprt::translate_nb_assign(const verilog_statementt &statement, bo
         unsigned char saved_diff = 0;
         convert_expr_nb(rhs, saved_diff);
         code_assignv.rhs() = rhs;
+        if (lhs.id() == ID_symbol && lhs.type().id() == ID_unsignedbv) {
+            int width = lhs.type().get_int(ID_width);
+            if (width > 0 && width != 1 && width != 8 && width != 16 && width != 32 && width != 64 &&
+                width != 128) {
+                bitand_exprt band(rhs,
+                                  from_integer(power(2, width) - 1, integer_typet()));
+                code_assignv.rhs() = band;
+            }
+        }
     }// end of normal case
 
     // replace all register-type variables by member accesses (RHS only)
