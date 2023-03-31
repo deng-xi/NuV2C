@@ -58,7 +58,7 @@ bool vtoexpr(symbol_tablet &symbol_table, const irep_idt &module, std::ostream &
     verilog_exprt verilog_expr(symbol_table, module);
     const symbolt &symbol = ns.lookup(module);//信息存储在type和value中
     out << "#include <stdio.h>" << std::endl;
-    out << "#include <assert.h>" << std::endl;
+//    out << "#include <assert.h>" << std::endl;
     out << "#define TRUE 1" << std::endl;
     out << "#define FALSE 0" << std::endl << std::endl;
     // save the top module
@@ -367,7 +367,7 @@ bool verilog_exprt::do_conversion(code_blockt &code_verilogblock, const symbolt 
 //        out << std::endl;
     }
 
-    out << "_Bool last_clk;\n\n";
+//    out << "_Bool last_clk;\n\n";
 
     // Finally, iterate over a module to replace all reg type variables with its corresponding structure
     iterate_module(code_verilogblock, modulevb);
@@ -398,18 +398,18 @@ bool verilog_exprt::do_conversion(code_blockt &code_verilogblock, const symbolt 
         out << "struct state_elements_" << symbol.base_name << " s" << symbol.base_name << ";\n\n";
     }
 
-//    initial部分是不可综合的，验证也不需要，所以删除
-//    if (modulevb.initial == true) { //初始化函数
-//        out << "void initial_" + id2string(symbol.base_name) + "()";
-//        if (initial_block.op0().id() == ID_code && initial_block.operands().size() == 1) { //优化initial输出格式
-//            exprt exprBlock = initial_block.op0();
-//            initial_block.operands().pop_back();
-//            for (auto exprTmp: exprBlock.operands()) {
-//                initial_block.operands().push_back(exprTmp);
-//            }
-//        }
-//        out << verilog_expression2c(initial_block, ns) << std::endl << std::endl;
-//    }
+    //initial部分是不可综合的，验证也不需要，所以删除
+    if (modulevb.initial == true) { //初始化函数
+        out << "void initial_" + id2string(symbol.base_name) + "()";
+        if (initial_block.op0().id() == ID_code && initial_block.operands().size() == 1) { //优化initial输出格式
+            exprt exprBlock = initial_block.op0();
+            initial_block.operands().pop_back();
+            for (auto exprTmp: exprBlock.operands()) {
+                initial_block.operands().push_back(exprTmp);
+            }
+        }
+        out << verilog_expression2c(initial_block, ns) << std::endl << std::endl;
+    }
 
     // Function definition printing here
     code_typet typev;
@@ -453,18 +453,18 @@ bool verilog_exprt::do_conversion(code_blockt &code_verilogblock, const symbolt 
             str_print << "  " << verilog_expression2c(code_declt(sym), ns) << std::endl;
         }
         str_print << std::endl;
-//    initial部分是不可综合的，验证也不需要，所以删除
-//        if (modulevb.initial == true)
-//            str_print << "  initial_" + id2string(symbol.base_name) + "();\n";
+        //initial部分是不可综合的，验证也不需要，所以删除
+        if (modulevb.initial == true)
+            str_print << "  initial_" + id2string(symbol.base_name) + "();\n";
 
-        str_print << "  clk = 0;\n\n";
+//        str_print << "  clk = 0;\n\n";
 
         // print the while loop only for top level module call from the main function
         // and if the design is sequential circuit
         if (symbol.base_name != top_name && sequential)
             str_print << "  while(1) {" << std::endl;
 
-        str_print << "    last_clk = clk;\n    clk = !clk;\n";
+//        str_print << "    last_clk = clk;\n    clk = !clk;\n";
         //增加input变量非确定性赋值
         for (symbol_tablet::symbolst::const_iterator it = symbol_table.symbols.begin();
              it != symbol_table.symbols.end(); ++it) {
@@ -480,8 +480,8 @@ bool verilog_exprt::do_conversion(code_blockt &code_verilogblock, const symbolt 
                 } else if (typeString == "unsigned int") {
                     typeString = "uint";
                 }
-                if (nondet == "clk")
-                    continue;
+//                if (nondet == "clk")
+//                    continue;
                 nondet = nondet + " = __VERIFIER_nondet_" + typeString + "();\n";
                 if (symbol.base_name != top_name && sequential)
                     str_print << "    " << nondet;
@@ -2278,7 +2278,9 @@ codet verilog_exprt::translate_nb_assign(const verilog_statementt &statement, bo
             lhs_symbol = code_assignv.lhs().get_string(ID_component_name);
         if (code_assignv.lhs().id() == ID_index)
             lhs_symbol = code_assignv.lhs().op0().get_string(ID_component_name);
-        assert(lhs_symbol != "");
+//        assert(lhs_symbol != "");
+        if (lhs_symbol == "")
+            return code_assignv;
         std::set<std::string> updated_symbols;
         updated_symbols.emplace(lhs_symbol);
         add_cassignAll(my_code_block, updated_symbols);
@@ -2336,33 +2338,33 @@ codet verilog_exprt::translate_event_guard(
                 }
                 modulev.always = true;
 
-                if (it->id() == ID_posedge) {
-                    std::string name = ns.lookup(it->op0().get(ID_identifier)).base_name.c_str();
-                    event_guard = event_guard + " || " + name + " == 1 && last_" + name + " == 0";
-                }
-                else if (it->id() == ID_negedge) {
-                    std::string name = ns.lookup(it->op0().get(ID_identifier)).base_name.c_str();
-                    event_guard = event_guard + " || " + name + " == 0 && last_" + name + " == 1";
-                }
-            } else if (it->id() != ID_posedge && it->id() != ID_negedge) {
+//                if (it->id() == ID_posedge) {
+//                    std::string name = ns.lookup(it->op0().get(ID_identifier)).base_name.c_str();
+//                    event_guard = event_guard + " || " + name + " == 1 && last_" + name + " == 0";
+//                }
+//                else if (it->id() == ID_negedge) {
+//                    std::string name = ns.lookup(it->op0().get(ID_identifier)).base_name.c_str();
+//                    event_guard = event_guard + " || " + name + " == 0 && last_" + name + " == 1";
+//                }
+        } else if (it->id() != ID_posedge && it->id() != ID_negedge) {
 
                 modulev.always = false;
                 guards.push_back(*it);
 
-                if (it->id() == ID_symbol) {
-                    std::string name = ns.lookup(it->get(ID_identifier)).base_name.c_str();
-                    event_guard = event_guard + " || " + name + " != last_" +name;
-                }
-            }
+//                if (it->id() == ID_symbol) {
+//                    std::string name = ns.lookup(it->get(ID_identifier)).base_name.c_str();
+//                    event_guard = event_guard + " || " + name + " != last_" +name;
+//                }
         }
-    event_guard = event_guard.substr(4);
-    irep_idt cond = event_guard;
-    exprt cond_expr = exprt(cond);
-    code_ifthenelset codeif;
-    codeif.cond() = cond_expr;
-    codeif.then_case() = translate_statement(statement.body(), true);;
-    return codeif;
-//    return translate_statement(statement.body(), true);
+    }
+//    event_guard = event_guard.substr(4);
+//    irep_idt cond = event_guard;
+//    exprt cond_expr = exprt(cond);
+//    code_ifthenelset codeif;
+//    codeif.cond() = cond_expr;
+//    codeif.then_case() = translate_statement(statement.body(), true);;
+//    return codeif;
+    return translate_statement(statement.body(), true);
 }
 
 /*******************************************************************\
