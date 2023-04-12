@@ -179,10 +179,10 @@ bool NuV2C_parseoptionst::translate_module() {
 void NuV2C_parseoptionst::help() {
     std::cout <<
               "NuV2C accepts the following options:\n"
-              " --show-parse-tree            shows the parse tree\n"
+//              " --show-parse-tree            shows the parse tree\n"
               " --module name                top module for unwinding\n"
-              " --string                     print string_container\n"
-              " --symbol_table               print symbol_table\n"
+//              " --string                     print string_container\n"
+//              " --symbol_table               print symbol_table\n"
               "\n";
 }
 

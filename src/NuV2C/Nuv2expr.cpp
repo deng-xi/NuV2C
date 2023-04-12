@@ -59,6 +59,10 @@ bool vtoexpr(symbol_tablet &symbol_table, const irep_idt &module, std::ostream &
     const symbolt &symbol = ns.lookup(module);//信息存储在type和value中
     out << "#include <stdio.h>" << std::endl;
 //    out << "#include <assert.h>" << std::endl;
+    out << std::endl;
+    out << "//header file for clam" << std::endl;
+    out << "//#include </home/dx/opt/clam/include/clam/clam.h>"<< std::endl;
+    out << std::endl;
     out << "#define TRUE 1" << std::endl;
     out << "#define FALSE 0" << std::endl << std::endl;
     // save the top module
@@ -275,9 +279,9 @@ bool verilog_exprt::convert_module(const symbolt &symbol, std::ostream &out) {
     }
 
     // Handle the case of continuous assignment, top函数开始部分进行连续赋值
-    for(std::list<code_assignt>::const_iterator it3 = modulevb.cassign.begin();
-        it3!=modulevb.cassign.end();++it3)
-        code_verilogblock.operands().push_back(*it3);
+//    for(std::list<code_assignt>::const_iterator it3 = modulevb.cassign.begin();
+//        it3!=modulevb.cassign.end();++it3)
+//        code_verilogblock.operands().push_back(*it3);
 
 //    std::tr1::unordered_set<std::string> lhSymbols;
     Forall_operands(it, code_temp) {
@@ -395,6 +399,7 @@ bool verilog_exprt::do_conversion(code_blockt &code_verilogblock, const symbolt 
             }
         }
         out << "};" << std::endl;
+        str_print << std::endl;
         out << "struct state_elements_" << symbol.base_name << " s" << symbol.base_name << ";\n\n";
     }
 
@@ -443,7 +448,9 @@ bool verilog_exprt::do_conversion(code_blockt &code_verilogblock, const symbolt 
     // Print the void main function
     if (symbol.name == module) {
 
+//        str_print << std::endl;
         str_print << "void main() {" << "//main function" << std::endl;
+        str_print << std::endl;
         code_blockt code_blockv;
         // Declare the parameters of the top level function
         for (std::list<symbol_exprt>::const_iterator it = modulevb.local_sym.begin();
@@ -465,29 +472,30 @@ bool verilog_exprt::do_conversion(code_blockt &code_verilogblock, const symbolt 
             str_print << "  while(1) {" << std::endl;
 
 //        str_print << "    last_clk = clk;\n    clk = !clk;\n";
-        //增加input变量非确定性赋值
-        for (symbol_tablet::symbolst::const_iterator it = symbol_table.symbols.begin();
-             it != symbol_table.symbols.end(); ++it) {
-            if (it->second.is_input) {
-                std::string nondet;
-                datatypet myexpr2ct(ns);
-                nondet = id2string(it->second.base_name);
-                std::string typeString = myexpr2ct.convert(it->second.type);
-                if (typeString == "_Bool") {
-                    typeString = "bool";
-                } else if (typeString == "unsigned char") {
-                    typeString = "uchar";
-                } else if (typeString == "unsigned int") {
-                    typeString = "uint";
-                }
-//                if (nondet == "clk")
-//                    continue;
-                nondet = nondet + " = __VERIFIER_nondet_" + typeString + "();\n";
-                if (symbol.base_name != top_name && sequential)
-                    str_print << "    " << nondet;
-                else str_print << "  " << nondet;
-            }
-        }
+//        //增加input变量非确定性赋值
+//        for (symbol_tablet::symbolst::const_iterator it = symbol_table.symbols.begin();
+//             it != symbol_table.symbols.end(); ++it) {
+//            if (it->second.is_input) {
+//                std::string nondet;
+//                datatypet myexpr2ct(ns);
+//                nondet = id2string(it->second.base_name);
+//                std::string typeString = myexpr2ct.convert(it->second.type);
+//                std::string ctype = typeString;
+//                if (typeString == "_Bool") {
+//                    typeString = "bool";
+//                } else if (typeString == "unsigned char") {
+//                    typeString = "uchar";
+//                } else if (typeString == "unsigned int") {
+//                    typeString = "uint";
+//                }
+////                if (nondet == "clk")
+////                    continue;
+//                nondet = ctype +" " + nondet + " = __VERIFIER_nondet_" + typeString + "();\n";
+//                if (symbol.base_name != top_name && sequential)
+//                    str_print << "    " << nondet;
+//                else str_print << "  " << nondet;
+//            }
+//        }
         str_print << std::endl;
         // Just call the top level verilog module given as command line argument
         code_function_callt code_function_callv;
@@ -694,6 +702,8 @@ codet verilog_exprt::convert_decl(
                 curr_variable = to_symbol_expr(it->op0());
                 full_name = curr_variable.get_identifier();
             }
+        if (full_name == dstring(0, 0))
+            continue;
             const symbolt &symbol = ns.lookup(full_name);
             // check for ports (Input, Output)
             if (statement.get(ID_class) == ID_input) {
@@ -926,17 +936,17 @@ verilog_exprt::convert_expr(exprt &expression, unsigned char &saved_diff, dstrin
                 // find the size of the symbol
                 mp_integer width = pointer_offset_bits(rhs.type(), ns);
                 assert(width > 0);
-//                if (rhs.id() != ID_constant && width > 1 && width != 8 && width != 16 && width != 32 && width != 128) {
-//                    constant_exprt constant = from_integer(power(2, diff + 1) - 1, integer_typet());
-//                    bitand_exprt andexpr(shlsym, constant);
-//                    expr_concat.push_back(andexpr);
-//                } else {
+                if (rhs.id() != ID_constant && width > 1 && width != 8 && width != 16 && width != 32 && width != 128) {
+                    constant_exprt constant = from_integer(power(2, diff + 1) - 1, integer_typet());
+                    bitand_exprt andexpr(shlsym, constant);
+                    expr_concat.push_back(andexpr);
+                } else {
 //                    可能要删除常量0的位移? 其它地方也要改
 //                    if (rhs.id() == ID_constant && rhs.get_int(ID_value) == 0)
 //                        expr_concat.push_back(rhs);
 //                    else
                     expr_concat.push_back(shlsym);
-//                }
+                }
                 saved_diff = saved_diff + integer2unsigned(width);
             }
         } // end for
@@ -998,17 +1008,17 @@ verilog_exprt::convert_expr(exprt &expression, unsigned char &saved_diff, dstrin
                 *it = convert_expr(*it, saved_diff);
             }
         }
-//        if (expression.id() == ID_symbol) { //处理普通变量
-//            if (expression.type().id() == ID_unsignedbv) {
-//                int width = expression.type().get_int(ID_width);
-//                if (width > 0 && width != 1 && width != 8 && width != 16 && width != 32 && width != 64 &&
-//                    width != 128) {
-//                    bitand_exprt band(expression,
-//                                      from_integer(power(2, width) - 1, integer_typet()));
-//                    expression = band;
-//                }
-//            }
-//        }
+        if (expression.id() == ID_symbol) { //处理普通变量
+            if (expression.type().id() == ID_unsignedbv) {
+                int width = expression.type().get_int(ID_width);
+                if (width > 0 && width != 1 && width != 8 && width != 16 && width != 32 && width != 64 &&
+                    width != 128) {
+                    bitand_exprt band(expression,
+                                      from_integer(power(2, width) - 1, integer_typet()));
+                    expression = band;
+                }
+            }
+        }
     }
     return expression;
 }
@@ -1099,17 +1109,17 @@ verilog_exprt::convert_expr_nb(exprt &expression, unsigned char &saved_diff, dst
                 // find the size of the symbol
                 mp_integer width = pointer_offset_bits(rhs.type(), ns);
                 assert(width > 0);
-//                if (rhs.id() != ID_constant && width > 1 && width != 8 && width != 16 && width != 32 && width != 128) {
-//                    constant_exprt constant = from_integer(power(2, diff + 1) - 1, integer_typet());
-//                    bitand_exprt andexpr(shlsym, constant);
-//                    expr_concat.push_back(andexpr);
-//                } else {
+                if (rhs.id() != ID_constant && width > 1 && width != 8 && width != 16 && width != 32 && width != 128) {
+                    constant_exprt constant = from_integer(power(2, diff + 1) - 1, integer_typet());
+                    bitand_exprt andexpr(shlsym, constant);
+                    expr_concat.push_back(andexpr);
+                } else {
 //                    可能要删除常量0的位移? 其它地方也要改
 //                    if (rhs.id() == ID_constant && rhs.get_int(ID_value) == 0)
 //                        expr_concat.push_back(rhs);
 //                    else
                     expr_concat.push_back(shlsym);
-//                }
+                }
                 saved_diff = saved_diff + integer2unsigned(width);
             }
         } // end for
@@ -1170,17 +1180,17 @@ verilog_exprt::convert_expr_nb(exprt &expression, unsigned char &saved_diff, dst
             expression = symbol_exprt(id2string(expression.op0().get(ID_identifier)).substr(id2string(current_module).size() + 1) + "_" +
                                                   id2string(expression.op1().get(ID_identifier)).substr(id2string(current_module).size() + 1) + "_old", expression.type());
         }
-//        if (expression.id() == ID_symbol) {
-//            if (expression.type().id() == ID_unsignedbv) {
-//                int width = expression.type().get_int(ID_width);
-//                if (width > 0 && width != 1 && width != 8 && width != 16 && width != 32 && width != 64 &&
-//                    width != 128) {
-//                    bitand_exprt band(expression,
-//                                      from_integer(power(2, width) - 1, integer_typet()));
-//                    expression = band;
-//                }
-//            }
-//        }
+        if (expression.id() == ID_symbol) {
+            if (expression.type().id() == ID_unsignedbv) {
+                int width = expression.type().get_int(ID_width);
+                if (width > 0 && width != 1 && width != 8 && width != 16 && width != 32 && width != 64 &&
+                    width != 128) {
+                    bitand_exprt band(expression,
+                                      from_integer(power(2, width) - 1, integer_typet()));
+                    expression = band;
+                }
+            }
+        }
     }
     return expression;
 }
@@ -1208,13 +1218,13 @@ void verilog_exprt::add_bitand(exprt &expression) {
             }
     } else if (expression.id() == ID_symbol) {
         if (expression.type().id() == ID_unsignedbv) { //数组索引也符合条件,数组名不符合
-//            int width = expression.type().get_int(ID_width);
-//            if (width > 0 && width != 1 && width != 8 && width != 16 && width != 32 && width != 64 &&
-//                width != 128) {
-//                bitand_exprt band(expression,
-//                                  from_integer(power(2, width) - 1, integer_typet()));
-//                expression = band;
-//            }
+            int width = expression.type().get_int(ID_width);
+            if (width > 0 && width != 1 && width != 8 && width != 16 && width != 32 && width != 64 &&
+                width != 128) {
+                bitand_exprt band(expression,
+                                  from_integer(power(2, width) - 1, integer_typet()));
+                expression = band;
+            }
         }
     } else if (expression.id() == ID_index && expression.op0().id() == ID_symbol &&
                expression.op1().id() == ID_symbol) {//增加数组索引位与
@@ -1404,54 +1414,54 @@ codet verilog_exprt::convert_continuous_assign(
 
                 // Processing of statements like out = tmp[5:3];
 
-                // Processing of statements like out[a:b] = tmp[c:d];
-                // 正确:out = (out & ((2^(width_of_out) - 1) - (2^a - 2^b + 2^a))) | (((tmp & (2^c - 2^d + 2^c)) >> d) << b);
-                //上面论文中的做法复杂了,代码实现改为:
-                // out = (out & ((2^(width_of_out) - 1) - (2^a - 2^b + 2^a))) | ((tmp >> d) & 2^(c-d+1) << b);
-            else if (lhs.id() == ID_extractbits) {
-                code_assignv.lhs() = lhs.op0();
-                symbol_exprt lhs_symbol = to_symbol_expr(lhs.op0());
-                mp_integer size_a, size_b, size_c, size_d;
-                to_integer(lhs.op1(), size_a);
-                to_integer(lhs.op2(), size_b);
-                int width = lhs.op0().find(ID_type).get_int(ID_width);
-                constant_exprt lhs_constant = from_integer(
-                        (power(2, width) - 1) - (power(2, size_a) - power(2, size_b) + power(2, size_a)),
-                        integer_typet());
-                bitand_exprt lhs_andexpr(lhs_symbol, lhs_constant);
-                unsigned char saved_diff = 0;
-                rhs = convert_expr(rhs, saved_diff);
-                shl_exprt shl(rhs, lhs.op2());
-                bitor_exprt orexpr(lhs_andexpr, shl);
-                rhs = orexpr;
-                code_assignv.rhs() = rhs;
-            }
-                //增加函数内直接调用函数
-            else if (rhs.id() == ID_function_call && rhs.op1().id() == dstring(0, 0) && rhs.op1().has_operands() &&
-                     rhs.op1().op0().id() == ID_concatenation) { //rhs.op1().op0()是函数的参数
-                exprt arg = rhs.op1().op0();
-                code_assignv.lhs() = lhs;
-                unsigned char saved_diff = 0;
-                arg = convert_expr(arg, saved_diff);
-                rhs.op1().op0() = arg;
-                code_assignv.rhs() = rhs;
-            }
-                // handle the case of ID_constant and normal assignments
-            else {
-                unsigned char saved_diff = 0;
-                convert_expr(rhs, saved_diff);
-                code_assignv.rhs() = rhs;
-                if (lhs.id() == ID_symbol && lhs.type().id() == ID_unsignedbv) {
-                    int width = lhs.type().get_int(ID_width);
-                    if (width > 0 && width != 1 && width != 8 && width != 16 && width != 32 && width != 64 &&
-                    width != 128) {
-                        bitand_exprt band(rhs,
-                                          from_integer(power(2, width) - 1, integer_typet()));
-                        code_assignv.rhs() = band;
-                    }
-                }
-            }// end of normal case
-        } // end for
+            // Processing of statements like out[a:b] = tmp[c:d];
+            // 正确:out = (out & ((2^(width_of_out) - 1) - (2^a - 2^b + 2^a))) | (((tmp & (2^c - 2^d + 2^c)) >> d) << b);
+            //上面论文中的做法复杂了,代码实现改为:
+            // out = (out & ((2^(width_of_out) - 1) - (2^a - 2^b + 2^a))) | ((tmp >> d) & 2^(c-d+1) << b);
+        else if (lhs.id() == ID_extractbits) {
+            code_assignv.lhs() = lhs.op0();
+            symbol_exprt lhs_symbol = to_symbol_expr(lhs.op0());
+            mp_integer size_a, size_b, size_c, size_d;
+            to_integer(lhs.op1(), size_a);
+            to_integer(lhs.op2(), size_b);
+            int width = lhs.op0().find(ID_type).get_int(ID_width);
+            constant_exprt lhs_constant = from_integer(
+                    (power(2, width) - 1) - (power(2, size_a) - power(2, size_b) + power(2, size_a)),
+                    integer_typet());
+            bitand_exprt lhs_andexpr(lhs_symbol, lhs_constant);
+            unsigned char saved_diff = 0;
+            rhs = convert_expr(rhs, saved_diff);
+            shl_exprt shl(rhs, lhs.op2());
+            bitor_exprt orexpr(lhs_andexpr, shl);
+            rhs = orexpr;
+            code_assignv.rhs() = rhs;
+        }
+            //增加函数内直接调用函数
+        else if (rhs.id() == ID_function_call && rhs.op1().id() == dstring(0, 0) && rhs.op1().has_operands() &&
+                 rhs.op1().op0().id() == ID_concatenation) { //rhs.op1().op0()是函数的参数
+            exprt arg = rhs.op1().op0();
+            code_assignv.lhs() = lhs;
+            unsigned char saved_diff = 0;
+            arg = convert_expr(arg, saved_diff);
+            rhs.op1().op0() = arg;
+            code_assignv.rhs() = rhs;
+        }
+            // handle the case of ID_constant and normal assignments
+        else {
+            unsigned char saved_diff = 0;
+            convert_expr(rhs, saved_diff);
+            code_assignv.rhs() = rhs;
+//            if (lhs.id() == ID_symbol && lhs.type().id() == ID_unsignedbv) {
+//                int width = lhs.type().get_int(ID_width);
+//                if (width > 0 && width != 1 && width != 8 && width != 16 && width != 32 && width != 64 &&
+//                    width != 128) {
+//                    bitand_exprt band(rhs,
+//                                      from_integer(power(2, width) - 1, integer_typet()));
+//                    code_assignv.rhs() = band;
+//                }
+//            }
+        }// end of normal case
+    } // end for
 
 
     // replace all register-type variables by member accesses (RHS only)  ???
@@ -1986,15 +1996,15 @@ codet verilog_exprt::translate_block_assign(
         unsigned char saved_diff = 0;
         convert_expr(rhs, saved_diff);
         code_block_assignv.rhs() = rhs;
-        if (lhs.id() == ID_symbol && lhs.type().id() == ID_unsignedbv) {
-            int width = lhs.type().get_int(ID_width);
-            if (width > 0 && width != 1 && width != 8 && width != 16 && width != 32 && width != 64 &&
-                width != 128) {
-                bitand_exprt band(rhs,
-                                  from_integer(power(2, width) - 1, integer_typet()));
-                code_block_assignv.rhs() = band;
-            }
-        }
+//        if (lhs.id() == ID_symbol && lhs.type().id() == ID_unsignedbv) {
+//            int width = lhs.type().get_int(ID_width);
+//            if (width > 0 && width != 1 && width != 8 && width != 16 && width != 32 && width != 64 &&
+//                width != 128) {
+//                bitand_exprt band(rhs,
+//                                  from_integer(power(2, width) - 1, integer_typet()));
+//                code_block_assignv.rhs() = band;
+//            }
+//        }
     }// end of normal case
 
     // replace all register-type variables by member accesses (RHS only)
@@ -2242,15 +2252,15 @@ codet verilog_exprt::translate_nb_assign(const verilog_statementt &statement, bo
         unsigned char saved_diff = 0;
         convert_expr_nb(rhs, saved_diff);
         code_assignv.rhs() = rhs;
-        if (lhs.id() == ID_symbol && lhs.type().id() == ID_unsignedbv) {
-            int width = lhs.type().get_int(ID_width);
-            if (width > 0 && width != 1 && width != 8 && width != 16 && width != 32 && width != 64 &&
-                width != 128) {
-                bitand_exprt band(rhs,
-                                  from_integer(power(2, width) - 1, integer_typet()));
-                code_assignv.rhs() = band;
-            }
-        }
+//        if (lhs.id() == ID_symbol && lhs.type().id() == ID_unsignedbv) {
+//            int width = lhs.type().get_int(ID_width);
+//            if (width > 0 && width != 1 && width != 8 && width != 16 && width != 32 && width != 64 &&
+//                width != 128) {
+//                bitand_exprt band(rhs,
+//                                  from_integer(power(2, width) - 1, integer_typet()));
+//                code_assignv.rhs() = band;
+//            }
+//        }
     }// end of normal case
 
     // replace all register-type variables by member accesses (RHS only)
