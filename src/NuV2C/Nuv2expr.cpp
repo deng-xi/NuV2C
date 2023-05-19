@@ -58,7 +58,7 @@ bool vtoexpr(symbol_tablet &symbol_table, const irep_idt &module, std::ostream &
     verilog_exprt verilog_expr(symbol_table, module);
     const symbolt &symbol = ns.lookup(module);//信息存储在type和value中
     out << "#include <stdio.h>" << std::endl;
-//    out << "#include <assert.h>" << std::endl;
+    out << "//#include <assert.h>" << std::endl;
     out << std::endl;
     out << "//header file for clam" << std::endl;
     out << "//#include </home/dx/opt/clam/include/clam/clam.h>"<< std::endl;
@@ -247,6 +247,8 @@ bool verilog_exprt::convert_module(const symbolt &symbol, std::ostream &out) {
             // is also needed with same if-else blocks defined in multiple clocked blocks.
 
             bool is_always = it->id() == ID_always;
+            if (is_always) continue;
+
             codet codefinal =
                     convert_module_item(static_cast<const verilog_module_itemt &>(*it));//给模块每个项赋具体值
 
@@ -262,6 +264,20 @@ bool verilog_exprt::convert_module(const symbolt &symbol, std::ostream &out) {
             forall_operands(itf, codefinal) code_verilogblock.operands().push_back(*itf);
         } //end of for loop
 
+    // Process always
+    forall_operands(it, symbol.value) { //一个模块
+            bool is_always = it->id() == ID_always;
+            if (is_always) {
+                codet codefinal =
+                        convert_module_item(static_cast<const verilog_module_itemt &>(*it));//给模块每个项赋具体值
+
+                if (codefinal.get_statement() != ID_block)
+                    code_verilogblock.operands().push_back(codefinal);
+                else
+                    // ID_block always contains {}, so just push back its operands
+                forall_operands(itf, codefinal) code_verilogblock.operands().push_back(*itf);
+            }
+        } //end of for loop
 
     code_blockt code_temp;
     code_temp.swap(code_verilogblock);
