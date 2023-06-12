@@ -132,6 +132,7 @@ bool NuV2C_parseoptionst::translate_module() {
         output = cmdline.args[1];
     else {
         error() << "Insufficient number of arguments";
+        std::cout << "\n***请给出输出文件参数***\n\n";
         throw 0;
     }
 
